@@ -1,0 +1,7 @@
+ARG_ENABLE('hello', 'hello support', 'no');
+
+if (PHP_HELLO != 'no') {
+	AC_DEFINE('HAVE_HELLO', 1, 'hello support enabled');
+
+	EXTENSION('hello', 'hello.c', null, '/DZEND_ENABLE_STATIC_TSRMLS_CACHE=1');
+}
