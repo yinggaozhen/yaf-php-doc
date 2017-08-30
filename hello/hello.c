@@ -39,18 +39,12 @@ PHP_FUNCTION(hello_array_init)
     }
 
     zval *entry;
-    array_init_size(return_value, 3);
-    zend_hash_real_init(Z_ARRVAL_P(return_value), 1);
+    array_init(return_value);
+    // zend_hash_real_init(Z_ARRVAL_P(return_value), 1);
 
-    ZEND_HASH_FILL_PACKED(Z_ARRVAL_P(return_value)) {
-        ZEND_HASH_FOREACH_VAL(&ht, entry) {
-                    if (UNEXPECTED(Z_ISREF_P(entry) && Z_REFCOUNT_P(entry) == 1)) {
-                        entry = Z_REFVAL_P(entry);
-                    }
-                    Z_TRY_ADDREF_P(entry);
-                    ZEND_HASH_FILL_ADD(entry);
-                } ZEND_HASH_FOREACH_END();
-    } ZEND_HASH_FILL_END();
+    ZEND_HASH_FOREACH_VAL(&ht, entry) {
+                zend_hash_next_index_insert(Z_ARRVAL_P(return_value), entry);
+    } ZEND_HASH_FOREACH_END();
 }
 
 /* {{{ arginfo
