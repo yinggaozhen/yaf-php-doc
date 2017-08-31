@@ -47,9 +47,37 @@ PHP_FUNCTION(hello_array_init)
     } ZEND_HASH_FOREACH_END();
 }
 
+PHP_FUNCTION(hello_array_merge)
+{
+    zval *dest, *src, *args, *entry;
+    ulong argc;
+
+    array_init(return_value);
+
+    ZEND_PARSE_PARAMETERS_START(2, 2)
+            Z_PARAM_ARRAY(dest)
+            Z_PARAM_ARRAY(src)
+    ZEND_PARSE_PARAMETERS_END();
+
+    // hash合并，类似array + array
+    zend_hash_merge(Z_ARRVAL_P(dest), Z_ARRVAL_P(src), zval_add_ref, 1);
+
+    // hash追加，类似array_merge
+//    ZEND_HASH_FOREACH_VAL(Z_ARRVAL_P(src), entry)
+//            zend_hash_next_index_insert(Z_ARRVAL_P(dest), entry);
+//    ZEND_HASH_FOREACH_END();
+
+    ZVAL_ARR(return_value, Z_ARRVAL_P(dest));
+}
+
 /* {{{ arginfo
  */
 ZEND_BEGIN_ARG_INFO(arginfo_hello_array_init, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_hello_array_merge, 0, 0, 2)
+    ZEND_ARG_INFO(0, arg)
+    ZEND_ARG_INFO(0, arg)
 ZEND_END_ARG_INFO()
 /* }}} */
 
@@ -57,6 +85,7 @@ ZEND_END_ARG_INFO()
  */
 const zend_function_entry hello_functions[] = {
 	PHP_FE(hello_array_init,		arginfo_hello_array_init)
+    PHP_FE(hello_array_merge,		arginfo_hello_array_merge)
 	PHP_FE_END
 };
 /* }}} */
