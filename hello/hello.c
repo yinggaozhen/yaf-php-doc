@@ -70,6 +70,27 @@ PHP_FUNCTION(hello_array_merge)
     ZVAL_ARR(return_value, Z_ARRVAL_P(dest));
 }
 
+PHP_FUNCTION(hello_array_sum)
+{
+    zval *array, *entry, entry_t;
+
+    ZEND_PARSE_PARAMETERS_START(1, 1)
+            Z_PARAM_ARRAY(array)
+    ZEND_PARSE_PARAMETERS_END();
+
+    ZVAL_LONG(return_value, 0);
+
+    ZEND_HASH_FOREACH_VAL(Z_ARRVAL_P(array), entry)
+            if (Z_TYPE_P(entry) == IS_OBJECT || Z_TYPE_P(entry) == IS_ARRAY) {
+                continue;
+            }
+            ZVAL_COPY(&entry_t, entry);
+
+            convert_scalar_to_number(&entry_t);
+            fast_add_function(return_value, return_value, &entry_t);
+    ZEND_HASH_FOREACH_END();
+}
+
 /* {{{ arginfo
  */
 ZEND_BEGIN_ARG_INFO(arginfo_hello_array_init, 0)
@@ -79,6 +100,10 @@ ZEND_BEGIN_ARG_INFO_EX(arginfo_hello_array_merge, 0, 0, 2)
     ZEND_ARG_INFO(0, arg)
     ZEND_ARG_INFO(0, arg)
 ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(arginfo_hello_array_sum, 0, 0, 1)
+                ZEND_ARG_INFO(0, arg)
+ZEND_END_ARG_INFO()
 /* }}} */
 
 /* {{{ hello_functions[]
@@ -86,6 +111,7 @@ ZEND_END_ARG_INFO()
 const zend_function_entry hello_functions[] = {
 	PHP_FE(hello_array_init,		arginfo_hello_array_init)
     PHP_FE(hello_array_merge,		arginfo_hello_array_merge)
+    PHP_FE(hello_array_sum,		    arginfo_hello_array_sum)
 	PHP_FE_END
 };
 /* }}} */
