@@ -8,6 +8,16 @@
 #include "ext/standard/info.h"
 #include "php_hello.h"
 
+PHP_MINIT_FUNCTION(hello)
+{
+//    ZEND_INIT_MODULE_GLOBALS(array, php_array_init_globals, NULL);
+
+    REGISTER_LONG_CONSTANT("HELLO_CONST_LONG", 1, CONST_CS | CONST_PERSISTENT);
+    REGISTER_STRING_CONSTANT("HELLO_CONST_STRING", "hello_string", CONST_CS | CONST_PERSISTENT);
+
+    return SUCCESS;
+}
+
 PHP_MINFO_FUNCTION(hello)
 {
 	php_info_print_table_start();
@@ -122,7 +132,7 @@ zend_module_entry hello_module_entry = {
 	STANDARD_MODULE_HEADER,
 	"hello",					/* Extension name */
 	hello_functions,			/* zend_function_entry */
-	NULL,						/* PHP_MINIT - Module initialization */
+    PHP_MINIT(hello),           /* PHP_MINIT - Module initialization */
 	NULL,						/* PHP_MSHUTDOWN - Module shutdown */
 	NULL,						/* PHP_RINIT - Request initialization */
 	NULL,						/* PHP_RSHUTDOWN - Request shutdown */
