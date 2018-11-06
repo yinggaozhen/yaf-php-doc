@@ -51,6 +51,8 @@ abstract class Request_Abstract
      */
     protected $_routed = 0;
 
+    protected const YAF_REQUEST_SERVER_URI = 'request_uri=';
+
     public function isXmlHttpRequest(): bool
     {
         return false;
@@ -202,16 +204,17 @@ abstract class Request_Abstract
     }
 
     /**
-     * @param string $name
+     * @param string $uri
      * @return bool|$this
      */
-    public function setBaseUri($name)
+    public function setBaseUri($uri)
     {
-        if (empty($name)) {
+        if (empty($uri)) {
             return false;
         }
 
-        $this->_base_uri = $name;
+        $this->_setBaseUri($uri, null);
+
         return $this;
     }
 
@@ -270,6 +273,66 @@ abstract class Request_Abstract
     public function getRequestUri()
     {
         return $this->_uri;
+    }
+
+    protected function _setBaseUri(string $base_uri, string $request_uri): int
+    {
+        if (is_null($base_uri)) {
+            $script_filename = $_SERVER['SCRIPT_FILENAME'];
+
+            do {
+                if ($script_filename) {
+                    global $ext;
+                    $script_name = $_SERVER['SCRIPT_NAME'];
+                    $file_name = basename($script_name, $ext);
+
+                    if ($script_name) {
+                        $script = basename($script_name);
+                        if ($file_name == $script) {
+                            $basename = $script_name;
+                            break;
+                        }
+                    }
+
+                    $phpself_name = $_SERVER['PHP_SELF'];
+                    if ($phpself_name) {
+                        $phpself = basename($phpself_name);
+
+                        if ($file_name == $phpself) {
+                            $basename = $phpself;
+                            break;
+                        }
+                    }
+
+                    $orig_name = $_SERVER['ORIG_SCRIPT_NAME'];
+                    if ($orig_name) {
+                        $orig = basename($orig_name);
+
+                        if ($file_name == $orig) {
+                            $basename = $orig;
+                            break;
+                        }
+                    }
+                }
+            } while (0);
+
+            if (!empty($basename) && $request_uri == $basename) {
+                if ($basename) {
+                    $this->_base_uri = rtrim($basename, '/');
+                    return 1;
+                }
+            } else if (!empty($basename)) {
+                $dir = rtrim(dirname($basename), '/');
+
+                if ($dir && strncmp($request_uri, $dir, strlen($dir)) == 0) {
+                    $this->_base_uri = $dir;
+                }
+            }
+        } else {
+            $this->_base_uri = $base_uri;
+        }
+
+        return 1;
     }
 
     public function __call($method, $arguments)

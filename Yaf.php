@@ -26,11 +26,12 @@ define('YAF\\ERR\\AUTOLOAD_FAILED', 	 520);
 define('YAF\\ERR\\TYPE_ERROR',			 521);
 
 // RINIT_FUNCTION
-$GLOBALS['yaf']['throw_exception'] = 1;
-$GLOBALS['yaf']['ext']             = 'php';
-$GLOBALS['yaf']['view_ext']        = 'phtml';
-$GLOBALS['yaf']['default_module']  = 'Index';
-$GLOBALS['yaf']['default_action']  = 'Index';
+$GLOBALS['yaf']['throw_exception']    = 1;
+$GLOBALS['yaf']['ext']                = 'php';
+$GLOBALS['yaf']['view_ext']           = 'phtml';
+$GLOBALS['yaf']['default_module']     = 'Index';
+$GLOBALS['yaf']['default_action']     = 'Index';
+$GLOBALS['yaf']['default_controller'] = 'Index';
 
 
 
