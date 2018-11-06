@@ -16,7 +16,7 @@ abstract class Response_Abstract
      */
     protected $_body;
 
-    protected $_sendheader;
+    protected $_sendheader = false;
 
     public function __construct()
     {

@@ -23,21 +23,20 @@ abstract class Controller_Abstract
      * @param array|NULL $var_array
      * @return string|bool
      */
-    protected function render($action, array $var_array = NULL)
+    protected function render(string $action, array $var_array = NULL)
     {
-        $output = $this->_render($this, $action, $var_array);
+        $output = $this->_render($action, $var_array);
 
         return $output ? $output : false;
     }
 
     /**
-     * @param self   $instance
      * @param string $action_name
      * @param array  $var_array
      */
-    private function _render($instance, $action_name, $var_array)
+    private function _render(string $action_name, array $var_array)
     {
-        $view = $instance->_view;
-        $name = $instance->_name;
+        $view = $this->_view;
+        $name = $this->_name;
     }
 }

@@ -26,7 +26,7 @@ namespace Yaf
         /**
          * @return string
          */
-        public function getPrevious()
+        public function getPrevious(): string
         {
             return $this->previous;
         }

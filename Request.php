@@ -51,7 +51,7 @@ abstract class Request_Abstract
      */
     protected $_routed = 0;
 
-    public function isXmlHttpRequest()
+    public function isXmlHttpRequest(): bool
     {
         return false;
     }
@@ -59,7 +59,7 @@ abstract class Request_Abstract
     /**
      * @return int
      */
-    public function isDispatched()
+    public function isDispatched(): int
     {
         return $this->_dispatched === true ? 1 : 0;
     }
@@ -67,7 +67,7 @@ abstract class Request_Abstract
     /**
      * @return int
      */
-    public function isRouted()
+    public function isRouted(): int
     {
         return $this->_routed === true ? 1 : 0;
     }
@@ -77,7 +77,7 @@ abstract class Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getServer($name, $default = null)
+    public function getServer(string $name, $default = null): string
     {
         return isset($_SERVER[$name]) ? $_SERVER[$name] : $default;
     }
@@ -87,7 +87,7 @@ abstract class Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getEnv($name, $default = null)
+    public function getEnv(string $name, $default = null): string
     {
         return isset($_ENV[$name]) ? $_ENV[$name] : $default;
     }
@@ -112,7 +112,7 @@ abstract class Request_Abstract
     /**
      * @return array|null
      */
-    public function getParams()
+    public function getParams(): ?array
     {
         return $this->_params;
     }
