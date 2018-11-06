@@ -1,9 +1,5 @@
 \.idea
+vendor
+composer\.lock
+*\.out
 *\.swp
-*\.o
-start
-cmake*
-CMake*
-Makefile
-MakeCmake.php
-*_bak

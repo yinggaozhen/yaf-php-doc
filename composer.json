@@ -1,0 +1,26 @@
+{
+  "name": "yinggaozhen/yaf-php",
+  "description": "Yaf PHP version",
+  "type": "yaf-php",
+  "minimum-stability": "dev",
+  "homepage": "https://github.com/yinggaozhen/yaf-php",
+  "require" : {
+    "php" : ">=5.5"
+  },
+  "authors": [
+    {
+      "name": "Gaozhen Ying",
+      "email": "yinggaozhen@hotmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+    }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}
