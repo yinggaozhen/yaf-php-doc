@@ -4,13 +4,9 @@ namespace Yaf;
 
 // TODO 类名和目录名称不一致
 
-abstract class Route_Interface
+interface Route_Interface
 {
-    function __construct(array $config)
-    {
-    }
+    public function route(Request_Abstract $request);
 
-    abstract public function route();
-
-    abstract public function assemble();
+    public function assemble();
 }

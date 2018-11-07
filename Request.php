@@ -27,6 +27,9 @@ abstract class Request_Abstract
      */
     protected $_params;
 
+    /**
+     * @var string
+     */
     protected $_language;
 
     protected $_exception;
@@ -235,6 +238,9 @@ abstract class Request_Abstract
         return true;
     }
 
+    /**
+     * @return $this
+     */
     public function setRouted()
     {
         $this->_routed = 1;
@@ -242,12 +248,18 @@ abstract class Request_Abstract
         return $this;
     }
 
+    /**
+     * @return mixed
+     */
     public function getMethod()
     {
         return $this->method;
     }
 
-    public function getLanguage()
+    /**
+     * @return string|null
+     */
+    public function getLanguage(): ?string
     {
         $lang = $this->_language;
 
@@ -265,16 +277,27 @@ abstract class Request_Abstract
         return $lang;
     }
 
-    public function getBaseUri()
+    /**
+     * @return string
+     */
+    public function getBaseUri(): string
     {
         return $this->_base_uri;
     }
 
-    public function getRequestUri()
+    /**
+     * @return string
+     */
+    public function getRequestUri(): string
     {
         return $this->_uri;
     }
 
+    /**
+     * @param string $base_uri
+     * @param string $request_uri
+     * @return int
+     */
     protected function _setBaseUri(string $base_uri, string $request_uri): int
     {
         if (is_null($base_uri)) {
