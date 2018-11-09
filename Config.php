@@ -10,5 +10,7 @@ abstract class Config_Abstract
     // 其实是protected
     public $_readonly;
 
-    // TODO methods添加
+    abstract function get();
+
+    abstract function set();
 }
