@@ -26,10 +26,21 @@ namespace
      * 内部YAF全局(内部方法,外部不可调用)
      *
      * @param $name
+     * @param null $value
      * @return null|string
      */
-    function YAF_G($name)
+    function YAF_G($name, $value = null)
     {
+        static $internal_g = [];
+
+        if (!is_null($value)) {
+            return $internal_g[$name] = $value;
+        }
+
+        if (isset($internal_g[$name])) {
+            return $internal_g[$name];
+        }
+
         if (ini_get('yaf.' . $name)) {
             return ini_get('yaf.' . $name);
         }
