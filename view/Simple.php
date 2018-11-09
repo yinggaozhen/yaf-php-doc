@@ -61,23 +61,53 @@ class Simple implements View_Interface
         return false;
     }
 
-    function display($tpl, $tpl_vars = null)
+    /**
+     * @param $tpl
+     * @param null $tpl_vars
+     * @throws \Exception
+     */
+    function display($tpl, $tpl_vars = null): void
     {
+        $this->simpleRender($tpl, $tpl_vars, $null);
     }
 
-    function render($tpl, $tpl_vars)
+    /**
+     * @param $tpl
+     * @param $tpl_vars
+     * @throws \Exception
+     */
+    function render($tpl, $tpl_vars): void
     {
-        // TODO: Implement render() method.
+        $this->simpleRender($tpl, $tpl_vars, $return_value);
     }
 
-    function setScriptPath($template_dir)
+    /**
+     * @param string $template_dir
+     * @return $this|bool
+     */
+    function setScriptPath(string $template_dir)
     {
-        // TODO: Implement setScriptPath() method.
+        if (is_string($template_dir) && realpath($template_dir) == $template_dir) {
+            $this->_tpl_dir = $template_dir;
+
+            return $this;
+        }
+
+        return false;
     }
 
-    function getScriptPath()
+    /**
+     * @return string
+     */
+    function getScriptPath(): string
     {
-        // TODO: Implement getScriptPath() method.
+        $tpl_dir = $this->_tpl_dir;
+
+        if ((empty($tpl_dir) || !is_string($tpl_dir)) && YAF_G('view_directory')) {
+            return YAF_G('view_directory');
+        }
+
+        return $tpl_dir;
     }
 
     /**
@@ -86,9 +116,7 @@ class Simple implements View_Interface
      */
     public function get(?string $name = null)
     {
-        $tpl_vars = $this->_tpl_vars;
-
-        if (!empty($tpl_vars) && is_array($tpl_vars)) {
+        if (!empty($this->_tpl_vars) && is_array($this->_tpl_vars)) {
             if (empty($name)) {
                 return $this->_tpl_vars;
             }
@@ -99,19 +127,39 @@ class Simple implements View_Interface
         return null;
     }
 
-    public function eval()
+    /**
+     * @param string $tpl_content
+     * @param array|null $vars
+     * @return bool
+     * @throws \Exception
+     */
+    public function eval(string $tpl_content, array $vars = null): ?bool
     {
-
+        // TODO 这里execTpl解读还没彻底理解
+        if (!$this->simpleEval($tpl_content, $vars, $result_value)) {
+            return false;
+        }
     }
 
-    public function assignRef()
+    /**
+     * @param string $name
+     * @param $value
+     * @return $this
+     */
+    public function assignRef(string $name, $value): Simple
     {
+        $this->_tpl_vars[$name] = $value;
 
+        return $this;
     }
 
-    public function clear()
+    public function clear(string $name): void
     {
-
+        if (empty($name)) {
+            $this->_tpl_vars = [];
+        } else {
+            unset($this->_tpl_vars[$name]);
+        }
     }
 
     /**
@@ -143,7 +191,14 @@ class Simple implements View_Interface
         }
     }
 
-    private function simpleRender(string $tpl, $vars, $ret)
+    /**
+     * @param string $tpl
+     * @param $vars
+     * @param $result
+     * @return int
+     * @throws \Exception
+     */
+    private function simpleRender(string $tpl, $vars, &$result): int
     {
         $tpl_vars = $this->_tpl_vars[$tpl];
 
@@ -151,26 +206,70 @@ class Simple implements View_Interface
 
         // 判断是否为绝对路径
         if (realpath($tpl) == $tpl) {
-            // TODO
+            if ($this->renderTpl($symbol_table, $tpl, $result) == 0) {
+                return 0;
+            }
+        } else {
+            $tpl_dir = $this->_tpl_dir;
+
+            if (!is_string($tpl_dir)) {
+                if (YAF_G('view_directory')) {
+                    $script = sprintf("%s%c%s", YAF_G('view_directory'), DIRECTORY_SEPARATOR, $tpl);
+                } else {
+                    $message = sprintf("Could not determine the view script path, you should call %s::setScriptPath to specific it", self::class);
+                    throw new \Exception($message, VIEW);
+                }
+            } else {
+                $script = sprintf("%s%c%s", $tpl_dir, DIRECTORY_SEPARATOR, $tpl);
+            }
+
+            if ($this->renderTpl($symbol_table, $script, $result) == 0) {
+                return 0;
+            }
         }
+
+        return 1;
     }
 
     /**
      * @param array $symbol_table
-     * @param string $tpl
-     * @param $ret
+     * @param string $_internal_tpl
+     * @param null|string $_internal_result
+     * @return int
      * @throws \Exception
      */
-    private function renderTpl(array $symbol_table, string $tpl, $ret)
+    private function renderTpl(array $symbol_table, string $_internal_tpl, ?string &$_internal_result): int
     {
-        if (realpath($tpl) != $tpl) {
-            throw new \Exception(sprintf("Failed opening template %s", $tpl), VIEW);
+        // TODO 是否需要extract
+        extract($symbol_table);
+
+        if (realpath($_internal_tpl) != $_internal_tpl) {
+            throw new \Exception(sprintf("Failed opening template %s", $_internal_tpl), VIEW);
         }
 
-        // TODO 下次从这里开始
+        if (!is_readable($_internal_tpl)) {
+            trigger_error('Unable to fetch ob content', E_WARNING);
+            return 0;
+        }
+
+        ob_start();
+        $_internal_result = include $_internal_tpl;
+
+        if (is_null($_internal_result)) {
+            ob_end_flush(); // display方式. 直接输出页面
+        } else {
+            ob_end_clean(); // render. 获取页面内容,不直接输出
+        }
+
+        return 1;
     }
 
-    private function buildSymtable($tpl_vars, $vars)
+    /**
+     * @param $tpl_vars
+     * @param $vars
+     * @return array
+     */
+    private function buildSymtable($tpl_vars, $vars): ?array
     {
         $symbol_table = [];
         $scope        = $this;
@@ -212,6 +311,36 @@ class Simple implements View_Interface
         return $symbol_table;
     }
 
+    /**
+     * TODO
+     *
+     * @param string $tpl
+     * @param array|null $vars
+     * @param $result
+     * @return int
+     */
+    private function simpleEval(string $tpl, ?array $vars, &$result): int
+    {
+        if (!is_string($tpl)) {
+            return 0;
+        }
+
+        $tpl_vars = $this->_tpl_vars;
+        $symbol_table = $this->buildSymtable($tpl_vars, $vars);
+
+        if (strlen($tpl)) {
+            $phtml = sprintf("?>%s", $tpl);
+            // TODO zend_compile_string
+        }
+
+        return 1;
+    }
+
+    /**
+     * @param string $var_name
+     * @param int $var_name_len
+     * @return int
+     */
     private static function validVarName(string $var_name, int $var_name_len): int
     {
         if (empty($var_name)) {
