@@ -2,15 +2,18 @@
 
 namespace Yaf;
 
+use const YAF\ERR\DISPATCH_FAILED;
+use const YAF\ERR\NOTFOUND\MODULE;
 use const YAF\ERR\ROUTE_FAILED;
+use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\View\Simple;
 
 
-final class Dispatcher
+final class DispatcherTODOLoader
 {
     /**
-     * @var Dispatcher
+     * @var DispatcherTODOLoader
      */
     protected static $_instance = null;
 
@@ -76,9 +79,9 @@ final class Dispatcher
     }
 
     /**
-     * @return Dispatcher
+     * @return DispatcherTODOLoader
      */
-    public static function getInstance(): Dispatcher
+    public static function getInstance(): DispatcherTODOLoader
     {
         $instance = self::$_instance;
 
@@ -86,7 +89,7 @@ final class Dispatcher
             return $instance;
         }
 
-        self::$_instance = new Dispatcher();
+        self::$_instance = new DispatcherTODOLoader();
 
         return self::$_instance;
     }
@@ -105,9 +108,9 @@ final class Dispatcher
     }
 
     /**
-     * @return Dispatcher
+     * @return DispatcherTODOLoader
      */
-    public function enableView(): Dispatcher
+    public function enableView(): DispatcherTODOLoader
     {
         $this->_auto_render = true;
 
@@ -115,9 +118,9 @@ final class Dispatcher
     }
 
     /**
-     * @return Dispatcher
+     * @return DispatcherTODOLoader
      */
-    public function disableView(): Dispatcher
+    public function disableView(): DispatcherTODOLoader
     {
         $this->_auto_render = false;
 
@@ -268,9 +271,9 @@ final class Dispatcher
     /**
      * @param callable $callback
      * @param int $error_type
-     * @return Dispatcher
+     * @return DispatcherTODOLoader
      */
-    public function setErrorHandler(callable $callback, int $error_type = E_ALL | E_STRICT): Dispatcher
+    public function setErrorHandler(callable $callback, int $error_type = E_ALL | E_STRICT): DispatcherTODOLoader
     {
         try {
             set_error_handler($callback, $error_type);
@@ -350,15 +353,15 @@ final class Dispatcher
     /**
      * @internal
      */
-    private const YAF_PLUGIN_HOOK_ROUTESTARTUP = "routerstartup";
+    private const YAF_PLUGIN_HOOK_ROUTESTARTUP  = "routerstartup";
     private const YAF_PLUGIN_HOOK_ROUTESHUTDOWN = "routershutdown";
-    private const YAF_PLUGIN_HOOK_LOOPSTARTUP = "dispatchloopstartup";
-    private const YAF_PLUGIN_HOOK_PREDISPATCH = "predispatch";
-    private const YAF_PLUGIN_HOOK_POSTDISPATCH = "postdispatch";
-    private const YAF_PLUGIN_HOOK_LOOPSHUTDOWN = "dispatchloopshutdown";
-    private const YAF_PLUGIN_HOOK_PRERESPONSE = "preresponse";
-    private const YAF_ERROR_CONTROLLER = "Error";
-    private const YAF_ERROR_ACTION = "error";
+    private const YAF_PLUGIN_HOOK_LOOPSTARTUP   = "dispatchloopstartup";
+    private const YAF_PLUGIN_HOOK_PREDISPATCH   = "predispatch";
+    private const YAF_PLUGIN_HOOK_POSTDISPATCH  = "postdispatch";
+    private const YAF_PLUGIN_HOOK_LOOPSHUTDOWN  = "dispatchloopshutdown";
+    private const YAF_PLUGIN_HOOK_PRERESPONSE   = "preresponse";
+    private const YAF_ERROR_CONTROLLER          = "Error";
+    private const YAF_ERROR_ACTION              = "error";
 
     // ================================================== 内部方法 ==================================================
 
@@ -407,7 +410,9 @@ final class Dispatcher
             $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
             $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
 
-            // TODO 下边从这里开始
+            if ($this->_handle($request, $response, $view)) {
+                // TODO
+            }
         } while (--$nesting > 0 && !$request->isDispatched());
     }
 
@@ -454,8 +459,8 @@ final class Dispatcher
             $request->setModuleName($module);
         }
 
-        $controller = Dispatcher::YAF_ERROR_CONTROLLER;
-        $action = Dispatcher::YAF_ERROR_ACTION;
+        $controller = DispatcherTODOLoader::YAF_ERROR_CONTROLLER;
+        $action = DispatcherTODOLoader::YAF_ERROR_ACTION;
 
         // TODO 下面有点难懂,先放着,后面再研究研究
     }
@@ -526,6 +531,75 @@ final class Dispatcher
             $request->setActionName($action);
         } else {
             $request->setActionName(ucfirst(strtolower($action)));
+        }
+    }
+
+    /**
+     * @param Request_Abstract $request
+     * @param Response_Abstract $response
+     * @param View_Interface $view
+     * @throws \Exception
+     */
+    private function _handle(Request_Abstract $request, Response_Abstract $response, View_Interface $view)
+    {
+        $app_dir = YAF_G('directory');
+
+        $request->setDispatched();
+        if (!$app_dir) {
+            $error_message = sprintf("%s requires %s(which set the application.directory) to be initialized first", get_class($this), Application::class);
+            throw new \Exception($error_message, STARTUP_FAILED);
+        } else {
+            $is_def_module = 0;
+
+            $module     = $request->getModuleName();
+            $controller = $request->getControllerName();
+            $dmodule    = $this->_default_module;
+
+            if (!is_string($module) || empty($module)) {
+                throw new \Exception("Unexcepted a empty module name");
+            } else if (!Application::isModuleName($module)) {
+                throw new \Exception(sprintf("There is no module %s", $module), MODULE);
+            }
+
+            if (!is_string($controller) || empty($controller)) {
+                throw new \Exception("Unexcepted a empty controller name", DISPATCH_FAILED);
+            }
+
+            if ($dmodule == $module) {
+                $is_def_module = 1;
+                // TODO
+            }
+        }
+    }
+
+    private function _getController(string $app_dir, string $module, string $controller, int $def_module)
+    {
+        if ($def_module) {
+            $directory = sprintf("%s%c%s", $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
+            $directory_len = strlen($directory);
+        } else {
+            $directory = sprintf("%s%c%s%c%s%c%s",
+                $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_MODULE_DIRECTORY_NAME, DIRECTORY_SEPARATOR, $module, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
+            $directory_len = strlen($directory);
+        }
+
+        $class = '';
+        if ($directory_len) {
+            if (YAF_G('name_suffix')) {
+                $class = sprintf("%s%s%s", $controller, YAF_G('name_separator'), 'Controller');
+            } else {
+                $class = sprintf("%s%s%s", 'Controller', YAF_G('name_separator'), $controller);
+            }
+        }
+
+        $class_lowercase = strtolower($class);
+
+        if (!class_exists($class_lowercase, false)) {
+            // TODO LOADER写好写这里
+            // TODO LOADER写好写这里
+            // TODO LOADER写好写这里
+            // TODO LOADER写好写这里
+            // TODO LOADER写好写这里
         }
     }
 
