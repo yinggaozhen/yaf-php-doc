@@ -75,4 +75,22 @@ final class Application
 
         // TODO dispatcher
     }
+
+    /**
+     * 内部方法,外部不可调用
+     *
+     * @internal
+     * @param $name
+     * @return int
+     */
+    public static function isModuleName($name)
+    {
+        $app = self::$_app;
+
+        if (!is_object($app)) {
+            return 0;
+        }
+
+        // TODO Application 从这里写起
+    }
 }

@@ -2,6 +2,9 @@
 
 namespace Yaf;
 
+use Yaf\Response\Cli;
+use Yaf\Response\Http;
+
 abstract class Response_Abstract
 {
     const DEFAULT_BODY = 'content';
@@ -17,6 +20,12 @@ abstract class Response_Abstract
     protected $_body;
 
     protected $_sendheader = false;
+
+    /**
+     * @internal
+     * @var Response_Abstract
+     */
+    private static $instance;
 
     public function __construct()
     {
@@ -163,5 +172,25 @@ abstract class Response_Abstract
         $return_value = implode('', $zbody);
 
         return $return_value;
+    }
+
+    /**
+     * 内部使用,YAF对外不存在此方法
+     *
+     * @internal
+     */
+    public static function instance($sapi)
+    {
+        if (!is_null(self::$instance)) {
+            return self::$instance;
+        }
+
+        if (strncasecmp($sapi, 'cli', 4)) {
+            self::$instance = new Cli();
+        } else {
+            self::$instance = new Http();
+        }
+
+        return self::$instance;
     }
 }

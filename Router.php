@@ -4,6 +4,9 @@ namespace Yaf;
 
 class Router
 {
+    /**
+     * @var Route_Interface
+     */
     protected $_routes;
 
     protected $_current;
@@ -60,11 +63,20 @@ class Router
      */
     public function route(Request_Abstract $request): bool
     {
-        $routes = $this->_routes;
+        $routes = array_reverse($this->_routes);
 
         foreach ($routes as $key => $route) {
-            // TODO 这里看不懂
+            $result = call_user_func([$route, 'route'], $request);
+
+            if (true === $result) {
+                $this->_current = $key;
+            }
+            $request->setRouted();
+
+            return true;
         }
+
+        return false;
     }
 
     /**
