@@ -128,13 +128,13 @@ out:
     }
 
     /**
-     * @param null $library
-     * @param null $global_library
+     * @param string $library
+     * @param string $global_library
      * @return Loader|false
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function getInstance($library = null, $global_library = null)
+    public static function getInstance(?string $library = null, ?string $global_library = null)
     {
         $loader = self::_instance($library, $global_library);
 
@@ -145,14 +145,58 @@ out:
         return false;
     }
 
-    public static function import()
+    /**
+     * @param string $file
+     * @return bool
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
+    public static function import(string $file) :bool
     {
+        if (empty($file)) {
+            return false;
+        }
 
+        if (realpath($file) !== $file) {
+            $loader = self::getInstance(null, null);
+
+            if (empty($loader)) {
+                trigger_error(sprintf("%s need to be initialize first", Loader::class), E_WARNING);
+                return false;
+            } else {
+                $property = new \ReflectionProperty($loader, '_library');
+                $property->setAccessible(true);
+                $library = $property->getValue();
+
+                $file = sprintf("%s%c%s", $library, DIRECTORY_SEPARATOR, $file);
+            }
+        }
+
+        $retval = array_key_exists($file, get_included_files());
+        if ($retval) {
+            return true;
+        }
+
+        $retval = self::loaderImport($file, 0);
+
+        return (bool) $retval;
     }
 
-    public function registerLocalNamespace()
+    public function registerLocalNamespace($namespaces)
     {
+        if (is_string($namespaces)) {
+            if ($this->namespaceSingle($namespaces)) {
+                return $this;
+            }
+        } else if (is_array($namespaces)) {
+            if ($this->namespaceMulti($namespaces)) {
+                return $this;
+            }
+        } else {
+            trigger_error("Invalid parameters provided, must be a string, or an array", E_WARNING);
+        }
 
+        return false;
     }
 
     public function getLocalNamespace()
@@ -165,19 +209,48 @@ out:
 
     }
 
-    public function isLocalName()
+    /**
+     * @param null|string $class_name
+     * @return bool|int
+     */
+    public function isLocalName(?string $class_name): bool
     {
+        if (empty($class_name) || !is_string($class_name)) {
+            return false;
+        }
 
+        return (bool) $this->isLocalNamespace($class_name, strlen($class_name));
     }
 
-    public function setLibraryPath()
+    /**
+     * @param string $library
+     * @param bool $global
+     * @return $this
+     */
+    public function setLibraryPath(string $library, bool $global = false): Loader
     {
+        if (!$global) {
+            $this->_library = $library;
+        } else {
+            $this->_global_library = $library;
+        }
 
+        return $this;
     }
 
-    public function getLibraryPath()
+    /**
+     * @param bool $global
+     * @return mixed
+     */
+    public function getLibraryPath(bool $global = false): string
     {
+        if (!$global) {
+            $library = $this->_library;
+        } else {
+            $library = $this->_global_library;
+        }
 
+        return $library;
     }
 
     private function __clone()
@@ -372,11 +445,16 @@ out:
         $buf .= '.';
         $buf .= YAF_G('ext');
 
-        $status = $this->loaderImport($buf, 0);
+        $status = Loader::loaderImport($buf, 0);
 
         return $status;
     }
 
+    /**
+     * @param string $class_name
+     * @param int $len
+     * @return int
+     */
     private function isLocalNamespace(string $class_name, int $len): int
     {
         if (!YAF_G('local_namespaces')) {
@@ -406,7 +484,7 @@ out:
      * @param int $use_path
      * @return int
      */
-    private function loaderImport(string $path, int $use_path): int
+    private static function loaderImport(string $path, int $use_path): int
     {
         if (!realpath($path)) {
             return 0;
@@ -414,4 +492,25 @@ out:
 
         include $path;
     }
+
+    /**
+     * @param string $prefix
+     * @return int
+     */
+    private function namespaceSingle(string $prefix): int
+    {
+        if (YAF_G('local_namespaces')) {
+            YAF_G('local_namespaces', YAF_G('local_namespaces') . ';' . $prefix);
+        } else {
+            YAF_G('local_namespaces', $prefix);
+        }
+
+        return 1;
+    }
+
+    private function namespaceMulti()
+    {
+        // TODO 下次从这里开始
+    }
+
 }
