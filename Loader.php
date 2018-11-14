@@ -12,8 +12,15 @@ final class Loader
     {
     }
 
+    /**
+     * @param string $class_name
+     * @return bool
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
     public function autoload(string $class_name)
     {
+        $file_name     = '';
         $file_name_len = 0;
         $ret = true;
 
@@ -95,7 +102,6 @@ final class Loader
         if (!YAF_G('use_spl_autoload')) {
             /** directory might be NULL since we passed a NULL */
             // TODO $directory是否为指针
-            // TODO 从这里开始
             if ($this->internalAutoload($file_name, $file_name_len, $directory)) {
                 $lc_classname = substr($origin_classname, 0, strlen($class_name));
                 if (class_exists($lc_classname, false)) {
@@ -254,7 +260,7 @@ out:
      * @return mixed
      * @throws \Exception
      */
-    private static function _instance(string $library_path, string $global_path)
+    private static function _instance(?string $library_path, ?string $global_path)
     {
         $instance = self::$_instance;
 
@@ -321,5 +327,91 @@ out:
         }
 
         return 1;
+    }
+
+    /**
+     * @param string $file_name
+     * @param int $name_len
+     * @param string $directory
+     * @return int
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
+    private function internalAutoload(string $file_name, int $name_len, string $directory): int
+    {
+        $buf = '';
+
+        if (empty($directory)) {
+            $loader = self::_instance(null, null);
+
+            if (empty($loader)) {
+                trigger_error(sprintf('%s need to be initialize first', Loader::class), E_WARNING);
+                return 0;
+            } else {
+                if ($this->isLocalNamespace($file_name, $name_len)) {
+                    $library_dir = $this->_library;
+                } else {
+                    $library_dir = $this->_global_library;
+                }
+
+                $library_path = $library_dir;
+            }
+
+            $buf .= $library_path;
+        } else {
+            $buf .= $directory;
+        }
+
+        $buf .= DIRECTORY_SEPARATOR;
+        $buf .= str_replace('_', DIRECTORY_SEPARATOR, $file_name);
+
+        if (YAF_G('lowcase_path')) {
+            $buf = strtolower($buf);
+        }
+
+        $buf .= '.';
+        $buf .= YAF_G('ext');
+
+        $status = $this->loaderImport($buf, 0);
+
+        return $status;
+    }
+
+    private function isLocalNamespace(string $class_name, int $len): int
+    {
+        if (!YAF_G('local_namespaces')) {
+            return 0;
+        }
+
+        $ns = YAF_G('local_namespaces');
+
+        if (strstr($class_name, '_')) {
+            $prefix = strstr($class_name, '_', true);
+            $backup = strstr($class_name, '_');
+        } else if (strstr($class_name, DIRECTORY_SEPARATOR)) {
+            $prefix = strstr($class_name, DIRECTORY_SEPARATOR, true);
+            $backup = strstr($class_name, DIRECTORY_SEPARATOR);
+        } else {
+            $prefix = $class_name;
+            $backup = $len;
+        }
+
+        // TODO 看不懂
+
+        return 0;
+    }
+
+    /**
+     * @param string $path
+     * @param int $use_path
+     * @return int
+     */
+    private function loaderImport(string $path, int $use_path): int
+    {
+        if (!realpath($path)) {
+            return 0;
+        }
+
+        include $path;
     }
 }
