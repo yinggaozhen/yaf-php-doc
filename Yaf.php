@@ -37,6 +37,15 @@ namespace
             return $internal_g[$name] = $value;
         }
 
+        /**
+         * 兼容写法
+         *
+         * @see \Yaf\Loader::clearLocalNamespace
+         */
+        if ($value === 'NULL') {
+            return $internal_g[$name] = null;
+        }
+
         if (isset($internal_g[$name])) {
             return $internal_g[$name];
         }
@@ -51,6 +60,14 @@ namespace
 
         return null;
     }
+}
+
+/**
+ * 只适用于内部的常量(PHP常量)
+ */
+namespace INTERNAL\PHP
+{
+    const DEFAULT_SLASH = DIRECTORY_SEPARATOR;
 }
 
 // MINIT_FUNCTION

@@ -182,10 +182,14 @@ out:
         return (bool) $retval;
     }
 
+    /**
+     * @param string|array $namespaces
+     * @return $this|bool
+     */
     public function registerLocalNamespace($namespaces)
     {
         if (is_string($namespaces)) {
-            if ($this->namespaceSingle($namespaces)) {
+            if ($this->registerNamespaceSingle($namespaces)) {
                 return $this;
             }
         } else if (is_array($namespaces)) {
@@ -199,14 +203,23 @@ out:
         return false;
     }
 
-    public function getLocalNamespace()
+    /**
+     * @return null|string
+     */
+    public function getLocalNamespace(): ?string
     {
-
+        return YAF_G('local_namespaces') ?? null;
     }
 
-    public function clearLocalNamespace()
+    /**
+     * @return true
+     */
+    public function clearLocalNamespace(): true
     {
+        // 源代码这里是用宏直接设置成null,这里做了一点小调整
+        YAF_G('local_namespaces', 'NULL');
 
+        return true;
     }
 
     /**
@@ -255,17 +268,14 @@ out:
 
     private function __clone()
     {
-
     }
 
     private function __sleep()
     {
-
     }
 
     private function __wakeup()
     {
-
     }
 
     // ================================================== 内部常量 ==================================================
@@ -403,6 +413,9 @@ out:
     }
 
     /**
+     * 实际为private
+     *
+     * @internal
      * @param string $file_name
      * @param int $name_len
      * @param string $directory
@@ -410,7 +423,7 @@ out:
      * @throws \Exception
      * @throws \ReflectionException
      */
-    private function internalAutoload(string $file_name, int $name_len, string $directory): int
+    public static function internalAutoload(string $file_name, int $name_len, string &$directory): int
     {
         $buf = '';
 
@@ -421,10 +434,14 @@ out:
                 trigger_error(sprintf('%s need to be initialize first', Loader::class), E_WARNING);
                 return 0;
             } else {
-                if ($this->isLocalNamespace($file_name, $name_len)) {
-                    $library_dir = $this->_library;
+                if (self::isLocalNamespace($file_name, $name_len)) {
+                    $property = new \ReflectionProperty($loader, '_library');
+                    $property->setAccessible(true);
+                    $library_dir = $property->getValue();
                 } else {
-                    $library_dir = $this->_global_library;
+                    $property = new \ReflectionProperty($loader, '_global_library');
+                    $property->setAccessible(true);
+                    $library_dir = $property->getValue();
                 }
 
                 $library_path = $library_dir;
@@ -455,7 +472,7 @@ out:
      * @param int $len
      * @return int
      */
-    private function isLocalNamespace(string $class_name, int $len): int
+    private static function isLocalNamespace(string $class_name, int $len): int
     {
         if (!YAF_G('local_namespaces')) {
             return 0;
@@ -497,7 +514,7 @@ out:
      * @param string $prefix
      * @return int
      */
-    private function namespaceSingle(string $prefix): int
+    private function registerNamespaceSingle(string $prefix): int
     {
         if (YAF_G('local_namespaces')) {
             YAF_G('local_namespaces', YAF_G('local_namespaces') . ';' . $prefix);
@@ -508,9 +525,17 @@ out:
         return 1;
     }
 
-    private function namespaceMulti()
+    /**
+     * @param string[] $prefixes
+     * @return int
+     */
+    private function namespaceMulti(array $prefixes): int
     {
-        // TODO 下次从这里开始
+        foreach ($prefixes as $prefix) {
+            $this->registerNamespaceSingle($prefix);
+        }
+
+        return 1;
     }
 
 }

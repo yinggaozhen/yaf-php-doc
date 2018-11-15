@@ -2,7 +2,11 @@
 
 namespace Yaf;
 
+use const INTERNAL\PHP\DEFAULT_SLASH;
+use ReflectionFunction;
+use const YAF\ERR\AUTOLOAD_FAILED;
 use const YAF\ERR\DISPATCH_FAILED;
+use const YAF\ERR\NOTFOUND\CONTROLLER;
 use const YAF\ERR\NOTFOUND\MODULE;
 use const YAF\ERR\ROUTE_FAILED;
 use const YAF\ERR\STARTUP_FAILED;
@@ -538,6 +542,7 @@ final class DispatcherTODOLoader
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      * @param View_Interface $view
+     * @return int
      * @throws \Exception
      */
     private function _handle(Request_Abstract $request, Response_Abstract $response, View_Interface $view)
@@ -567,11 +572,65 @@ final class DispatcherTODOLoader
 
             if ($dmodule == $module) {
                 $is_def_module = 1;
-                // TODO
+            }
+
+            /** @var Controller_Abstract $ce */
+            $ce = $this->_getController($app_dir, $module, $controller, $is_def_module);
+            if (empty($ce)) {
+                return 0;
+            } else {
+                // TODO controller 入参问题
+                $icontroller = new $ce($request, $response, $view);
+
+                if (!$request->isDispatched()) {
+                    return $this->_handle($request, $response, $view);
+                }
+
+                /* view template directory for application, please notice that view engine's directory has high priority */
+                if ($is_def_module) {
+                    $view_dir = sprintf("%s%c%s", $app_dir, DEFAULT_SLASH, "views");
+                } else {
+                    $view_dir = sprintf("%s%c%s%c%s%c%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "views"));
+                }
+
+                if (YAF_G('view_directory')) {
+                    YAF_G('view_directory', 'NULL');
+                }
+
+                YAF_G('view_directory', $view_dir);
+                $property = new \ReflectionProperty($icontroller, '_name');
+                $property->setAccessible(true);
+                $property->setValue($controller);
+
+                $action = $request->getActionName();
+                $func_name = sprintf('%s%s', strtolower($action), 'action');
+
+                try {
+                    $reflectionFunc = new ReflectionFunction($ce, $func_name);
+                } catch (\ReflectionException $e) {
+                    $reflectionFunc = null;
+                }
+                if ($reflectionFunc) {
+                    if ($reflectionFunc->getNumberOfParameters()) {
+                        $this->_getCallParameters();
+                    } else {
+
+                    }
+
+                }
             }
         }
     }
 
+    /**
+     * @param string $app_dir
+     * @param string $module
+     * @param string $controller
+     * @param int $def_module
+     * @return int|string|null
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
     private function _getController(string $app_dir, string $module, string $controller, int $def_module)
     {
         if ($def_module) {
@@ -595,11 +654,37 @@ final class DispatcherTODOLoader
         $class_lowercase = strtolower($class);
 
         if (!class_exists($class_lowercase, false)) {
-            // TODO LOADER写好写这里
-            // TODO LOADER写好写这里
-            // TODO LOADER写好写这里
-            // TODO LOADER写好写这里
-            // TODO LOADER写好写这里
+            // TODO $directory是否为引用
+            if (Loader::internalAutoload($controller, strlen($controller), $directory)) {
+                trigger_error(sprintf("Failed opening controller script %s", $directory), CONTROLLER);
+                return null;
+            } else if (!class_exists($class_lowercase)) {
+                trigger_error(sprintf('"Could not find class %s in controller script %s"', $class), AUTOLOAD_FAILED);
+                return 0;
+            } else {
+                $ce = $class_lowercase;
+
+                if (!($ce instanceof Controller_Abstract)) {
+                    trigger_error(sprintf("Controller must be an instance of %s", Controller_Abstract::class), TYPE_ERROR);
+                    return 0;
+                }
+            }
+
+            return $ce;
+        }
+
+        return null;
+    }
+
+    private function _getCallParameters(Request_Abstract $request, ReflectionFunction $fptr, ?array &$params, int &$count)
+    {
+        $request_args = $request->getParams();
+        $func_arg_info = $fptr->getParameters();
+
+        foreach ($func_arg_info as $arg) {
+            if (isset($request_args[$arg->getName()])) {
+                $params[$arg->getName()] = $request_args[$arg->getName()];
+            }
         }
     }
 
@@ -635,7 +720,7 @@ final class DispatcherTODOLoader
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      */
-    function MACRO_YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
+    private function MACRO_YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);
