@@ -684,6 +684,8 @@ final class DispatcherTODOLoader
         foreach ($func_arg_info as $arg) {
             if (isset($request_args[$arg->getName()])) {
                 $params[$arg->getName()] = $request_args[$arg->getName()];
+
+                // TODO 校验 yaf_dispatcher.php yaf_dispatcher_get_call_parameters
             }
         }
     }
