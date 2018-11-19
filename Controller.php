@@ -23,10 +23,10 @@ abstract class Controller_Abstract
 
     /**
      * @param string     $action
-     * @param array|NULL $var_array
+     * @param array|null $var_array
      * @return string|bool
      */
-    protected function render(string $action, array $var_array = NULL)
+    protected function render(string $action, array $var_array = null)
     {
         $output = $this->_render($action, $var_array);
 

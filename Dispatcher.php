@@ -380,7 +380,7 @@ final class Dispatcher
      * @return null
      * @throws \Exception
      */
-    private function _dispatch(?Response_Abstract $response)
+    private function _dispatch(?Response_Abstract $response): ?Response_Abstract
     {
         $nesting = YAF_G('forward_limit');
 
@@ -435,7 +435,7 @@ final class Dispatcher
         if (0 == $nesting && !$request->isDispatched()) {
             trigger_error(sprintf("The max dispatch nesting %ld was reached", YAF_G('forward_limit')), DISPATCH_FAILED);
             $this->MACRO_YAF_EXCEPTION_HANDLE_NORET($request, $response);
-            return NULL;
+            return null;
         }
 
         $return_response = $this->_return_response;

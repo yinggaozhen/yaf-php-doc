@@ -17,10 +17,10 @@ class Simple implements View_Interface
     /**
      * Simple constructor.
      * @param string $tpl_dir
-     * @param array|NULL $options
+     * @param array|null $options
      * @throws \Exception
      */
-    final public function __construct(string $tpl_dir, array $options = NULL)
+    final public function __construct(string $tpl_dir, array $options = null)
     {
         $this->_tpl_vars = [];
 
