@@ -3,9 +3,9 @@
 namespace Yaf;
 
 use const INTERNAL\PHP\DEFAULT_SLASH;
-use ReflectionFunction;
 use const YAF\ERR\AUTOLOAD_FAILED;
 use const YAF\ERR\DISPATCH_FAILED;
+use const YAF\ERR\NOTFOUND\ACTION;
 use const YAF\ERR\NOTFOUND\CONTROLLER;
 use const YAF\ERR\NOTFOUND\MODULE;
 use const YAF\ERR\ROUTE_FAILED;
@@ -14,10 +14,10 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\View\Simple;
 
 
-final class DispatcherTODOLoader
+final class Dispatcher
 {
     /**
-     * @var DispatcherTODOLoader
+     * @var Dispatcher
      */
     protected static $_instance = null;
 
@@ -83,9 +83,9 @@ final class DispatcherTODOLoader
     }
 
     /**
-     * @return DispatcherTODOLoader
+     * @return Dispatcher
      */
-    public static function getInstance(): DispatcherTODOLoader
+    public static function getInstance(): Dispatcher
     {
         $instance = self::$_instance;
 
@@ -93,11 +93,16 @@ final class DispatcherTODOLoader
             return $instance;
         }
 
-        self::$_instance = new DispatcherTODOLoader();
+        self::$_instance = new Dispatcher();
 
         return self::$_instance;
     }
 
+    /**
+     * @param Request_Abstract $request
+     * @return bool|null
+     * @throws \Exception
+     */
     public function dispatch(Request_Abstract $request)
     {
         $this->_request = $request;
@@ -112,9 +117,9 @@ final class DispatcherTODOLoader
     }
 
     /**
-     * @return DispatcherTODOLoader
+     * @return Dispatcher
      */
-    public function enableView(): DispatcherTODOLoader
+    public function enableView(): Dispatcher
     {
         $this->_auto_render = true;
 
@@ -122,9 +127,9 @@ final class DispatcherTODOLoader
     }
 
     /**
-     * @return DispatcherTODOLoader
+     * @return Dispatcher
      */
-    public function disableView(): DispatcherTODOLoader
+    public function disableView(): Dispatcher
     {
         $this->_auto_render = false;
 
@@ -275,9 +280,9 @@ final class DispatcherTODOLoader
     /**
      * @param callable $callback
      * @param int $error_type
-     * @return DispatcherTODOLoader
+     * @return Dispatcher
      */
-    public function setErrorHandler(callable $callback, int $error_type = E_ALL | E_STRICT): DispatcherTODOLoader
+    public function setErrorHandler(callable $callback, int $error_type = E_ALL | E_STRICT): Dispatcher
     {
         try {
             set_error_handler($callback, $error_type);
@@ -415,9 +420,32 @@ final class DispatcherTODOLoader
             $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
 
             if ($this->_handle($request, $response, $view)) {
-                // TODO
+                $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+                return null;
             }
+
+            $this->_fixDefault($request);
+            $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
+            $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
         } while (--$nesting > 0 && !$request->isDispatched());
+
+        $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
+        $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+
+        if (0 == $nesting && !$request->isDispatched()) {
+            trigger_error(sprintf("The max dispatch nesting %ld was reached", YAF_G('forward_limit')), DISPATCH_FAILED);
+            $this->MACRO_YAF_EXCEPTION_HANDLE_NORET($request, $response);
+            return NULL;
+        }
+
+        $return_response = $this->_return_response;
+
+        if ($return_response === false) {
+            call_user_func([$response, 'response']);
+            $response->clearBody();
+        }
+
+        return $response;
     }
 
     /**
@@ -463,8 +491,8 @@ final class DispatcherTODOLoader
             $request->setModuleName($module);
         }
 
-        $controller = DispatcherTODOLoader::YAF_ERROR_CONTROLLER;
-        $action = DispatcherTODOLoader::YAF_ERROR_ACTION;
+        $controller = Dispatcher::YAF_ERROR_CONTROLLER;
+        $action = Dispatcher::YAF_ERROR_ACTION;
 
         // TODO 下面有点难懂,先放着,后面再研究研究
     }
@@ -545,7 +573,7 @@ final class DispatcherTODOLoader
      * @return int
      * @throws \Exception
      */
-    private function _handle(Request_Abstract $request, Response_Abstract $response, View_Interface $view)
+    private function _handle(Request_Abstract $request, Response_Abstract $response, View_Interface $view): int
     {
         $app_dir = YAF_G('directory');
 
@@ -580,7 +608,7 @@ final class DispatcherTODOLoader
                 return 0;
             } else {
                 // TODO controller 入参问题
-                $icontroller = new $ce($request, $response, $view);
+                $iController = new $ce($request, $response, $view);
 
                 if (!$request->isDispatched()) {
                     return $this->_handle($request, $response, $view);
@@ -590,7 +618,7 @@ final class DispatcherTODOLoader
                 if ($is_def_module) {
                     $view_dir = sprintf("%s%c%s", $app_dir, DEFAULT_SLASH, "views");
                 } else {
-                    $view_dir = sprintf("%s%c%s%c%s%c%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "views"));
+                    $view_dir = sprintf("%s%c%s%c%s%c%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "views");
                 }
 
                 if (YAF_G('view_directory')) {
@@ -598,7 +626,7 @@ final class DispatcherTODOLoader
                 }
 
                 YAF_G('view_directory', $view_dir);
-                $property = new \ReflectionProperty($icontroller, '_name');
+                $property = new \ReflectionProperty($iController, '_name');
                 $property->setAccessible(true);
                 $property->setValue($controller);
 
@@ -606,19 +634,101 @@ final class DispatcherTODOLoader
                 $func_name = sprintf('%s%s', strtolower($action), 'action');
 
                 try {
-                    $reflectionFunc = new ReflectionFunction($ce, $func_name);
+                    $reflectionMethod = new \ReflectionMethod($ce, $func_name);
                 } catch (\ReflectionException $e) {
-                    $reflectionFunc = null;
+                    $reflectionMethod = null;
                 }
-                if ($reflectionFunc) {
-                    if ($reflectionFunc->getNumberOfParameters()) {
-                        $this->_getCallParameters();
-                    } else {
 
+                if ($reflectionMethod) {
+                    $executor = $iController;
+
+                    if ($reflectionMethod->getNumberOfParameters()) {
+                        // TODO GET_PARAMS
+                        $call_args = $this->_getCallParameters();
+
+                        $method_name = $func_name;
+                        $result = call_user_func([$iController, $method_name], $call_args);
+                    } else {
+                        call_user_func($func_name);
                     }
 
+                    if (!isset($result)) {
+                        return 0;
+                    }
+
+                    if ($result === false) {
+                        /* no auto-renderring */
+                        return 1;
+                    }
+
+                } else if ($ce = $this->_getAction($app_dir, $iController, $module, $is_def_module, $action) && is_callable([$ce, 'execute'])) {
+                    $fptr = new \ReflectionMethod($ce, 'execute');
+
+                    /** @var Action_Abstract $iAction */
+                    $iAction = new $ce($request, $response, $view);
+                    $executor = $iAction;
+
+                    $nameProperty = new \ReflectionProperty($iAction, '_name');
+                    $nameProperty->setAccessible(true);
+                    $nameProperty->setValue($controller);
+                    $controllerProperty = new \ReflectionProperty($iAction, '_controller');
+                    $controllerProperty->setAccessible(true);
+                    $controllerProperty->setValue($iController);
+
+                    if ($fptr->getNumberOfParameters()) {
+                        $this->_getCallParameters($request, $fptr, $call_args, $count);
+                        $result = call_user_func([$iAction, 'execute'], ...$call_args);
+                    } else {
+                        $result = call_user_func([$iAction, 'execute']);
+                    }
+
+                    if (!isset($result)) {
+                        return 0;
+                    }
+
+                    if ($result === false) {
+                        /* no auto-renderring */
+                        return 1;
+                    }
+                } else {
+                    return 0;
+                }
+
+                if ($executor) {
+                    /* controller's property can override the Dispatcher's */
+
+                    $render = $executor->yafAutoRender ?? null;
+                    if (!isset($render)) {
+                        $render = $this->_auto_render;
+                    }
+
+                    $auto_render = $render === true || (is_int($render));
+                    $instantly_flush = $this->_instantly_flush;
+                    if ($auto_render) {
+                        if ($instantly_flush === false) {
+                            $result = call_user_func([$executor, 'render'], $action);
+
+                            if (!isset($result) || $result === false) {
+                                return 0;
+                            }
+
+                            if (is_string($result) && !empty($result)) {
+                                $response->setBody((string) $result, 'YAF_RESPONSE_APPEND');
+                            }
+                        } else {
+                            $result = call_user_func([$executor, 'display'], $action);
+
+                            if (!isset($result) || $result === false) {
+                                return 0;
+                            }
+                        }
+                    } else {
+                        // DO NOTHING IN PHP
+                    }
                 }
             }
+
+            return 1;
         }
     }
 
@@ -676,7 +786,116 @@ final class DispatcherTODOLoader
         return null;
     }
 
-    private function _getCallParameters(Request_Abstract $request, ReflectionFunction $fptr, ?array &$params, int &$count)
+    /**
+     * @param string $app_dir
+     * @param Controller_Abstract $controller
+     * @param string $module
+     * @param int $def_module
+     * @param string $action
+     * @return null|string
+     * @throws \Exception
+     * @throws \ReflectionException
+     */
+    private function _getAction(string $app_dir, Controller_Abstract $controller, string $module, int $def_module, string $action): ?string
+    {
+        $actions_map = $controller->actions;
+
+        if (is_array($actions_map)) {
+            $action_upper = strtoupper($action);
+
+            if (YAF_G('name_suffix')) {
+                $class = sprintf("%s%s%s", $action_upper, YAF_G('name_separator'), 'Action');
+            } else {
+                $class = sprintf("%s%s%s", 'Action', YAF_G('name_separator'), $action_upper);
+            }
+
+            $class_lowercase = strtolower($class);
+            if (class_exists($class_lowercase)) {
+                if ($class_lowercase instanceof Action_Abstract) {
+                    return $class_lowercase;
+                } else {
+                    trigger_error(sprintf("Action %s must extends from %s", $class), TYPE_ERROR);
+                    return null;
+                }
+            }
+
+            $paction = $actions_map[$action];
+            if (!is_null($paction)) {
+
+                $action_path = sprintf('%s%c%s', $app_dir, DEFAULT_SLASH, $paction);
+                if (Loader::import($action_path)) {
+                    if (class_exists($class_lowercase)) {
+                        if ($class_lowercase instanceof Action_Abstract) {
+                            return $class_lowercase;
+                        } else {
+                            trigger_error(sprintf("Action %s must extends from %s", $class, Action_Abstract::class), TYPE_ERROR);
+                        }
+                    } else {
+                        trigger_error(sprintf("Could not find action %s in %s", $class, $action_path), ACTION);
+                    }
+                } else {
+                    trigger_error(sprintf("Failed opening action script %s", $action_path), ACTION);
+                }
+            }
+        } else if (YAF_G('st_compatible')) {
+            /* This only effects internally */
+            $action_upper = preg_replace_callback('/_(\w+)/', function($match) {
+                return '_' . ucfirst($match[1]);
+            }, $action);
+
+            if ($def_module) {
+                $directory = sprintf("%s%c%s", $app_dir, DEFAULT_SLASH, "actions");
+            } else {
+                $directory = sprintf("%s%c%s%c%s%c%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "actions");
+            }
+
+            if (YAF_G('name_suffix')) {
+                $class = sprintf("%s%s%s", $action_upper, YAF_G('name_separator'), "Action");
+            } else {
+                $class = strlen(sprintf("%s%s%s", "Action", YAF_G('name_separator'), $action_upper));
+            }
+
+            $class_lowercase = strtolower($class);
+
+            $ce = null;
+            if (!class_exists($class_lowercase)) {
+                if (!Loader::internalAutoload($action_upper, strlen($action), $directory)) {
+                    trigger_error(sprintf("Failed opening action script %s: %s", $directory), ACTION);
+                    return null;
+                }
+
+                $ce = $action_upper;
+                if (!class_exists($action_upper)) {
+                    trigger_error(sprintf("Could find class %s in action script %s", $class, $directory), AUTOLOAD_FAILED);
+                    return null;
+                }
+
+                if (!($ce instanceof Action_Abstract)) {
+                    trigger_error(sprintf("Action must be an instance of %s", Action_Abstract::class), TYPE_ERROR);
+                    return null;
+                }
+
+                return $ce;
+            }
+        } else {
+            $property = new \ReflectionProperty($controller, 'name');
+            $property->setAccessible(true);
+
+            trigger_error(sprintf("There is no method %s%s in %s", $action, "Action", $property->getValue()), ACTION);
+        }
+
+        return null;
+    }
+
+    /**
+     * TODO 未完成，看得有点头疼
+     *
+     * @param Request_Abstract $request
+     * @param \ReflectionMethod $fptr
+     * @param array|null $params
+     * @param int $count
+     */
+    private function _getCallParameters(Request_Abstract $request, \ReflectionMethod $fptr, ?array &$params, int &$count)
     {
         $request_args = $request->getParams();
         $func_arg_info = $fptr->getParameters();
@@ -723,6 +942,25 @@ final class DispatcherTODOLoader
      * @param Response_Abstract $response
      */
     private function MACRO_YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
+    {
+        if (YAF_G('catch_exception')) {
+            $this->_dispatcherExceptionHandler($request, $response);
+        }
+
+        return null;
+    }
+
+    /**
+     * 内部方法, YAF对外无此方法(无返回值)
+     *
+     * 原宏位置在
+     * @see yaf_exception.h
+     *
+     * @internal
+     * @param Request_Abstract $request
+     * @param Response_Abstract $response
+     */
+    private function MACRO_YAF_EXCEPTION_HANDLE_NORET(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);

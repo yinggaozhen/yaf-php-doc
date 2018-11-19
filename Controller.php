@@ -4,6 +4,9 @@ namespace Yaf;
 
 abstract class Controller_Abstract
 {
+    /**
+     * @var array
+     */
     public $actions;
 
     protected $_module;
