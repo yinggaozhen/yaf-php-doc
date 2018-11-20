@@ -3,6 +3,9 @@
 namespace
 {
     // PHP_RINIT_FUNCTION
+
+    use Yaf\Application;
+
     ini_set('yaf.library',          '');
     ini_set('yaf.action_prefer',    '0');
     ini_set('yaf.lowcase_path',     '0');
@@ -22,8 +25,10 @@ namespace
     $GLOBALS['yaf']['default_action']     = 'Index';
     $GLOBALS['yaf']['default_controller'] = 'Index';
 
+    // ================================================== 内部方法 ==================================================
+
     /**
-     * 内部YAF全局(内部方法,外部不可调用)
+     * YAF内部全局(内部方法,外部不可调用)
      *
      * @param $name
      * @param null $value
@@ -59,6 +64,41 @@ namespace
         }
 
         return null;
+    }
+
+    /**
+     * YAF内部触发错误方法(内部方法,外部不可调用)
+     *
+     * @param int $type
+     * @param string[] $format
+     * @throws Exception
+     */
+    function yaf_trigger_error(int $type, string ...$format): void
+    {
+        if (YAF_G('throw_exception')) {
+            if ($type & \Yaf\Exception\Internal\YAF_ERR_BASE === \Yaf\Exception\Internal\YAF_ERR_BASE) {
+                /** @var \Exception $exception */
+                $exception = \Yaf\Exception\Internal\yaf_buildin_exceptions($type);
+                throw new $exception($format[0], $type);
+            }
+
+            throw new \Exception($format[0], $type);
+        } else {
+            $property = new \ReflectionProperty(Application::class, '_app');
+            $property->setAccessible(true);
+            /** @var Application $app */
+            $app = $property->getValue();
+
+            $errNoProperty = new ReflectionProperty($app, '_err_no');
+            $errNoProperty->setAccessible(true);
+            $errNoProperty->setValue($app, $type);
+
+            $errMsgProperty = new ReflectionProperty($app, '_err_msg');
+            $errMsgProperty->setAccessible(true);
+            $errMsgProperty->setValue($app, $format[0]);
+
+            trigger_error($format[0], E_RECOVERABLE_ERROR);
+        }
     }
 }
 

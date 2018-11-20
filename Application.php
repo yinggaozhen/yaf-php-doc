@@ -9,6 +9,9 @@ use Yaf\Request\Http;
 
 final class Application
 {
+    /**
+     * @var Application
+     */
     protected static $_app = null;
 
     protected $config;
