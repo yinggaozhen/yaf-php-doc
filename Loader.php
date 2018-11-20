@@ -151,7 +151,7 @@ out:
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function import(string $file) :bool
+    public static function import(string $file): bool
     {
         if (empty($file)) {
             return false;

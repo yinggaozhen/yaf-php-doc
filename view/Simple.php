@@ -166,7 +166,7 @@ class Simple implements View_Interface
      * @param $value
      * @return int
      */
-    private function assignMulti($value) :int
+    private function assignMulti($value): int
     {
         if (is_array($value)) {
             $this->_tpl_vars = $value;
@@ -181,7 +181,7 @@ class Simple implements View_Interface
      * @param $value
      * @return int
      */
-    private function assignSingle(string $name, $value) :int
+    private function assignSingle(string $name, $value): int
     {
         try {
             $this->_tpl_vars[$name] = $value;
