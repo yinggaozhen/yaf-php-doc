@@ -28,6 +28,10 @@ final class Session implements Iterator, ArrayAccess, Countable
     {
     }
 
+    /**
+     * @return null|Session
+     * @throws \Exception
+     */
     public static function getInstance()
     {
         $instance = self::$_instance;
@@ -37,7 +41,7 @@ final class Session implements Iterator, ArrayAccess, Countable
             $instance->start();
 
             if ($_SESSION == null || !is_array($_SESSION)) {
-                trigger_error("Attempt to start session failed", E_WARNING);
+                yaf_trigger_error(E_WARNING, "Attempt to start session failed");
                 return null;
             }
 

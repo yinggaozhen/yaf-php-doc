@@ -16,13 +16,23 @@ final class SimpleTODO implements Route_Interface
 
     protected $action;
 
+    /**
+     * @param string $module
+     * @param string $controller
+     * @param string $action
+     * @throws \Exception
+     */
     public function __construct(string $module, string $controller, string $action)
     {
         if (!is_string($module) || !is_string($controller) || !is_string($action)) {
-            trigger_error("Expect 3 string parameters", TYPE_ERROR);
+            yaf_trigger_error(TYPE_ERROR, "Expect 3 string parameters");
 
             return false;
         }
+
+        $this->module = $module;
+        $this->controller = $controller;
+        $this->action = $action;
     }
 
     /**

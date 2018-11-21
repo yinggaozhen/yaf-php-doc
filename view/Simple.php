@@ -248,7 +248,7 @@ class Simple implements View_Interface
         }
 
         if (!is_readable($_internal_tpl)) {
-            trigger_error('Unable to fetch ob content', E_WARNING);
+            yaf_trigger_error(E_WARNING, 'Unable to fetch ob content');
             return 0;
         }
 

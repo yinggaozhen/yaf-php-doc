@@ -100,7 +100,7 @@ final class Dispatcher
 
     /**
      * @param Request_Abstract $request
-     * @return bool|null
+     * @return Response_Abstract|bool
      * @throws \Exception
      */
     public function dispatch(Request_Abstract $request)
@@ -167,11 +167,12 @@ final class Dispatcher
     /**
      * @param Request_Abstract $request
      * @return $this|bool
+     * @throws \Exception
      */
     public function setRequest(Request_Abstract $request)
     {
         if (!is_object($request) || !($request instanceof Request_Abstract)) {
-            trigger_error(sprintf("Expects a %s instance", get_class($request)), E_WARNING);
+            yaf_trigger_error(E_WARNING, sprintf("Expects a %s instance", get_class($request)));
             return false;
         }
 
@@ -281,13 +282,14 @@ final class Dispatcher
      * @param callable $callback
      * @param int $error_type
      * @return Dispatcher
+     * @throws \Exception
      */
     public function setErrorHandler(callable $callback, int $error_type = E_ALL | E_STRICT): Dispatcher
     {
         try {
             set_error_handler($callback, $error_type);
         } catch (\Throwable $e) {
-            trigger_error("Call to set_error_handler failed", E_WARNING);
+            yaf_trigger_error(E_WARNING, 'Call to set_error_handler failed');
         }
 
         return $this;
@@ -344,11 +346,12 @@ final class Dispatcher
     /**
      * @param Plugin_Abstract $plugin
      * @return $this|bool
+     * @throws \Exception
      */
     public function registerPlugin(Plugin_Abstract $plugin)
     {
         if (!is_object($plugin) || !($plugin instanceof Plugin_Abstract)) {
-            trigger_error(sprintf("Expect a %s instance", get_class($plugin)), E_WARNING);
+            yaf_trigger_error(E_WARNING, sprintf("Expect a %s instance", get_class($plugin)));
             return false;
         }
 
@@ -377,7 +380,7 @@ final class Dispatcher
     /**
      * @internal
      * @param null|Response_Abstract $response
-     * @return null
+     * @return null|Response_Abstract
      * @throws \Exception
      */
     private function _dispatch(?Response_Abstract $response): ?Response_Abstract
@@ -433,7 +436,7 @@ final class Dispatcher
         $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
 
         if (0 == $nesting && !$request->isDispatched()) {
-            trigger_error(sprintf("The max dispatch nesting %ld was reached", YAF_G('forward_limit')), DISPATCH_FAILED);
+            yaf_trigger_error(DISPATCH_FAILED, sprintf("The max dispatch nesting %ld was reached", YAF_G('forward_limit')));
             $this->MACRO_YAF_EXCEPTION_HANDLE_NORET($request, $response);
             return null;
         }
@@ -766,16 +769,16 @@ final class Dispatcher
         if (!class_exists($class_lowercase, false)) {
             // TODO $directory是否为引用
             if (Loader::internalAutoload($controller, strlen($controller), $directory)) {
-                trigger_error(sprintf("Failed opening controller script %s", $directory), CONTROLLER);
+                yaf_trigger_error(CONTROLLER, sprintf("Failed opening controller script %s", $directory));
                 return null;
             } else if (!class_exists($class_lowercase)) {
-                trigger_error(sprintf('"Could not find class %s in controller script %s"', $class), AUTOLOAD_FAILED);
+                yaf_trigger_error(AUTOLOAD_FAILED, sprintf('"Could not find class %s in controller script %s"', $class));
                 return 0;
             } else {
                 $ce = $class_lowercase;
 
                 if (!($ce instanceof Controller_Abstract)) {
-                    trigger_error(sprintf("Controller must be an instance of %s", Controller_Abstract::class), TYPE_ERROR);
+                    yaf_trigger_error(TYPE_ERROR, sprintf("Controller must be an instance of %s", Controller_Abstract::class));
                     return 0;
                 }
             }
@@ -814,7 +817,7 @@ final class Dispatcher
                 if ($class_lowercase instanceof Action_Abstract) {
                     return $class_lowercase;
                 } else {
-                    trigger_error(sprintf("Action %s must extends from %s", $class), TYPE_ERROR);
+                    yaf_trigger_error(TYPE_ERROR, sprintf("Action %s must extends from %s", $class));
                     return null;
                 }
             }
@@ -828,13 +831,13 @@ final class Dispatcher
                         if ($class_lowercase instanceof Action_Abstract) {
                             return $class_lowercase;
                         } else {
-                            trigger_error(sprintf("Action %s must extends from %s", $class, Action_Abstract::class), TYPE_ERROR);
+                            yaf_trigger_error(TYPE_ERROR, sprintf("Action %s must extends from %s", $class, Action_Abstract::class));
                         }
                     } else {
-                        trigger_error(sprintf("Could not find action %s in %s", $class, $action_path), ACTION);
+                        yaf_trigger_error(ACTION, sprintf("Could not find action %s in %s", $class, $action_path));
                     }
                 } else {
-                    trigger_error(sprintf("Failed opening action script %s", $action_path), ACTION);
+                    yaf_trigger_error(ACTION, sprintf("Failed opening action script %s", $action_path));
                 }
             }
         } else if (YAF_G('st_compatible')) {
@@ -860,18 +863,18 @@ final class Dispatcher
             $ce = null;
             if (!class_exists($class_lowercase)) {
                 if (!Loader::internalAutoload($action_upper, strlen($action), $directory)) {
-                    trigger_error(sprintf("Failed opening action script %s: %s", $directory), ACTION);
+                    yaf_trigger_error(ACTION, sprintf("Failed opening action script %s: %s", $directory));
                     return null;
                 }
 
                 $ce = $action_upper;
                 if (!class_exists($action_upper)) {
-                    trigger_error(sprintf("Could find class %s in action script %s", $class, $directory), AUTOLOAD_FAILED);
+                    yaf_trigger_error(AUTOLOAD_FAILED, sprintf("Could find class %s in action script %s", $class, $directory));
                     return null;
                 }
 
                 if (!($ce instanceof Action_Abstract)) {
-                    trigger_error(sprintf("Action must be an instance of %s", Action_Abstract::class), TYPE_ERROR);
+                    yaf_trigger_error(TYPE_ERROR, sprintf("Action must be an instance of %s", Action_Abstract::class));
                     return null;
                 }
 
@@ -881,7 +884,7 @@ final class Dispatcher
             $property = new \ReflectionProperty($controller, 'name');
             $property->setAccessible(true);
 
-            trigger_error(sprintf("There is no method %s%s in %s", $action, "Action", $property->getValue()), ACTION);
+            yaf_trigger_error(ACTION, sprintf("There is no method %s%s in %s", $action, "Action", $property->getValue()));
         }
 
         return null;

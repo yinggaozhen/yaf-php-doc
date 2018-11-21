@@ -13,7 +13,8 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
      * Ini constructor.
      *
      * @param string|array $filename 文件名称或者参数值
-     * @param string       $section
+     * @param string $section
+     * @throws \Exception
      */
     public function __construct($filename, $section = null)
     {
@@ -24,7 +25,8 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
      * TODO 换位置
      *
      * @param string|array $filename 文件名称或者参数值
-     * @param string       $section
+     * @param string $section
+     * @throws \Exception
      */
     private function instance($filename, $section)
     {
@@ -33,17 +35,18 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         } else if (is_string($filename)) {
             if (is_file($filename)) {
             } else {
-                trigger_error('Yaf_Config_Ini is readonly', E_NOTICE);
+                yaf_trigger_error(E_NOTICE, 'Yaf_Config_Ini is readonly');
             }
         }
     }
 
     /**
      * @return bool
+     * @throws \Exception
      */
     public function set()
     {
-        trigger_error('Yaf_Config_Ini is readonly', E_NOTICE);
+        yaf_trigger_error(E_NOTICE, 'Yaf_Config_Ini is readonly');
 
         return false;
     }

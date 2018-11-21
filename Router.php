@@ -38,6 +38,7 @@ class Router
     /**
      * @param array|Config_Abstract $config
      * @return $this|bool
+     * @throws \Exception
      */
     public function addConfig($config)
     {
@@ -46,7 +47,7 @@ class Router
         } else if (is_array($config)) {
             $routes = $config;
         } else {
-            trigger_error(sprintf("Expect a %s instance or an array, %s given", Config_Abstract::class, gettype($config)), E_WARNING);
+            yaf_trigger_error(E_WARNING, sprintf("Expect a %s instance or an array, %s given", Config_Abstract::class, gettype($config)));
             return false;
         }
 
@@ -109,6 +110,11 @@ class Router
         return $this->_current;
     }
 
+    /**
+     * @param $configs
+     * @return int
+     * @throws \Exception
+     */
     private function _addRoute($configs): int
     {
         if (empty($configs) || !is_array($configs)) {
@@ -126,9 +132,9 @@ class Router
                     $route = new $entry();
                 } catch (\Exception $e) {
                     if (is_numeric($key)) {
-                        trigger_error(sprintf("Unable to initialize route at index '%ld'", $key), E_WARNING);
+                        yaf_trigger_error(E_WARNING, sprintf("Unable to initialize route at index '%ld'", $key));
                     } else {
-                        trigger_error(sprintf("Unable to initialize route named '%s'", $key), E_WARNING);
+                        yaf_trigger_error(E_WARNING, sprintf("Unable to initialize route named '%s'", $key));
                     }
 
                     continue;

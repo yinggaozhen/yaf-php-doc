@@ -41,5 +41,7 @@ abstract class Controller_Abstract
     {
         $view = $this->_view;
         $name = $this->_name;
+
+        // TODO
     }
 }

@@ -36,7 +36,7 @@ final class Loader
             }
 
             if (strncmp($class_name, self::YAF_LOADER_RESERVERD, self::YAF_LOADER_LEN_RESERVERD) == 0) {
-                trigger_error(sprintf("You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD), E_WARNING);
+                yaf_trigger_error(E_WARNING, sprintf("You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD));
             }
 
             if (self::isCategory($class_name, self::YAF_LOADER_MODEL, self::YAF_LOADER_LEN_MODEL)) {
@@ -94,7 +94,7 @@ final class Loader
         } while (0);
 
         if (!$app_directory && $directory) {
-            trigger_error("Couldn't load a MVC class unless an %s is initialized", Application::class);
+            trigger_error(sprintf("Couldn't load a MVC class unless an %s is initialized", Application::class));
             $ret = 0;
             goto out;
         }
@@ -108,9 +108,9 @@ final class Loader
                     goto out;
                 }
 
-                trigger_error(sprintf("Could not find class %s in %s", $class_name, $directory), E_STRICT);
+                yaf_trigger_error(E_STRICT, sprintf("Could not find class %s in %s", $class_name, $directory));
             } else {
-                trigger_error(sprintf("Failed opening script %s", $directory), E_WARNING);
+                yaf_trigger_error(E_WARNING, sprintf("Failed opening script %s", $directory));
             }
             goto out;
         } else {
@@ -161,7 +161,7 @@ out:
             $loader = self::getInstance(null, null);
 
             if (empty($loader)) {
-                trigger_error(sprintf("%s need to be initialize first", Loader::class), E_WARNING);
+                yaf_trigger_error(E_WARNING, sprintf("%s need to be initialize first", Loader::class));
                 return false;
             } else {
                 $property = new \ReflectionProperty($loader, '_library');
@@ -185,6 +185,7 @@ out:
     /**
      * @param string|array $namespaces
      * @return $this|bool
+     * @throws \Exception
      */
     public function registerLocalNamespace($namespaces)
     {
@@ -197,7 +198,7 @@ out:
                 return $this;
             }
         } else {
-            trigger_error("Invalid parameters provided, must be a string, or an array", E_WARNING);
+            yaf_trigger_error(E_WARNING, "Invalid parameters provided, must be a string, or an array");
         }
 
         return false;
@@ -365,7 +366,7 @@ out:
 
         $instance = new self();
         if (!$global_path && !$library_path) {
-            trigger_error('Missed library directory arguments', E_WARNING);
+            yaf_trigger_error(E_WARNING, 'Missed library directory arguments');
             return null;
         }
 
@@ -383,7 +384,7 @@ out:
         self::$_instance = $instance;
 
         if (!self::loaderRegister($instance)) {
-            trigger_error('Failed to register autoload function', E_WARNING);
+            yaf_trigger_error(E_WARNING, 'Failed to register autoload function');
         }
 
         return $instance;
@@ -405,7 +406,7 @@ out:
         try {
             spl_autoload_register($autoload);
         } catch (\Exception $e) {
-            trigger_error(sprintf('Unable to register autoload function autoload'), E_WARNING);
+            yaf_trigger_error(E_WARNING, sprintf('Unable to register autoload function autoload'));
             return 0;
         }
 
@@ -431,7 +432,7 @@ out:
             $loader = self::_instance(null, null);
 
             if (empty($loader)) {
-                trigger_error(sprintf('%s need to be initialize first', Loader::class), E_WARNING);
+                yaf_trigger_error(E_WARNING, sprintf('%s need to be initialize first', Loader::class));
                 return 0;
             } else {
                 if (self::isLocalNamespace($file_name, $name_len)) {

@@ -44,6 +44,7 @@ final class Map implements Route_Interface
      * @param array $info
      * @param array|null $query
      * @return null|string
+     * @throws \Exception
      */
     public function assemble(array $info, array $query = null): ?string
     {
@@ -83,6 +84,7 @@ final class Map implements Route_Interface
      * @param array $info
      * @param array $query
      * @return string
+     * @throws \Exception
      */
     private function _assemble(array $info, array $query): ?string
     {
@@ -103,7 +105,7 @@ final class Map implements Route_Interface
                 if (!is_null($zv) && is_string($zv)) {
                     $pname = $zv;
                 } else {
-                    trigger_error("Undefined the 'action' parameter for the 1st parameter", TYPE_ERROR);
+                    yaf_trigger_error(TYPE_ERROR, "Undefined the 'action' parameter for the 1st parameter");
                     break;
                 }
 
@@ -112,7 +114,7 @@ final class Map implements Route_Interface
                 if (!is_null($zv) && is_string($zv)) {
                     $pname = $zv;
                 } else {
-                    trigger_error("Undefined the 'controller' parameter for the 1st parameter", TYPE_ERROR);
+                    yaf_trigger_error(TYPE_ERROR, "Undefined the 'controller' parameter for the 1st parameter");
                     break;
                 }
             }
