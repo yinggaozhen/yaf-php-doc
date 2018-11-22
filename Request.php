@@ -370,4 +370,47 @@ abstract class Request_Abstract
 
         return $this->method == $method;
     }
+
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * @internal
+     * @param int $type
+     * @param string $name
+     * @return array|mixed|null
+     */
+    public static function queryEx(int $type, string $name): ?string
+    {
+        $carrier = [];
+
+        switch ($type) {
+            case 'POST':
+            case 'GET':
+            case 'FILES':
+            case 'COOKIE':
+                $carrier = $_COOKIE;
+                break;
+            case 'ENV':
+                $carrier = $_ENV;
+                break;
+            case 'SERVER':
+                $carrier = $_ENV;
+                break;
+            case 'REQUEST':
+                $carrier = $_REQUEST;
+                break;
+            default:
+                break;
+        }
+
+        if (empty($carrier)) {
+            return null;
+        }
+
+        if (empty($name)) {
+            return $carrier;
+        }
+
+        return $carrier[$name] ?? null;
+    }
 }

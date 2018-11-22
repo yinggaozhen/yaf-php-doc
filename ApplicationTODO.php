@@ -7,10 +7,10 @@ use Yaf\Config\Simple;
 use const YAF\ERR\STARTUP_FAILED;
 use Yaf\Request\Http;
 
-final class Application
+final class ApplicationTODO
 {
     /**
-     * @var Application
+     * @var ApplicationTODO
      */
     protected static $_app = null;
 

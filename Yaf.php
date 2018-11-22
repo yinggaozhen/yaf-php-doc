@@ -4,7 +4,7 @@ namespace
 {
     // PHP_RINIT_FUNCTION
 
-    use Yaf\Application;
+    use Yaf\ApplicationTODO;
 
     ini_set('yaf.library',          '');
     ini_set('yaf.action_prefer',    '0');
@@ -84,9 +84,9 @@ namespace
 
             throw new \Exception($format[0], $type);
         } else {
-            $property = new \ReflectionProperty(Application::class, '_app');
+            $property = new \ReflectionProperty(ApplicationTODO::class, '_app');
             $property->setAccessible(true);
-            /** @var Application $app */
+            /** @var ApplicationTODO $app */
             $app = $property->getValue();
 
             $errNoProperty = new ReflectionProperty($app, '_err_no');

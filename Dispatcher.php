@@ -207,7 +207,7 @@ final class Dispatcher
      */
     public function setDefaultModule(string $module)
     {
-        if (is_string($module) && !empty($module) && Application::isModuleName($module)) {
+        if (is_string($module) && !empty($module) && ApplicationTODO::isModuleName($module)) {
             $this->_default_module = ucfirst(strtolower($module));
 
             return $this;
@@ -582,7 +582,7 @@ final class Dispatcher
 
         $request->setDispatched();
         if (!$app_dir) {
-            $error_message = sprintf("%s requires %s(which set the application.directory) to be initialized first", get_class($this), Application::class);
+            $error_message = sprintf("%s requires %s(which set the application.directory) to be initialized first", get_class($this), ApplicationTODO::class);
             throw new \Exception($error_message, STARTUP_FAILED);
         } else {
             $is_def_module = 0;
@@ -593,7 +593,7 @@ final class Dispatcher
 
             if (!is_string($module) || empty($module)) {
                 throw new \Exception("Unexcepted a empty module name");
-            } else if (!Application::isModuleName($module)) {
+            } else if (!ApplicationTODO::isModuleName($module)) {
                 throw new \Exception(sprintf("There is no module %s", $module), MODULE);
             }
 
