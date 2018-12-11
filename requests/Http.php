@@ -109,7 +109,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return null|string
      */
-    public function getFiles(string $name, $default = null) :?string
+    public function getFiles(string $name, $default = null): ?string
     {
         return isset($_FILES[$name]) ? $_FILES[$name] : $default;
     }
