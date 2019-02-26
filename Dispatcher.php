@@ -99,11 +99,13 @@ final class Dispatcher
     }
 
     /**
+     * TODO 默认值需要再check一下
+     *
      * @param Request_Abstract $request
      * @return Response_Abstract|bool
      * @throws \Exception
      */
-    public function dispatch(Request_Abstract $request)
+    public function dispatch(Request_Abstract $request = null)
     {
         $this->_request = $request;
         /** @var Response_Abstract $rResponse */

@@ -202,7 +202,7 @@ abstract class Controller_Abstract
      * @param array $args
      * @return bool
      */
-    public function forward(string $module, $controller = '', $action = '', array $args = null)
+    public function forward(string $module, $controller = '', $action = '', array $args = null): bool
     {
         $request = $this->_request;
 
@@ -268,7 +268,7 @@ abstract class Controller_Abstract
      * @param string $location
      * @return bool
      */
-    public function redirect(string $location)
+    public function redirect(string $location): bool
     {
         /** @var Http $response */
         $response = $this->_response;
