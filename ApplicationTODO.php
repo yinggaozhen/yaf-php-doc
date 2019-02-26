@@ -90,7 +90,7 @@ final class ApplicationTODO
 
     public static function app()
     {
-
+        // TODO 从这里开始
     }
 
     /**
@@ -141,7 +141,7 @@ final class ApplicationTODO
 
     public function bootstrap()
     {
-
+        // TODO 从这里开始
     }
 
     /**
