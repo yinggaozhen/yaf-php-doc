@@ -3,6 +3,7 @@
 namespace Yaf;
 
 use const INTERNAL\PHP\DEFAULT_SLASH;
+use Yaf\Response\Http;
 use Yaf\View\Simple;
 
 abstract class Controller_Abstract
@@ -194,14 +195,87 @@ abstract class Controller_Abstract
         }
     }
 
-    public function forward()
+    /**
+     * @param string $module
+     * @param string|array $controller
+     * @param string|array $action
+     * @param array $args
+     * @return bool
+     */
+    public function forward(string $module, $controller = '', $action = '', array $args = null)
     {
-        // TODO 下次从这里开始
+        $request = $this->_request;
+
+        if (empty($this->_request) || $this->_request instanceof Request_Abstract) {
+            return false;
+        }
+
+        switch (func_num_args()) {
+            case 1:
+                if (is_string($module)) {
+                    trigger_error("Expect a string action name", E_WARNING);
+                    return false;
+                }
+
+                $this->actions = $module;
+                break;
+
+            case 2:
+                if (is_string($controller)) {
+                    $request->controller = $module;
+                    $request->action = $controller;
+                } else if (is_array($controller)) {
+                    $request->setActionName($module);
+                    $request->setParam($controller);
+                } else {
+                    return false;
+                }
+                break;
+
+            case 3:
+                if (is_string($action)) {
+                    $request->setModuleName($module);
+                    $request->setControllerName($controller);
+                    $request->setActionName($action);
+                } else if (is_array($action)) {
+                    $request->setControllerName($module);
+                    $request->setActionName($controller);
+                    $request->setParam($action);
+                } else {
+                    return false;
+                }
+                break;
+
+            case 4:
+                if (!is_array($args)) {
+                    trigger_error('Parameters must be an array', E_WARNING);
+                    return false;
+                }
+
+                $request->setModuleName($module);
+                $request->setControllerName($controller);
+                $request->setActionName($action);
+                $request->setParam($args);
+                break;
+        }
+
+        $request->setDispatched();
+
+        return true;
     }
 
-    public function redirect()
+    /**
+     * @param string $location
+     * @return bool
+     */
+    public function redirect(string $location)
     {
-        // TODO 下次从这里开始
+        /** @var Http $response */
+        $response = $this->_response;
+
+        $response->setRedirect($location);
+
+        return true;
     }
 
     /**
