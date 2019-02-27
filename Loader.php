@@ -190,7 +190,7 @@ out:
     public function registerLocalNamespace($namespaces)
     {
         if (is_string($namespaces)) {
-            if ($this->registerNamespaceSingle($namespaces)) {
+            if (self::registerNamespaceSingle($namespaces)) {
                 return $this;
             }
         } else if (is_array($namespaces)) {
@@ -515,7 +515,7 @@ out:
      * @param string $prefix
      * @return int
      */
-    private function registerNamespaceSingle(string $prefix): int
+    private static function registerNamespaceSingle(string $prefix): int
     {
         if (YAF_G('local_namespaces')) {
             YAF_G('local_namespaces', YAF_G('local_namespaces') . ';' . $prefix);
@@ -530,10 +530,10 @@ out:
      * @param string[] $prefixes
      * @return int
      */
-    private function namespaceMulti(array $prefixes): int
+    private static function namespaceMulti(array $prefixes): int
     {
         foreach ($prefixes as $prefix) {
-            $this->registerNamespaceSingle($prefix);
+            self::registerNamespaceSingle($prefix);
         }
 
         return 1;

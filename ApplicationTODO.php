@@ -2,12 +2,14 @@
 
 namespace Yaf;
 
+use const INTERNAL\PHP\DEFAULT_DIR_SEPARATOR;
 use const INTERNAL\PHP\DEFAULT_SLASH;
-use Yaf\Config\Ini;
-use Yaf\Config\Simple;
+use const INTERNAL\PHP\FAILURE;
+use const INTERNAL\PHP\SUCCESS;
 use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
-use Yaf\Exception\LoadFailed\Action;
+use Yaf\Config\Ini;
+use Yaf\Config\Simple;
 use Yaf\Request\Http;
 
 final class ApplicationTODO
@@ -141,9 +143,58 @@ final class ApplicationTODO
         return (string) $env;
     }
 
+    /**
+     * @throws \Exception
+     * @throws \ReflectionException
+     * @return $this|bool
+     */
     public function bootstrap()
     {
-        // TODO 从这里开始
+        $ce = null;
+        $retval = 1;
+
+        if (!class_exists(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER, false)) {
+            if (YAF_G('bootstrap')) {
+                $bootstrapPath = YAF_G('bootstrap');
+            } else {
+                $bootstrapPath = sprintf('%s%c%s.%s', YAF_G('directory'), DEFAULT_SLASH, Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, YAF_G('ext'));
+            }
+
+            if (!Loader::import($bootstrapPath)) {
+                trigger_error("Couldn't find bootstrap file {$bootstrapPath}", E_WARNING);
+                $retval = 0;
+            } else if (!class_exists(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER, false)) {
+                trigger_error(sprintf("Couldn't find class %s in %s", Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, $bootstrapPath), E_WARNING);
+                $retval = 0;
+            } else if (!Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER instanceof Bootstrap_Abstract) {
+                trigger_error(sprintf("Expect a %s instance, %s give", Bootstrap_Abstract::class, get_class(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP)), E_WARNING);
+            }
+        }
+
+        if (!$retval) {
+            return false;
+        } else {
+            $bootstrap = new $ce();
+            $dispatcher = $this->getDispatcher();
+
+            $reflection = new \ReflectionClass($bootstrap);
+            $methods = $reflection->getMethods();
+
+            $prefixLen = strlen(Bootstrap_Abstract::YAF_BOOTSTRAP_INITFUNC_PREFIX) - 1;
+            foreach ($methods as $method) {
+                if (strncasecmp($method->getName(), Bootstrap_Abstract::YAF_BOOTSTRAP_INITFUNC_PREFIX, $prefixLen)) {
+                    continue;
+                }
+
+                try {
+                    $method->invoke($bootstrap, $dispatcher);
+                } catch (\Exception $e) {
+                    return false;
+                }
+
+            }
+        }
+        return $this;
     }
 
     /**
@@ -300,10 +351,10 @@ final class ApplicationTODO
 
     /**
      * @param $options
-     * @return bool
+     * @return int
      * @throws \Exception
      */
-    public static function parseOption($options)
+    public static function parseOption($options): int
     {
         $app = null;
         $conf = array_keys($options);
@@ -311,19 +362,19 @@ final class ApplicationTODO
         if (!isset($conf['application'])) {
             if (is_null($app = $conf['yaf'])) {
                 yaf_trigger_error(TYPE_ERROR, 'Expected an array of application configure');
-                return false;
+                return FAILURE;
             }
         }
 
         if (is_array($app)) {
             yaf_trigger_error(TYPE_ERROR, 'Expected an array of application configure');
-            return false;
+            return FAILURE;
         }
 
         $pzval = $app['directory'];
         if (is_null($pzval) || !is_string($pzval) || empty($pzval)) {
             yaf_trigger_error(STARTUP_FAILED, "Expected a directory entry in application configures");
-            return false;
+            return FAILURE;
         }
         YAF_G('directory', rtrim($pzval, DEFAULT_SLASH));
 
@@ -348,10 +399,82 @@ final class ApplicationTODO
                 }
 
                 $psval = $pzval['namespace'];
-                if (!is_null($psval) && is_string($psval)) {
-
+                if (!is_null($psval) && is_string($psval) && !empty($psval)) {
+                    $src = $psval;
+                    $target = str_replace([' ', ','], ['', DEFAULT_DIR_SEPARATOR], $src);
+                    $method = new \ReflectionMethod(Loader::class, 'registerNamespaceSingle');
+                    $method->setAccessible(true);
+                    $method->invoke(null, $target);
                 }
             }
         }
+
+        $pzval = $app['view'];
+        if (!is_null($pzval) && is_array($pzval)) {
+            $psval = $pzval['ext'];
+
+            if (!is_null($psval) && is_string($psval)) {
+                YAF_G('view_ext', $psval);
+            }
+        }
+
+        $pzval = $app['baseUri'];
+        if (!is_null($pzval) && is_string($pzval)) {
+            YAF_G('base_uri', $pzval);
+        }
+
+        $pzval = $app['dispatcher'];
+        if (!is_null($pzval) && is_array($pzval)) {
+            $psval = $pzval['defaultModule'];
+            if (!is_null($psval) && is_string($psval)) {
+                YAF_G('default_module', strtolower($psval));
+            }
+
+            $psval = $pzval['defaultController'];
+            if (!is_null($psval) && is_string($psval)) {
+                YAF_G('default_controller', strtolower($psval));
+            }
+
+            $psval = $pzval['defaultAction'];
+            if (!is_null($psval) && is_string($psval)) {
+                YAF_G('default_action', strtolower($psval));
+            }
+
+            if (array_key_exists('throwException', $pzval) && !is_null($pzval['throwException'])) {
+                YAF_G('throw_exception', true);
+            }
+
+            if (array_key_exists('catchException', $pzval) && !is_null($pzval['catchException'])) {
+                YAF_G('catch_exception', true);
+            }
+
+            $psval = $pzval['defaultRoute'];
+            if (!is_null($psval) && is_array($psval)) {
+                YAF_G('default_route', $psval);
+            }
+        }
+
+        do {
+            YAF_G('modules', []);
+            $pzval = $app['modules'];
+
+            if (!is_null($pzval) && is_string($pzval) && !empty($pzval)) {
+                $modules = array_map('strtoupper', explode(',', $pzval));
+                YAF_G('modules', $modules);
+            } else {
+                $module = YAF_G('default_module');
+                YAF_G('modules', [$module]);
+            }
+        } while (0);
+
+        $pzval = $app['system'];
+        if (!is_null($pzval) && is_array($pzval)) {
+            foreach ($pzval as $key => $value) {
+                $str = substr(sprintf("%s.%s", 'yaf', $key), 0, 127);
+                ini_alter($str, $value);
+            }
+        }
+
+        return SUCCESS;
     }
 }

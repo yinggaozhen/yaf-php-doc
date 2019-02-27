@@ -108,6 +108,10 @@ namespace
 namespace INTERNAL\PHP
 {
     const DEFAULT_SLASH = DIRECTORY_SEPARATOR;
+    const DEFAULT_DIR_SEPARATOR = DIRECTORY_SEPARATOR;
+
+    const SUCCESS = 1;
+    const FAILURE = 0;
 }
 
 // MINIT_FUNCTION
