@@ -94,7 +94,7 @@ final class Loader
         } while (0);
 
         if (!$app_directory && $directory) {
-            trigger_error(sprintf("Couldn't load a MVC class unless an %s is initialized", ApplicationTODO::class));
+            trigger_error(sprintf("Couldn't load a MVC class unless an %s is initialized", Application::class));
             $ret = 0;
             goto out;
         }

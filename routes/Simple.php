@@ -4,7 +4,7 @@ namespace Yaf\Route;
 
 // TODO 类名和目录名称不一致
 
-use Yaf\ApplicationTODO;
+use Yaf\Application;
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
@@ -112,7 +112,7 @@ final class Simple implements Route_Interface
         $controller = Request_Abstract::queryEx('GET', $ncontroller);
         $action = Request_Abstract::queryEx('GET', $naction);
 
-        if ($module && is_string($module) && ApplicationTODO::isModuleName($module)) {
+        if ($module && is_string($module) && Application::isModuleName($module)) {
             $request->setModuleName($module);
         }
 

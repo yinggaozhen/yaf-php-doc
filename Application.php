@@ -12,10 +12,10 @@ use Yaf\Config\Ini;
 use Yaf\Config\Simple;
 use Yaf\Request\Http;
 
-final class ApplicationTODO
+final class Application
 {
     /**
-     * @var ApplicationTODO
+     * @var Application
      */
     protected static $_app = null;
 
@@ -89,12 +89,53 @@ final class ApplicationTODO
             throw new \Exception("Initialization of request failed", STARTUP_FAILED);
         }
 
-        // TODO dispatcher
+        $zdispatcher = Dispatcher::getInstance();
+        if (!is_object($zdispatcher)) {
+            yaf_trigger_error(STARTUP_FAILED, "Instantiation of application dispatcher failed");
+            RETURN false;
+        }
+
+        $zdispatcher->setRequest($zrequest);
+        $this->config = $zconfig;
+        $this->dispatcher = $zdispatcher;
+
+        if (YAF_G('local_library')) {
+            $globalLibrary = YAF_G('global_library') ?: null;
+
+            $loader = Loader::getInstance(YAF_G('local_library'), $globalLibrary);
+        } else {
+            $localLibrary = sprintf("%s%c%s", YAF_G('directory'), DEFAULT_SLASH, Loader::YAF_LIBRARY_DIRECTORY_NAME);
+            $globalLibrary = YAF_G('global_library') ?: null;
+
+            $loader = Loader::getInstance($localLibrary, $globalLibrary);
+        }
+
+        if (!is_object($loader)) {
+            yaf_trigger_error(STARTUP_FAILED, "Initialization of application auto loader failed");
+            return false;
+        }
+
+        $this->_running = 0;
+        $this->_environ = YAF_G('environ_name');
+
+        if (is_array(YAF_G('modules'))) {
+            // TODO 指针
+            $this->_modules = YAF_G('modules');
+        } else {
+            $this->_modules = null;
+        }
+
+        self::$_app = $this;
     }
 
-    public static function app()
+    /**
+     * @return null|Application
+     */
+    public static function app(): ?Application
     {
-        // TODO 从这里开始
+        $app = self::$_app;
+
+        return $app;
     }
 
     /**
@@ -276,7 +317,7 @@ final class ApplicationTODO
     /**
      * @return $this
      */
-    public function clearLastError(): ApplicationTODO
+    public function clearLastError(): Application
     {
         $this->_err_no = 0;
         $this->_err_msg = '';
