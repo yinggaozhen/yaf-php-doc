@@ -2,9 +2,11 @@
 
 namespace Yaf;
 
+use const INTERNAL\PHP\DEFAULT_SLASH;
 use Yaf\Config\Ini;
 use Yaf\Config\Simple;
 use const YAF\ERR\STARTUP_FAILED;
+use const YAF\ERR\TYPE_ERROR;
 use Yaf\Exception\LoadFailed\Action;
 use Yaf\Request\Http;
 
@@ -231,24 +233,6 @@ final class ApplicationTODO
         return $this;
     }
 
-    /**
-     * 内部方法,外部不可调用
-     *
-     * @internal
-     * @param $name
-     * @return int
-     */
-    public static function isModuleName($name)
-    {
-        $app = self::$_app;
-
-        if (!is_object($app)) {
-            return 0;
-        }
-
-        // TODO Application 从这里写起
-    }
-
     public function __destruct()
     {
     }
@@ -263,5 +247,111 @@ final class ApplicationTODO
 
     private function __wakeup()
     {
+    }
+
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * 内部方法,外部不可调用
+     *
+     * @internal
+     * @param string $name
+     * @return int
+     */
+    public static function isModuleName($name): int
+    {
+        $app = self::$_app;
+
+        if (!is_object($app)) {
+            return 0;
+        }
+
+        $modules = $app->getModules();
+        if (!is_array($modules)) {
+            return 0;
+        }
+
+        foreach ($modules as $module) {
+            if (!is_string($module)) {
+                continue;
+            }
+
+            if ($module == $name) {
+                return 1;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * 内部方法,外部不可调用
+     *
+     * @internal
+     * @param string $name
+     * @return int
+     */
+    public static function isModuleNameStr($name): int
+    {
+        $ret = self::isModuleName($name);
+
+        return $ret;
+    }
+
+    /**
+     * @param $options
+     * @return bool
+     * @throws \Exception
+     */
+    public static function parseOption($options)
+    {
+        $app = null;
+        $conf = array_keys($options);
+
+        if (!isset($conf['application'])) {
+            if (is_null($app = $conf['yaf'])) {
+                yaf_trigger_error(TYPE_ERROR, 'Expected an array of application configure');
+                return false;
+            }
+        }
+
+        if (is_array($app)) {
+            yaf_trigger_error(TYPE_ERROR, 'Expected an array of application configure');
+            return false;
+        }
+
+        $pzval = $app['directory'];
+        if (is_null($pzval) || !is_string($pzval) || empty($pzval)) {
+            yaf_trigger_error(STARTUP_FAILED, "Expected a directory entry in application configures");
+            return false;
+        }
+        YAF_G('directory', rtrim($pzval, DEFAULT_SLASH));
+
+        $pzval = $app['ext'];
+        if (!is_null($pzval) && is_string($pzval)) {
+            YAF_G('ext', $pzval);
+        }
+
+        $pzval = $app['bootstrap'];
+        if (!is_null($pzval) && is_string($pzval)) {
+            YAF_G('bootstrap', $pzval);
+        }
+
+        $pzval = $app['library'];
+        if (!is_null($pzval)) {
+            if (is_string($pzval)) {
+                YAF_G('local_library', rtrim($pzval, DEFAULT_SLASH));
+            } else if (is_array($pzval)) {
+                $psval = $pzval['directory'];
+                if (!is_null($psval) && is_string($psval)) {
+                    YAF_G('local_library', rtrim('$psval', DEFAULT_SLASH));
+                }
+
+                $psval = $pzval['namespace'];
+                if (!is_null($psval) && is_string($psval)) {
+
+                }
+            }
+        }
     }
 }
