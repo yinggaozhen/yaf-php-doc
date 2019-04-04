@@ -141,7 +141,7 @@ final class Application
     /**
      * @throws \Exception
      */
-    public function run()
+    public function run(): ?bool
     {
         $running = $this->_running;
 

@@ -5,7 +5,7 @@
   "minimum-stability": "dev",
   "homepage": "https://github.com/yinggaozhen/yaf-php",
   "require" : {
-    "php" : ">=5.5"
+    "php" : ">=7.1"
   },
   "authors": [
     {
@@ -15,7 +15,8 @@
   ],
   "autoload": {
     "psr-4": {
-    }
+    },
+    "classmap": ["./"]
   },
   "repositories": {
     "packagist": {
