@@ -12,9 +12,9 @@ class Http extends Request_Abstract
 
     const SCHEME_HTTPS = 'https';
 
-    public function __construct(string $request_uri, string $base_uri)
+    public function __construct(?string $request_uri, ?string $base_uri)
     {
-        $method = $_SERVER['REQUEST_METHOD'];
+        $method = $_SERVER['REQUEST_METHOD'] ?? '';
 
         if ($method) {
         } else if (strtolower(php_sapi_name()) != 'cli') {
@@ -31,13 +31,13 @@ class Http extends Request_Abstract
             $settled_uri = '';
 
             do {
-                $uri = $_SERVER['PATH_INFO'];
+                $uri = $_SERVER['PATH_INFO'] ?? '';
                 if (!empty($uri)) {
                     $settled_uri = $uri;
                     break;
                 }
 
-                $uri = $_SERVER['REQUEST_URI'];
+                $uri = $_SERVER['REQUEST_URI'] ?? '';
                 if (!empty($uri)) {
                     if (strncasecmp($uri, 'http', strlen('http') - 1) == 0) {
                         $settled_uri = parse_url($uri, PHP_URL_PATH);
@@ -47,7 +47,7 @@ class Http extends Request_Abstract
                     break;
                 }
 
-                $uri = $_SERVER['ORIG_PATH_INFO'];
+                $uri = $_SERVER['ORIG_PATH_INFO'] ?? '';
                 if (!empty($uri)) {
                     $settled_uri = $uri;
                 }

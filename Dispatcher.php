@@ -945,14 +945,13 @@ final class Dispatcher
      * @internal
      * @param Request_Abstract $request
      * @param Response_Abstract $response
+     * @return null|void
      */
     private function MACRO_YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);
         }
-
-        return null;
     }
 
     /**

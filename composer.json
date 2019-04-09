@@ -16,7 +16,12 @@
   "autoload": {
     "psr-4": {
     },
-    "classmap": ["./"]
+    "classmap": [
+      "./"
+    ],
+    "files": [
+      "./Yaf.php"
+    ]
   },
   "repositories": {
     "packagist": {
