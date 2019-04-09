@@ -36,10 +36,10 @@ namespace
      */
     function YAF_G($name, $value = null)
     {
-        static $internal_g = [];
+        static $internalVars = [];
 
         if (!is_null($value)) {
-            return $internal_g[$name] = $value;
+            return $internalVars[$name] = $value;
         }
 
         /**
@@ -48,11 +48,11 @@ namespace
          * @see \Yaf\Loader::clearLocalNamespace
          */
         if ($value === 'NULL') {
-            return $internal_g[$name] = null;
+            return $internalVars[$name] = null;
         }
 
-        if (isset($internal_g[$name])) {
-            return $internal_g[$name];
+        if (isset($internalVars[$name])) {
+            return $internalVars[$name];
         }
 
         if (ini_get('yaf.' . $name)) {

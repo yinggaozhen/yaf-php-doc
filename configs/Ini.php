@@ -22,25 +22,6 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
     }
 
     /**
-     * TODO 换位置
-     *
-     * @param string|array $filename 文件名称或者参数值
-     * @param string $section
-     * @throws \Exception
-     */
-    private function instance($filename, $section)
-    {
-        if (is_array($filename)) {
-            $this->_config = $filename;
-        } else if (is_string($filename)) {
-            if (is_file($filename)) {
-            } else {
-                yaf_trigger_error(E_NOTICE, 'Yaf_Config_Ini is readonly');
-            }
-        }
-    }
-
-    /**
      * @return bool
      * @throws \Exception
      */
@@ -107,5 +88,19 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
     public function offsetUnset($offset)
     {
         // TODO: Implement offsetUnset() method.
+    }
+
+    private function instance(string $filename, string $section_name): ?Ini
+    {
+        if (is_array($filename)) {
+            $this->_config = $filename;
+        } else if (is_string($filename)) {
+            // TODO 从这里开始
+            /data/github/yaf/configs/yaf_config_ini.c
+            if (is_file($filename)) {
+            } else {
+                yaf_trigger_error(E_NOTICE, 'Yaf_Config_Ini is readonly');
+            }
+        }
     }
 }

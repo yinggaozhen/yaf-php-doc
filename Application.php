@@ -62,7 +62,8 @@ final class Application
      */
     public function __construct($config, string $section = null)
     {
-        $this->_environ = YAF_G('yaf.environ');
+        // TODO DELETE
+        // $this->_environ = YAF_G('environ');
 
         $app = self::$_app;
 
@@ -75,6 +76,7 @@ final class Application
 
             if (!$section || !is_string($section) || empty($section)) {
                 $zsection = YAF_G('environ_name');
+                // TODO !!! 这里应该换成初始化方法
                 $zconfig = new Ini($config, $zsection);
             } else {
                 $zconfig = new Simple($config, $section);
