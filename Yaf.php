@@ -75,14 +75,16 @@ namespace
      */
     function yaf_trigger_error(int $type, string ...$format): void
     {
+        $message = call_user_func_array('sprintf', $format);
+
         if (YAF_G('throw_exception')) {
             if ($type & \Yaf\Exception\Internal\YAF_ERR_BASE === \Yaf\Exception\Internal\YAF_ERR_BASE) {
                 /** @var \Exception $exception */
                 $exception = \Yaf\Exception\Internal\yaf_buildin_exceptions($type);
-                throw new $exception($format[0], $type);
+                throw new $exception($type, $message);
             }
 
-            throw new \Exception($format[0], $type);
+            throw new \Exception($type, $message);
         } else {
             $property = new \ReflectionProperty(Application::class, '_app');
             $property->setAccessible(true);
@@ -95,9 +97,9 @@ namespace
 
             $errMsgProperty = new ReflectionProperty($app, '_err_msg');
             $errMsgProperty->setAccessible(true);
-            $errMsgProperty->setValue($app, $format[0]);
+            $errMsgProperty->setValue($app, $message);
 
-            trigger_error($format[0], E_RECOVERABLE_ERROR);
+            trigger_error(E_RECOVERABLE_ERROR, $message);
         }
     }
 }

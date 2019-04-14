@@ -52,13 +52,13 @@ final class Route_Static implements Route_Interface
             }
 
             if (is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT])) {
-                yaf_trigger_error(TYPE_ERROR, sprintf("%s", "You need to specify the controller by ':c'"));
+                yaf_trigger_error(TYPE_ERROR, "%s", "You need to specify the controller by ':c'");
                 break;
             }
 
             $str .= '/' . $zv;
             if (is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT])) {
-                yaf_trigger_error(TYPE_ERROR, sprintf("%s", "You need to specify the action by ':a'"));
+                yaf_trigger_error(TYPE_ERROR, "%s", "You need to specify the action by ':a'");
                 break;
             }
 

@@ -36,7 +36,7 @@ final class Loader
             }
 
             if (strncmp($class_name, self::YAF_LOADER_RESERVERD, self::YAF_LOADER_LEN_RESERVERD) == 0) {
-                yaf_trigger_error(E_WARNING, sprintf("You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD));
+                yaf_trigger_error(E_WARNING, "You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD);
             }
 
             if (self::isCategory($class_name, self::YAF_LOADER_MODEL, self::YAF_LOADER_LEN_MODEL)) {
@@ -108,9 +108,9 @@ final class Loader
                     goto out;
                 }
 
-                yaf_trigger_error(E_STRICT, sprintf("Could not find class %s in %s", $class_name, $directory));
+                yaf_trigger_error(E_STRICT, "Could not find class %s in %s", $class_name, $directory);
             } else {
-                yaf_trigger_error(E_WARNING, sprintf("Failed opening script %s", $directory));
+                yaf_trigger_error(E_WARNING, "Failed opening script %s", $directory);
             }
             goto out;
         } else {
@@ -161,7 +161,7 @@ out:
             $loader = self::getInstance(null, null);
 
             if (empty($loader)) {
-                yaf_trigger_error(E_WARNING, sprintf("%s need to be initialize first", Loader::class));
+                yaf_trigger_error(E_WARNING, "%s need to be initialize first", Loader::class);
                 return false;
             } else {
                 $property = new \ReflectionProperty($loader, '_library');
@@ -406,7 +406,7 @@ out:
         try {
             spl_autoload_register($autoload);
         } catch (\Exception $e) {
-            yaf_trigger_error(E_WARNING, sprintf('Unable to register autoload function autoload'));
+            yaf_trigger_error(E_WARNING, 'Unable to register autoload function autoload');
             return 0;
         }
 
@@ -432,7 +432,7 @@ out:
             $loader = self::_instance(null, null);
 
             if (empty($loader)) {
-                yaf_trigger_error(E_WARNING, sprintf('%s need to be initialize first', Loader::class));
+                yaf_trigger_error(E_WARNING, '%s need to be initialize first', Loader::class);
                 return 0;
             } else {
                 if (self::isLocalNamespace($file_name, $name_len)) {

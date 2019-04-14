@@ -47,7 +47,7 @@ class Router
         } else if (is_array($config)) {
             $routes = $config;
         } else {
-            yaf_trigger_error(E_WARNING, sprintf("Expect a %s instance or an array, %s given", Config_Abstract::class, gettype($config)));
+            yaf_trigger_error(E_WARNING, "Expect a %s instance or an array, %s given", Config_Abstract::class, gettype($config));
             return false;
         }
 
@@ -132,9 +132,9 @@ class Router
                     $route = new $entry();
                 } catch (\Exception $e) {
                     if (is_numeric($key)) {
-                        yaf_trigger_error(E_WARNING, sprintf("Unable to initialize route at index '%ld'", $key));
+                        yaf_trigger_error(E_WARNING, "Unable to initialize route at index '%ld'", $key);
                     } else {
-                        yaf_trigger_error(E_WARNING, sprintf("Unable to initialize route named '%s'", $key));
+                        yaf_trigger_error(E_WARNING, "Unable to initialize route named '%s'", $key);
                     }
 
                     continue;
