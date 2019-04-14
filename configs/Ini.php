@@ -86,54 +86,101 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return true;
     }
 
-    public function count()
+    public function count(): int
     {
-        // TODO: Implement count() method.
+        return count(array_keys($this->_config));
     }
 
     public function current()
     {
-        // TODO: Implement current() method.
+        $prop = $this->_config;
+
+        $pzval = null;
+        if (is_null($pzval = current($prop))) {
+            return false;
+        }
+
+        if (is_array($pzval)) {
+            $ret = $this->iniFormat($pzval);
+            return $ret ?? null;
+        } else {
+            return $pzval;
+    }
     }
 
     public function next()
     {
-        // TODO: Implement next() method.
+        return next($this->_config);
     }
 
     public function key()
     {
-        // TODO: Implement key() method.
+        return key($this->_config);
     }
 
     public function valid()
     {
-        // TODO: Implement valid() method.
+        return !is_null(key($this->_config));
     }
 
-    public function rewind()
+    public function rewind(): void
     {
-        // TODO: Implement rewind() method.
+        reset($this->_config);
     }
 
     public function offsetExists($offset)
     {
-        // TODO: Implement offsetExists() method.
+        return isset($this[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        // TODO: Implement offsetGet() method.
+        return $this->get($offset);
     }
 
+    /**
+     * @param mixed $offset
+     * @param mixed $value
+     * @return bool|void
+     * @throws \Exception
+     */
     public function offsetSet($offset, $value)
     {
-        // TODO: Implement offsetSet() method.
+        $this->set();
     }
 
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): bool
     {
-        // TODO: Implement offsetUnset() method.
+        trigger_error(E_WARNING, "Yaf_Config_Ini is readonly");
+        return false;
+    }
+
+    public function toArray()
+    {
+        $properties = $this->_config;
+
+        return $properties;
+    }
+
+    public function __isset(string $name): bool
+    {
+        return (bool) array_key_exists($this->_config, $name);
+    }
+
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * @param $name
+     * @param $value
+     * @return bool
+     * @throws \Exception
+     */
+    public function __set($name, $value)
+    {
+        return $this->set();
     }
 
     private function instance(string $filename, string $section_name): ?Ini
@@ -152,6 +199,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
 
             if (is_readable($filename)) {
                 try {
+                    // TODO SIMPLE PARSE INIT FILE
                     $configs = parse_ini_file($ini_file);
                 } catch (\Exception $e) {
                     yaf_trigger_error(E_ERROR, "Parsing ini file '%s' failed", $ini_file);
