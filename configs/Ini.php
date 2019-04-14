@@ -25,11 +25,57 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
      * @return bool
      * @throws \Exception
      */
-    public function set()
+    public function set(): bool
     {
         yaf_trigger_error(E_NOTICE, 'Yaf_Config_Ini is readonly');
 
         return false;
+    }
+
+    public function get(string $name = null)
+    {
+        $pzval = null;
+
+        if (is_null($name)) {
+            return $this;
+        } else {
+            $properties = $this->_config;
+
+            if (!is_array($properties)) {
+                return null;
+            }
+
+            if (strchr($name, '.')) {
+                $entry = $name;
+
+                if ($seg = strtok($entry, '.')) {
+                    while ($seg) {
+                        $pzval = $properties[$seg];
+
+                        if (!$pzval) {
+                            return null;
+                        }
+
+                        $properties = $pzval;
+                        $seg = strtok(".");
+                    }
+                }
+
+            } else {
+                $pzval = $properties[$name];
+                if (is_null($pzval)) {
+                    return $pzval;
+                }
+            }
+
+            if (is_array($pzval)) {
+                $ret = $this->iniFormat($pzval);
+
+                return $ret ?? null;
+            } else {
+                return $pzval;
+            }
+        }
     }
 
     /**
@@ -131,5 +177,10 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
             yaf_trigger_error(YAF_ERR_TYPE_ERROR, "Invalid parameters provided, must be path of ini file");
             return null;
         }
+    }
+
+    private function iniFormat($pzval)
+    {
+        return $this->instance($pzval, null);
     }
 }
