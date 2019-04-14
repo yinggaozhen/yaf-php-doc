@@ -69,7 +69,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
             }
 
             if (is_array($pzval)) {
-                $ret = $this->iniFormat($pzval);
+                $ret = $this->format($pzval);
 
                 return $ret ?? null;
             } else {
@@ -101,7 +101,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         }
 
         if (is_array($pzval)) {
-            $ret = $this->iniFormat($pzval);
+            $ret = $this->format($pzval);
             return $ret ?? null;
         } else {
             return $pzval;
@@ -227,7 +227,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         }
     }
 
-    private function iniFormat($pzval)
+    private function format($pzval)
     {
         return $this->instance($pzval, null);
     }
