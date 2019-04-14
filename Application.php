@@ -62,9 +62,6 @@ final class Application
      */
     public function __construct($config, string $section = null)
     {
-        // TODO DELETE
-        // $this->_environ = YAF_G('environ');
-
         $app = self::$_app;
 
         if (!is_null($app)) {
@@ -74,12 +71,13 @@ final class Application
         try {
             $zconfig = null;
 
+            $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
+            $instanceFunc->setAccessible(true);
             if (!$section || !is_string($section) || empty($section)) {
                 $zsection = YAF_G('environ_name');
-                // TODO !!! 这里应该换成初始化方法
-                $zconfig = new Ini($config, $zsection);
+                $zconfig = $instanceFunc->invoke(null, $config, $zsection);
             } else {
-                $zconfig = new Simple($config, $section);
+                $zconfig = $instanceFunc->invoke(null, $config, $section);
             }
         } catch (\Exception $e) {
             throw new \Exception("Initialization of application config failed", STARTUP_FAILED);
