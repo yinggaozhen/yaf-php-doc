@@ -79,7 +79,7 @@ final class Dispatcher
         $this->_default_controller = YAF_G('default_controller');
         $this->_default_action = YAF_G('default_action');
 
-        self::$_instance = new self();
+        self::$_instance = $this;
     }
 
     /**

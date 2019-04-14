@@ -8,8 +8,6 @@ use const INTERNAL\PHP\FAILURE;
 use const INTERNAL\PHP\SUCCESS;
 use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
-use Yaf\Config\Ini;
-use Yaf\Config\Simple;
 use Yaf\Request\Http;
 
 final class Application

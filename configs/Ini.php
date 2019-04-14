@@ -183,7 +183,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return $this->set();
     }
 
-    private function instance(string $filename, string $section_name): ?Ini
+    private function instance(?string $filename, ?string $section_name): ?Ini
     {
         if (is_array($filename)) {
             $this->_config = $filename;
@@ -211,7 +211,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
             }
 
             if ($section_name && is_string($section_name)) {
-                $section = $configs['section_name'];
+                $section = $configs[$section_name];
 
                 if (is_null($section)) {
                     yaf_trigger_error(E_ERROR, "There is no section '%s' in '%s'", $section_name, $ini_file);

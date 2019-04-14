@@ -215,7 +215,7 @@ out:
     /**
      * @return true
      */
-    public function clearLocalNamespace(): true
+    public function clearLocalNamespace(): bool
     {
         // 源代码这里是用宏直接设置成null,这里做了一点小调整
         YAF_G('local_namespaces', 'NULL');
