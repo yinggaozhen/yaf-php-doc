@@ -199,8 +199,9 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
 
             if (is_readable($filename)) {
                 try {
-                    // TODO SIMPLE PARSE INIT FILE
-                    $configs = parse_ini_file($ini_file);
+                    // TODO yaf_config_ini_parser_cb
+                    var_dump(parse_ini_file($ini_file));exit;
+                    // $configs = $this->iniParserCb($ini_file);
                 } catch (\Exception $e) {
                     yaf_trigger_error(E_ERROR, "Parsing ini file '%s' failed", $ini_file);
                     return null;
@@ -231,4 +232,10 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
     {
         return $this->instance($pzval, null);
     }
+
+    private function iniParserCb()
+    {
+
+    }
+
 }
