@@ -2,7 +2,7 @@
 
 namespace Yaf
 {
-    class Exception
+    class Exception extends \RuntimeException
     {
         /**
          * @var int
@@ -22,53 +22,51 @@ namespace Yaf
         public function __construct()
         {
         }
-
-        /**
-         * @return string
-         */
-        public function getPrevious(): string
-        {
-            return $this->previous;
-        }
     }
 }
 
 namespace Yaf\Exception
 {
-    class StartupError
+
+    use \Yaf\Exception;
+
+    class StartupError extends Exception
     {
     }
 
-    class RouterFailed
+    class RouterFailed extends Exception
     {
     }
 
-    class DispatchFailed
+    class DispatchFailed extends Exception
     {
     }
 
-    class LoadFailed
+    class LoadFailed extends Exception
     {
     }
 
-    class TypeError
+    class TypeError extends Exception
     {
     }
 }
 
 namespace Yaf\Exception\LoadFailed
 {
-    class Module
+
+    use \Yaf\Exception;
+
+    class Module extends Exception
     {
     }
 
-    class Controller
+    class Controller extends Exception
     {
     }
-    class Action
+    class Action extends Exception
     {
     }
-    class View
+    class View extends Exception
     {
     }
 }
