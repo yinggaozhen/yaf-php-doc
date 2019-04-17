@@ -245,22 +245,43 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         $result = [];
 
         $parse_array = parse_ini_file($ini_file, true);
+        // 基础配置解析
         foreach ($parse_array as $key => $value) {
             if (stripos($key, ':') !== false) {
                 continue;
             }
 
-            $result[$key] = $value;
+            $result[$key] = $this->generateRecvParsePath($value);
         }
-        exit;
+
+        // 继承配置解析
+        foreach ($parse_array as $key => $value) {
+            if (stripos($key, ':') === false) {
+                continue;
+            }
+
+            list($newKey, $inheritedKey) = explode(':', $key)[0];
+            if (isset($result[$inheritedKey])) {
+                $result[$newKey] = array_merge((array) $result[$inheritedKey], $this->generateRecvParsePath($value));
+            }
+        }
+
+        return $result;
     }
 
-    private function generateRecvParsePath(string $path, $value)
+    private function generateRecvParsePath(string $path, $value): array
     {
         $result = [];
+        $current = &$result;
 
         foreach (explode('.', $path) as $node) {
-
+            $current[$node] = [];
+            $current = &$current[$node];
         }
+
+        $current = $value;
+        unset($current);
+
+        return $result;
     }
 }
