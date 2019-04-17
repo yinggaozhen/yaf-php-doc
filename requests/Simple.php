@@ -8,45 +8,7 @@ final class Simple extends Request_Abstract
 {
     public function __construct(string $method = null, string $module = null, string $controller = null, string $action = null, array $params = null)
     {
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($method) {
-        } else if (strtolower(php_sapi_name()) != 'cli') {
-            $method = 'Unknow';
-        } else {
-            $method = 'Cli';
-        }
-
-        $this->method = $method;
-
-        global $yaf;
-
-        if ($module || $controller || $action) {
-            if ($module) {
-                $this->module = $module;
-            } else {
-                $this->module = $yaf['default_module'];
-            }
-
-            if ($controller) {
-                $this->controller = $controller;
-            } else {
-                $this->controller = $yaf['default_controller'];
-            }
-
-            if ($action) {
-                $this->action = $action;
-            } else {
-                $this->action = $yaf['default_action'];
-            }
-
-            $this->_routed = 1;
-        } else {
-            $query = $_GET[self::YAF_REQUEST_SERVER_URI];
-            $this->_uri = $query ?: '';
-        }
-
-        $this->_params = $params ?: [];
+        $this->instance($module, $controller, $action, $method, $params);
     }
 
     /**
@@ -134,5 +96,53 @@ final class Simple extends Request_Abstract
         }
 
         return false;
+    }
+
+    private function instance($module, $controller, $action, $method, $params)
+    {
+        if (!$method || !is_string($method)) {
+            $method = $_SERVER['REQUEST_METHOD'] ?? null;
+
+            if (!$method) {
+                if (strtolower(php_sapi_name()) === 'cli') {
+                    $method = 'Cli';
+                } else {
+                    $method = 'Unknow';
+                }
+            }
+
+        }
+
+        $this->method = $method;
+
+        global $yaf;
+
+        if ($module || $controller || $action) {
+            if ($module) {
+                $this->module = $module;
+            } else {
+                $this->module = $yaf['default_module'];
+            }
+
+            if ($controller) {
+                $this->controller = $controller;
+            } else {
+                $this->controller = $yaf['default_controller'];
+            }
+
+            if ($action) {
+                $this->action = $action;
+            } else {
+                $this->action = $yaf['default_action'];
+            }
+
+            $this->_routed = 1;
+        } else {
+            $query = $_GET[self::YAF_REQUEST_SERVER_URI];
+            $this->_uri = $query ?: '';
+        }
+
+        $this->_params = $params ?: [];
+
     }
 }
