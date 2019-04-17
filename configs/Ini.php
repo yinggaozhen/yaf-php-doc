@@ -2,6 +2,8 @@
 
 namespace Yaf\Config;
 
+use const YAF\ERR\TYPE_ERROR;
+
 final class Ini implements \Countable, \Iterator, \ArrayAccess
 {
     /**
@@ -32,6 +34,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return false;
     }
 
+    // TODO strok
     public function get(string $name = null)
     {
         $pzval = null;
@@ -164,7 +167,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
 
     public function __isset(string $name): bool
     {
-        return (bool) array_key_exists($this->_config, $name);
+        return (bool) array_key_exists($name, $this->_config);
     }
 
     public function __get($name)
@@ -183,6 +186,12 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return $this->set();
     }
 
+    /**
+     * @param null|string $filename
+     * @param null|string $section_name
+     * @return null|Ini
+     * @throws \Exception
+     */
     private function instance(?string $filename, ?string $section_name): ?Ini
     {
         if (is_array($filename)) {
@@ -198,11 +207,9 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
             }
 
             if (is_readable($filename)) {
-                try {
-                    // TODO yaf_config_ini_parser_cb
-                    var_dump(parse_ini_file($ini_file));exit;
-                    // $configs = $this->iniParserCb($ini_file);
-                } catch (\Exception $e) {
+                $configs = $this->iniParse($ini_file);
+
+                if (empty($configs)) {
                     yaf_trigger_error(E_ERROR, "Parsing ini file '%s' failed", $ini_file);
                     return null;
                 }
@@ -223,7 +230,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
             $this->_config = $configs;
             return $this;
         } else {
-            yaf_trigger_error(YAF_ERR_TYPE_ERROR, "Invalid parameters provided, must be path of ini file");
+            yaf_trigger_error(TYPE_ERROR, "Invalid parameters provided, must be path of ini file");
             return null;
         }
     }
@@ -233,9 +240,27 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return $this->instance($pzval, null);
     }
 
-    private function iniParserCb()
+    private function iniParse(string $ini_file)
     {
+        $result = [];
 
+        $parse_array = parse_ini_file($ini_file, true);
+        foreach ($parse_array as $key => $value) {
+            if (stripos($key, ':') !== false) {
+                continue;
+            }
+
+            $result[$key] = $value;
+        }
+        exit;
     }
 
+    private function generateRecvParsePath(string $path, $value)
+    {
+        $result = [];
+
+        foreach (explode('.', $path) as $node) {
+
+        }
+    }
 }

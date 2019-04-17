@@ -2,8 +2,6 @@
 
 namespace Yaf\Request;
 
-// TODO 空间名称和文件名称不统一
-
 use Yaf\Request_Abstract;
 
 final class Simple extends Request_Abstract

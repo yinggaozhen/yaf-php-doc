@@ -3,16 +3,18 @@
 namespace tests\configs;
 
 use PHPUnit\Framework\TestCase;
+use Yaf\Config\Ini;
 
 class IniTest extends TestCase
 {
-    public function test()
-    {
-        $this->assertSame(1, 1);
-    }
+    private const INI_APPLICATION = TEST_DIR . '/common/configs/application.ini';
 
-    public function test2()
+    /**
+     * @throws \Exception
+     */
+    public function testIniParse()
     {
-        $this->assertSame(1, 1);
+        $ini = new Ini(self::INI_APPLICATION);
+        $ini->get();
     }
 }

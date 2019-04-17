@@ -2,8 +2,6 @@
 
 namespace Yaf\Route;
 
-// TODO 类名和目录名称不一致
-
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
