@@ -103,15 +103,24 @@ abstract class Request_Abstract
      */
     public function setParam(...$params)
     {
-        if (count($params) == 1 && is_array($params)) {
-            $this->_params = $params;
+        if (count($params) == 1) {
+            if (!is_array($params)) {
+                return;
+            }
+
+            if ($this->setParamsMulti($params)) {
+                return $this;
+            }
         } else if (count($params) == 2) {
             list($name, $value) = $params;
 
             $this->_params[$name] = $value;
+            if ($this->setParamsSingle($name, $value)) {
+                return $this;
+            }
         }
 
-        return null;
+        return false;
     }
 
     /**
@@ -360,15 +369,33 @@ abstract class Request_Abstract
 
     public function __call($method, $arguments)
     {
-        $method = strtolower($method);
+        $method = ucfirst(str_replace('is', '', strtolower($method)));
         $allowMethod = ['Get', 'Post', 'Delete', 'Patch', 'Put', 'Head', 'Options', 'Cli'];
 
-        if (!in_array(ucfirst($method), $allowMethod)) {
+        if (!in_array($method, $allowMethod)) {
             // TODO throw method error
             return null;
         }
 
-        return $this->method == $method;
+        return strcasecmp($this->method, $method) === 0;
+    }
+
+    private function setParamsMulti($values): int
+    {
+        $params = &$this->_params;
+        if ($values && is_array($values)) {
+            $params = $values;
+
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private function setParamsSingle(string $key, $value): int
+    {
+        $this->_params[$key] = $value;
+        return 1;
     }
 
     // ================================================== 内部方法 ==================================================

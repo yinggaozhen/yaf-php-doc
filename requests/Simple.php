@@ -89,9 +89,9 @@ final class Simple extends Request_Abstract
 
     public function isXmlHttpRequest(): bool
     {
-        $header = $_SERVER['HTTP_X_REQUESTED_WITH'];
+        $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
 
-        if ($header && strncasecmp("XMLHttpRequest", $header, strlen($header))) {
+        if ($header && strncasecmp("XMLHttpRequest", $header, strlen($header)) === 0) {
             return true;
         }
 

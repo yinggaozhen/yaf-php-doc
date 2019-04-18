@@ -23,16 +23,13 @@ class P002Test extends Base
         $this->assertSame('dummy', $request->controller);
         $this->assertSame('index', $request->action);
         $this->assertSame('CLI', $request->method);
-        $this->assertTrue($request->setParam('name', 'Laruence'));
+        $this->assertTrue((bool) $request->setParam('name', 'Laruence'));
         $this->assertTrue($request->isCli());
         $this->assertFalse($request->isXmlHttpRequest());
         $this->assertFalse($request->isPost());
         $this->assertSame('Laruence', $request->getParam('name'));
         $this->assertNull($request->getParam('notexists'));
-    }
 
-    public function test2()
-    {
         try {
             $app = new Application([
                 'application' => ['directory' => dirname(__FILE__)],

@@ -22,7 +22,7 @@ namespace
     $GLOBALS['yaf']['ext']                = 'php';
     $GLOBALS['yaf']['view_ext']           = 'phtml';
     $GLOBALS['yaf']['default_module']     = 'Index';
-    $GLOBALS['yaf']['default_action']     = 'Index';
+    $GLOBALS['yaf']['default_action']     = 'index';
     $GLOBALS['yaf']['default_controller'] = 'Index';
 
     // ================================================== 内部方法 ==================================================

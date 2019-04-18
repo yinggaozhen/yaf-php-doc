@@ -7,9 +7,7 @@ final class Registry
     /**
      * @var array
      */
-    protected static $_entries;
-
-    protected $_instance;
+    protected static $_entries = [];
 
     private function __construct()
     {
