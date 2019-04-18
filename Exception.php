@@ -18,10 +18,6 @@ namespace Yaf
          * @var string
          */
         protected $previous;
-
-        public function __construct()
-        {
-        }
     }
 }
 

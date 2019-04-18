@@ -21,7 +21,8 @@
       "./"
     ],
     "files": [
-      "./Yaf.php"
+      "./Yaf.php",
+      "./Exception.php"
     ]
   },
   "scripts": {

@@ -73,7 +73,7 @@ namespace
      * @param string[] $format
      * @throws Exception
      */
-    function yaf_trigger_error(int $type, string ...$format): void
+    function yaf_trigger_error(int $type, ...$format): void
     {
         $message = call_user_func_array('sprintf', $format);
 

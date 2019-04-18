@@ -28,6 +28,7 @@ final class Loader
         $app_directory = YAF_G('directory')? YAF_G('directory') : null;
         $origin_classname = $class_name;
 
+        $directory = null;
         do {
             if (!$class_name) {
                 break;
@@ -424,7 +425,7 @@ out:
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function internalAutoload(string $file_name, int $name_len, string &$directory): int
+    public static function internalAutoload(?string $file_name, ?int $name_len, ?string &$directory): int
     {
         $buf = '';
 
@@ -442,7 +443,7 @@ out:
                 } else {
                     $property = new \ReflectionProperty($loader, '_global_library');
                     $property->setAccessible(true);
-                    $library_dir = $property->getValue();
+                    $library_dir = $property->getValue($loader);
                 }
 
                 $library_path = $library_dir;
@@ -504,7 +505,7 @@ out:
      */
     private static function loaderImport(string $path, int $use_path): int
     {
-        if (!realpath($path)) {
+        if (!@realpath($path)) {
             return 0;
         }
 
