@@ -90,7 +90,7 @@ final class Application
         $zdispatcher = Dispatcher::getInstance();
         if (!is_object($zdispatcher)) {
             yaf_trigger_error(STARTUP_FAILED, "Instantiation of application dispatcher failed");
-            RETURN false;
+            return false;
         }
 
         $zdispatcher->setRequest($zrequest);
@@ -117,7 +117,6 @@ final class Application
         $this->_environ = YAF_G('environ_name');
 
         if (is_array(YAF_G('modules'))) {
-            // TODO 指针
             $this->_modules = YAF_G('modules');
         } else {
             $this->_modules = null;

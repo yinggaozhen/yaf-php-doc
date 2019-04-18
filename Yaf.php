@@ -73,18 +73,18 @@ namespace
      * @param string[] $format
      * @throws Exception
      */
-    function yaf_trigger_error(int $type, ...$format): void
+    function yaf_trigger_error(int $type, ...$format)
     {
         $message = call_user_func_array('sprintf', $format);
 
         if (YAF_G('throw_exception')) {
-            if ($type & \Yaf\Exception\Internal\YAF_ERR_BASE === \Yaf\Exception\Internal\YAF_ERR_BASE) {
+            if (($type & \Yaf\Exception\Internal\YAF_ERR_BASE) === \Yaf\Exception\Internal\YAF_ERR_BASE) {
                 /** @var \Exception $exception */
                 $exception = \Yaf\Exception\Internal\yaf_buildin_exceptions($type);
-                throw new $exception($type, $message);
+                throw new $exception($message, $type);
             }
 
-            throw new \Exception($type, $message);
+            throw new \Exception($message, $type);
         } else {
             $property = new \ReflectionProperty(Application::class, '_app');
             $property->setAccessible(true);

@@ -3,6 +3,7 @@
 namespace tests;
 
 use Yaf\Application;
+use Yaf\Exception\LoadFailed\Controller;
 use Yaf\Request\Simple;
 
 class P002Test extends Base
@@ -35,7 +36,8 @@ class P002Test extends Base
             $app = new Application([
                 'application' => ['directory' => dirname(__FILE__)],
             ]);
-        } catch (\Yaf\Exception\LoadFailed\Controller | \Exception $e) {
+            $app->getDispatcher()->dispatch($request);
+        } catch (Controller | \Exception $e) {
             $catch = true;
             $this->assertSame('Failed opening controller script %scontrollers%cDummy.php: No such file or directory', $e->getMessage());
         }

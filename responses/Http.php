@@ -29,10 +29,6 @@ class Http extends Response_Abstract
      */
     public function setAllHeaders(?array $headers): ?bool
     {
-        if (empty($headers)) {
-            return;
-        }
-
         foreach ($headers as $name => $header) {
             $this->alertHeader($name, $header, true);
         }
