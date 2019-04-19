@@ -30,40 +30,18 @@ namespace
     /**
      * YAF内部全局(内部方法,外部不可调用)
      *
-     * @param $name
-     * @param null $value
-     * @return null|string
+     * @param array $args
+     * @return null|*
      */
-    function YAF_G($name, $value = null)
+    function YAF_G(...$args)
     {
-        static $internalVars = [];
+        list($name, $value) = $args;
 
-        if (!is_null($value)) {
-            return $internalVars[$name] = $value;
+        if (count($args) == 1) {
+            return $GLOBALS['yaf'][$args] ?? null;
         }
 
-        /**
-         * 兼容写法
-         *
-         * @see \Yaf\Loader::clearLocalNamespace
-         */
-        if ($value === 'NULL') {
-            return $internalVars[$name] = null;
-        }
-
-        if (isset($internalVars[$name])) {
-            return $internalVars[$name];
-        }
-
-        if (ini_get('yaf.' . $name)) {
-            return ini_get('yaf.' . $name);
-        }
-
-        if (isset($GLOBALS['yaf'][$name])) {
-            return $GLOBALS['yaf'][$name];
-        }
-
-        return null;
+        $GLOBALS['yaf'][$name] = $value;
     }
 
     /**

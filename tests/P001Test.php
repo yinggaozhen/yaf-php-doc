@@ -2,6 +2,11 @@
 
 namespace tests;
 
+/**
+ * Class P001Test
+ * @package tests
+ * @a
+ */
 class P001Test extends Base
 {
     /**

@@ -380,6 +380,8 @@ final class Dispatcher
     // ================================================== 内部方法 ==================================================
 
     /**
+     * TODO 这个写法好丑啊
+     *
      * @internal
      * @param null|Response_Abstract $response
      * @return null|Response_Abstract

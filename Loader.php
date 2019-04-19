@@ -18,14 +18,14 @@ final class Loader
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public function autoload(string $class_name)
+    public function autoload(string $class_name): bool
     {
         $file_name     = '';
         $file_name_len = 0;
         $ret = true;
 
         $separator_len = YAF_G('name_separator_len');
-        $app_directory = YAF_G('directory')? YAF_G('directory') : null;
+        $app_directory = YAF_G('directory') ?? null;
         $origin_classname = $class_name;
 
         $directory = null;
@@ -516,7 +516,7 @@ out:
      * @param string $prefix
      * @return int
      */
-    private static function registerNamespaceSingle(string $prefix): int
+    private static function registerNamespaceSingle($prefix): int
     {
         if (YAF_G('local_namespaces')) {
             YAF_G('local_namespaces', YAF_G('local_namespaces') . ';' . $prefix);
@@ -534,7 +534,9 @@ out:
     private static function namespaceMulti(array $prefixes): int
     {
         foreach ($prefixes as $prefix) {
-            self::registerNamespaceSingle($prefix);
+            if (is_string($prefix)) {
+                self::registerNamespaceSingle($prefix);
+            }
         }
 
         return 1;
