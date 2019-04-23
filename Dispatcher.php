@@ -105,7 +105,7 @@ final class Dispatcher
      * @return Response_Abstract|bool
      * @throws \Exception
      */
-    public function dispatch(Request_Abstract $request = null)
+    public function dispatch(Request_Abstract $request = null): Response_Abstract
     {
         $this->_request = $request;
         /** @var Response_Abstract $rResponse */
@@ -396,26 +396,29 @@ final class Dispatcher
         $plugins = $this->_plugins;
 
         if (!is_object($request)) {
-            throw new \Exception(sprintf('Expect a %s instance', get_class($request)), TYPE_ERROR);
+            yaf_trigger_error(TYPE_ERROR, 'Expect a %s instance', get_class($request));
+            return null;
         }
 
         if (!$request->isRouted()) {
-            $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
-            $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response); // TODO MACRO_YAF_EXCEPTION_HANDLE NEED COMPLETE
+            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
+            $this->YAF_EXCEPTION_HANDLE($request, $response); // TODO YAF_EXCEPTION_HANDLE NEED COMPLETE
             if (!$this->_route($request)) {
-                throw new \Exception("Routing request failed", ROUTE_FAILED);
+                yaf_trigger_error(ROUTE_FAILED, 'Routing request failed');
+                $this->YAF_EXCEPTION_HANDLE_NORET($request, $response);
+                return null;
             }
 
-            $this->_fixDefault($request);
-            $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
-            $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response); // TODO MACRO_YAF_EXCEPTION_HANDLE NEED COMPLETE
+            $this->fixDefault($request);
+            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
+            $this->YAF_EXCEPTION_HANDLE($request, $response); // TODO YAF_EXCEPTION_HANDLE NEED COMPLETE
             $request->setRouted();
         } else {
-            $this->_fixDefault($request);
+            $this->fixDefault($request);
         }
 
-        $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSTARTUP, $request, $response);
-        $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+        $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSTARTUP, $request, $response);
+        $this->YAF_EXCEPTION_HANDLE($request, $response);
 
         $view = $this->_initView(null, null);
         if (!$view) {
@@ -423,25 +426,25 @@ final class Dispatcher
         }
 
         do {
-            $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
-            $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
+            $this->YAF_EXCEPTION_HANDLE($request, $response);
 
             if ($this->_handle($request, $response, $view)) {
-                $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+                $this->YAF_EXCEPTION_HANDLE($request, $response);
                 return null;
             }
 
-            $this->_fixDefault($request);
-            $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
-            $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+            $this->fixDefault($request);
+            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
+            $this->YAF_EXCEPTION_HANDLE($request, $response);
         } while (--$nesting > 0 && !$request->isDispatched());
 
-        $this->MACRO_YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
-        $this->MACRO_YAF_EXCEPTION_HANDLE($request, $response);
+        $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
+        $this->YAF_EXCEPTION_HANDLE($request, $response);
 
         if (0 == $nesting && !$request->isDispatched()) {
             yaf_trigger_error(DISPATCH_FAILED, "The max dispatch nesting %ld was reached", YAF_G('forward_limit'));
-            $this->MACRO_YAF_EXCEPTION_HANDLE_NORET($request, $response);
+            $this->YAF_EXCEPTION_HANDLE_NORET($request, $response);
             return null;
         }
 
@@ -535,7 +538,7 @@ final class Dispatcher
     /**
      * @param Request_Abstract $request
      */
-    private function _fixDefault(Request_Abstract $request): void
+    private function fixDefault(Request_Abstract $request): void
     {
         $module     = $request->getModuleName();
         $action     = $request->getActionName();
@@ -927,7 +930,7 @@ final class Dispatcher
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      */
-    private function MACRO_YAF_PLUGIN_HANDLE(array $plugins, string $hook, Request_Abstract $request, Response_Abstract $response): void
+    private function YAF_PLUGIN_HANDLE(array $plugins, string $hook, Request_Abstract $request, Response_Abstract $response): void
     {
         if (!is_null($plugins)) {
             foreach ($plugins as $plugin) {
@@ -949,7 +952,7 @@ final class Dispatcher
      * @param Response_Abstract $response
      * @return null|void
      */
-    private function MACRO_YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
+    private function YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);
@@ -966,7 +969,7 @@ final class Dispatcher
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      */
-    private function MACRO_YAF_EXCEPTION_HANDLE_NORET(Request_Abstract $request, Response_Abstract $response): void
+    private function YAF_EXCEPTION_HANDLE_NORET(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);
