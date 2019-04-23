@@ -46,8 +46,6 @@ class P002Test extends Base
             ]);
             $app->getDispatcher()->dispatch($request);
         } catch (Controller | \Exception $e) {
-            throw $e;
-
             $catch = true;
             $this->assertSame('Failed opening controller script %scontrollers%cDummy.php: No such file or directory', $e->getMessage());
         }

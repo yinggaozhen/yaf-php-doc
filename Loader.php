@@ -2,8 +2,6 @@
 
 namespace Yaf;
 
-use SebastianBergmann\CodeCoverage\Report\PHP;
-
 final class Loader
 {
     protected $_library;
@@ -22,9 +20,6 @@ final class Loader
      */
     public function autoload(string $class_name): bool
     {
-        // TODO delete
-        echo $class_name . PHP_EOL;
-        return false;
         $file_name     = '';
         $file_name_len = 0;
         $ret = true;
@@ -107,7 +102,6 @@ final class Loader
 
         if (!YAF_G('use_spl_autoload')) {
             /** directory might be NULL since we passed a NULL */
-            // TODO $directory是否为指针
             if ($this->internalAutoload($file_name, $file_name_len, $directory)) {
                 $lc_classname = substr($origin_classname, 0, strlen($class_name));
                 if (class_exists($lc_classname, false)) {
@@ -322,7 +316,6 @@ out:
     private static function isCategory(string $class_name, string $category, int $category_len): int
     {
         $class_name_len = strlen($class_name);
-
         $separator_len  = YAF_G('name_separator_len');
 
         if (YAF_G('name_suffix')) {
