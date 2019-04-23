@@ -11,6 +11,7 @@ use const YAF\ERR\NOTFOUND\MODULE;
 use const YAF\ERR\ROUTE_FAILED;
 use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
+use function Yaf\Exception\Internal\yaf_buildin_exceptions;
 use Yaf\View\Simple;
 
 
@@ -402,7 +403,7 @@ final class Dispatcher
 
         if (!$request->isRouted()) {
             $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
-            $this->YAF_EXCEPTION_HANDLE($request, $response); // TODO YAF_EXCEPTION_HANDLE NEED COMPLETE
+            $this->YAF_EXCEPTION_HANDLE($request, $response);
             if (!$this->_route($request)) {
                 yaf_trigger_error(ROUTE_FAILED, 'Routing request failed');
                 $this->YAF_EXCEPTION_HANDLE_NORET($request, $response);
@@ -411,7 +412,7 @@ final class Dispatcher
 
             $this->fixDefault($request);
             $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
-            $this->YAF_EXCEPTION_HANDLE($request, $response); // TODO YAF_EXCEPTION_HANDLE NEED COMPLETE
+            $this->YAF_EXCEPTION_HANDLE($request, $response);
             $request->setRouted();
         } else {
             $this->fixDefault($request);
@@ -485,9 +486,12 @@ final class Dispatcher
     /**
      * @param Request_Abstract $request
      * @param Response_Abstract $response
+     * @throws \ReflectionException | \Exception
      */
     private function _dispatcherExceptionHandler(Request_Abstract $request, Response_Abstract $response)
     {
+        // TODO 是否要加入 try catch
+
         if (YAF_G('in_exception')) {
             return;
         }
@@ -503,8 +507,35 @@ final class Dispatcher
 
         $controller = Dispatcher::YAF_ERROR_CONTROLLER;
         $action = Dispatcher::YAF_ERROR_ACTION;
+        $exception = new \Exception();
 
-        // TODO 下面有点难懂,先放着,后面再研究研究
+        $request->setControllerName($controller);
+        $request->setActionName($action);
+        $reflectProperty = new \ReflectionProperty($request, '_exception');
+        $reflectProperty->setAccessible(true);
+        $reflectProperty->setValue($exception);
+
+        if ($request->setParamsSingle('exception', $exception)) {
+            // DO NOTHING IN PHP
+        } else {
+            return;
+        }
+
+        $request->setDispatched();
+        $view = $this->_initView(null, null);
+        if (!$view) {
+            return;
+        }
+
+        if (!$this->_handle($request, $view)) {
+            if (yaf_buildin_exceptions(CONTROLLER)) {
+                $m = $this->_default_module;
+                $request->setModuleName($m);
+                $this->_handle($request, $response, $view);
+            }
+        }
+
+        $response->response();
     }
 
     /**
@@ -951,6 +982,7 @@ final class Dispatcher
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      * @return null|void
+     * @throws \Exception | \ReflectionException
      */
     private function YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
     {
@@ -968,6 +1000,7 @@ final class Dispatcher
      * @internal
      * @param Request_Abstract $request
      * @param Response_Abstract $response
+     * @throws \Exception | \ReflectionException
      */
     private function YAF_EXCEPTION_HANDLE_NORET(Request_Abstract $request, Response_Abstract $response): void
     {

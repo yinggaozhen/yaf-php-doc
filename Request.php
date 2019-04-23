@@ -32,6 +32,9 @@ abstract class Request_Abstract
      */
     protected $_language;
 
+    /**
+     * @var \Exception
+     */
     protected $_exception;
 
     /**
@@ -141,9 +144,15 @@ abstract class Request_Abstract
         return isset($this->_params[$name]) ? $this->_params[$name] : $default;
     }
 
-    public function getException()
+    public function getException(): \Exception
     {
-        return $this->_exception;
+        $exception = $this->_exception;
+
+        if (is_object($exception) && $exception instanceof \Exception) {
+            return $exception;
+        }
+
+        return null;
     }
 
     /**
@@ -392,13 +401,19 @@ abstract class Request_Abstract
         return 0;
     }
 
-    private function setParamsSingle(string $key, $value): int
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * @internal
+     * @param string $key
+     * @param $value
+     * @return int
+     */
+    public function setParamsSingle(string $key, $value): int
     {
         $this->_params[$key] = $value;
         return 1;
     }
-
-    // ================================================== 内部方法 ==================================================
 
     /**
      * @internal
