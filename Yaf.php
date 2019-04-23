@@ -44,7 +44,7 @@ namespace
      */
     function YAF_G(...$args)
     {
-        list($name, $value) = $args;
+        @list($name, $value) = $args;
 
         if (count($args) == 1) {
             return YAF_G_V::$globals[$name] ?? null;

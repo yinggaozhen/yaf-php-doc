@@ -115,25 +115,23 @@ final class Simple extends Request_Abstract
 
         $this->method = $method;
 
-        global $yaf;
-
         if ($module || $controller || $action) {
             if ($module) {
                 $this->module = $module;
             } else {
-                $this->module = $yaf['default_module'];
+                $this->module = YAF_G('default_module');
             }
 
             if ($controller) {
                 $this->controller = $controller;
             } else {
-                $this->controller = $yaf['default_controller'];
+                $this->controller = YAF_G('default_controller');
             }
 
             if ($action) {
                 $this->action = $action;
             } else {
-                $this->action = $yaf['default_action'];
+                $this->action = YAF_G('default_action');
             }
 
             $this->_routed = 1;
