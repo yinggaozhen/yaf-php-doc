@@ -505,7 +505,7 @@ out:
             return 0;
         }
 
-        include $path;
+        require_once $path;
     }
 
     /**

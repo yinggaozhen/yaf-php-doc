@@ -13,10 +13,10 @@ final class Simple extends Request_Abstract
 
     /**
      * @param string $name
-     * @param null|mixed $default
+     * @param mixed $default
      * @return null|string
      */
-    public function getQuery(string $name, $default = null): ?string
+    public function getQuery(string $name, $default = null)
     {
         return isset($_GET[$name]) ? $_GET[$name] : $default;
     }
@@ -46,7 +46,7 @@ final class Simple extends Request_Abstract
      * @param null|mixed $default
      * @return null|string
      */
-    public function getCookie(string $name, $default = null): ?string
+    public function getCookie(string $name, $default = null)
     {
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
     }
@@ -68,7 +68,7 @@ final class Simple extends Request_Abstract
      */
     public function get(string $name, $default = null)
     {
-        $value = $this->_params[$name];
+        $value = $this->_params[$name] ?? null;
 
         if ($value) {
             return $value;
@@ -76,7 +76,7 @@ final class Simple extends Request_Abstract
             $methods = ['_POST', '_GET', '_COOKIE', '_SERVER'];
 
             foreach ($methods as $method) {
-                $pzval = $$method[$name];
+                $pzval = $$method[$name] ?? null;
 
                 if (isset($pzval)) {
                     return $pzval;

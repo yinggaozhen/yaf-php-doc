@@ -806,7 +806,7 @@ final class Dispatcher
 
         if (!class_exists($class_lowercase, false)) {
             // TODO $directory是否为引用
-            if (Loader::internalAutoload($controller, strlen($controller), $directory)) {
+            if (!Loader::internalAutoload($controller, strlen($controller), $directory)) {
                 yaf_trigger_error(CONTROLLER, "Failed opening controller script %s", $directory);
                 return null;
             } else if (!class_exists($class_lowercase)) {
