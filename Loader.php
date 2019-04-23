@@ -2,6 +2,8 @@
 
 namespace Yaf;
 
+use SebastianBergmann\CodeCoverage\Report\PHP;
+
 final class Loader
 {
     protected $_library;
@@ -20,6 +22,9 @@ final class Loader
      */
     public function autoload(string $class_name): bool
     {
+        // TODO delete
+        echo $class_name . PHP_EOL;
+        return false;
         $file_name     = '';
         $file_name_len = 0;
         $ret = true;
@@ -398,14 +403,11 @@ out:
      */
     private static function loaderRegister(Loader $loader): int
     {
-        $autoload = [];
         $method = 'autoload';
-
-        $autoload[] = $loader;
-        $autoload[] = $method;
+        $autoload = [$loader, $method];
 
         try {
-            // spl_autoload_register($autoload);
+            spl_autoload_register($autoload);
         } catch (\Exception $e) {
             yaf_trigger_error(E_WARNING, 'Unable to register autoload function autoload');
             return 0;
