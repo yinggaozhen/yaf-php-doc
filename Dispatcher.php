@@ -810,7 +810,7 @@ final class Dispatcher
                 yaf_trigger_error(CONTROLLER, "Failed opening controller script %s", $directory);
                 return null;
             } else if (!class_exists($class_lowercase)) {
-                yaf_trigger_error(AUTOLOAD_FAILED, '"Could not find class %s in controller script %s"', $class);
+                yaf_trigger_error(AUTOLOAD_FAILED, 'Could not find class %s in controller script %s', $class, $directory);
                 return 0;
             } else {
                 $ce = $class_lowercase;

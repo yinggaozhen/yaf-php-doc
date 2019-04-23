@@ -7,14 +7,18 @@ use const YAF\ERR\TYPE_ERROR;
 final class Simple implements \Countable, \Iterator, \ArrayAccess
 {
     /**
+     * TODO 其实是public
+     *
      * @var bool
      */
-    protected $_readonly = false;
+    public $_readonly = false;
 
     /**
+     * TODO 其实是public
+     *
      * @var array
      */
-    private $_config = [];
+    public $_config = [];
 
     /**
      * Simple constructor.

@@ -400,16 +400,14 @@ final class Application
     public static function parseOption($options): int
     {
         $app = null;
-        $conf = array_keys($options);
-
-        if (!isset($conf['application'])) {
-            if (is_null($app = $conf['yaf'])) {
+        if (is_null($app = $options['application'])) {
+            if (is_null($app = $options['yaf'])) {
                 yaf_trigger_error(TYPE_ERROR, 'Expected an array of application configure');
                 return FAILURE;
             }
         }
 
-        if (is_array($app)) {
+        if (!is_array($app)) {
             yaf_trigger_error(TYPE_ERROR, 'Expected an array of application configure');
             return FAILURE;
         }
@@ -421,17 +419,17 @@ final class Application
         }
         YAF_G('directory', rtrim($pzval, DEFAULT_SLASH));
 
-        $pzval = $app['ext'];
+        $pzval = $app['ext'] ?? null;
         if (!is_null($pzval) && is_string($pzval)) {
             YAF_G('ext', $pzval);
         }
 
-        $pzval = $app['bootstrap'];
+        $pzval = $app['bootstrap'] ?? null;
         if (!is_null($pzval) && is_string($pzval)) {
             YAF_G('bootstrap', $pzval);
         }
 
-        $pzval = $app['library'];
+        $pzval = $app['library'] ?? null;
         if (!is_null($pzval)) {
             if (is_string($pzval)) {
                 YAF_G('local_library', rtrim($pzval, DEFAULT_SLASH));
@@ -452,7 +450,7 @@ final class Application
             }
         }
 
-        $pzval = $app['view'];
+        $pzval = $app['view'] ?? null;
         if (!is_null($pzval) && is_array($pzval)) {
             $psval = $pzval['ext'];
 
@@ -461,12 +459,12 @@ final class Application
             }
         }
 
-        $pzval = $app['baseUri'];
+        $pzval = $app['baseUri'] ?? null;
         if (!is_null($pzval) && is_string($pzval)) {
             YAF_G('base_uri', $pzval);
         }
 
-        $pzval = $app['dispatcher'];
+        $pzval = $app['dispatcher'] ?? null;
         if (!is_null($pzval) && is_array($pzval)) {
             $psval = $pzval['defaultModule'];
             if (!is_null($psval) && is_string($psval)) {
@@ -499,7 +497,7 @@ final class Application
 
         do {
             YAF_G('modules', []);
-            $pzval = $app['modules'];
+            $pzval = $app['modules'] ?? null;
 
             if (!is_null($pzval) && is_string($pzval) && !empty($pzval)) {
                 $modules = array_map('strtoupper', explode(',', $pzval));
@@ -510,7 +508,7 @@ final class Application
             }
         } while (0);
 
-        $pzval = $app['system'];
+        $pzval = $app['system'] ?? null;
         if (!is_null($pzval) && is_array($pzval)) {
             foreach ($pzval as $key => $value) {
                 $str = substr(sprintf("%s.%s", 'yaf', $key), 0, 127);

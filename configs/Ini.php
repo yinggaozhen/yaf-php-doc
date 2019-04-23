@@ -9,7 +9,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
     /**
      * @var array
      */
-    private $_config = [];
+    public $_config = [];
 
     /**
      * Ini constructor.
