@@ -17,13 +17,22 @@ namespace
     ini_set('yaf.environ',          'product');
     ini_set('yaf.use_namespace',    '0');
 
+    /**
+     * @internal
+     * Class YAF_G_V
+     */
+    class YAF_G_V
+    {
+        public static $globals = [];
+    }
+
     // RINIT_FUNCTION
-    $GLOBALS['yaf']['throw_exception']    = 1;
-    $GLOBALS['yaf']['ext']                = 'php';
-    $GLOBALS['yaf']['view_ext']           = 'phtml';
-    $GLOBALS['yaf']['default_module']     = 'Index';
-    $GLOBALS['yaf']['default_action']     = 'index';
-    $GLOBALS['yaf']['default_controller'] = 'Index';
+    YAF_G_V::$globals['throw_exception']    = 1;
+    YAF_G_V::$globals['ext']                = 'php';
+    YAF_G_V::$globals['view_ext']           = 'phtml';
+    YAF_G_V::$globals['default_module']     = 'Index';
+    YAF_G_V::$globals['default_action']     = 'index';
+    YAF_G_V::$globals['default_controller'] = 'Index';
 
     // ================================================== 内部方法 ==================================================
 
@@ -38,10 +47,10 @@ namespace
         list($name, $value) = $args;
 
         if (count($args) == 1) {
-            return $GLOBALS['yaf'][$args] ?? null;
+            return YAF_G_V::$globals[$name] ?? null;
         }
 
-        $GLOBALS['yaf'][$name] = $value;
+        YAF_G_V::$globals[$name] = $value;
     }
 
     /**
