@@ -20,7 +20,7 @@ class Simple implements View_Interface
      * @param array|null $options
      * @throws \Exception
      */
-    final public function __construct(string $tpl_dir, array $options = null)
+    final public function __construct(?string $tpl_dir, ?array $options = null)
     {
         $this->_tpl_vars = [];
 

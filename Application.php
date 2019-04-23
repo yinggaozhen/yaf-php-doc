@@ -61,7 +61,6 @@ final class Application
     public function __construct($config, string $section = null)
     {
         $app = self::$_app;
-
         if (!is_null($app)) {
             throw new \Exception("Only one application can be initialized", STARTUP_FAILED);
         }

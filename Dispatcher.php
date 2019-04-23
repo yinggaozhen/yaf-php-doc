@@ -462,7 +462,7 @@ final class Dispatcher
      * @return Simple|View_Interface
      * @throws \Exception
      */
-    private function _initView(string $tpl_dir, array $options): ?View_Interface
+    private function _initView(?string $tpl_dir, ?array $options): ?View_Interface
     {
         $view = $this->_view;
 

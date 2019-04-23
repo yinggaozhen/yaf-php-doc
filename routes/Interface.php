@@ -17,3 +17,7 @@ interface Route_Interface
     public const YAF_ROUTER_URL_DELIMIETER  	        = '/';
     public const YAF_ROUTE_REGEX_DILIMITER  	        = '#';
 }
+
+function routerInstance(Router &$router, $config)
+{
+}

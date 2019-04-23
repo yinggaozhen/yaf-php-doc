@@ -2,6 +2,8 @@
 
 namespace Yaf;
 
+use Yaf\Route\Route_Static;
+
 class Router
 {
     /**
@@ -13,9 +15,7 @@ class Router
 
     public function __construct()
     {
-        $route = ['default' => []];
-
-        $this->_routes = $route;
+        $this->instance();
     }
 
     /**
@@ -108,6 +108,28 @@ class Router
     public function getCurrentRoute()
     {
         return $this->_current;
+    }
+
+    private function instance()
+    {
+        /** @var Router $route */
+        $route = null;
+        /** @var Router[] $route */
+        $routes = [];
+
+        if (!YAF_G('default_route')) {
+static_route:
+            $route = new Route_Static();
+        } else {
+            routerInstance($route, YAF_G('default_route'));
+            if (!is_object($route)) {
+                \trigger_error(sprintf('Unable to initialize default route, use %s instead', Route_Static::class), E_WARNING);
+                goto static_route;
+            }
+        }
+
+        $routes['_default'] = $route;
+        $this->_routes = $routes;
     }
 
     /**

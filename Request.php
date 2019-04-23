@@ -289,7 +289,7 @@ abstract class Request_Abstract
     /**
      * @return string
      */
-    public function getBaseUri(): string
+    public function getBaseUri(): ?string
     {
         return $this->_base_uri;
     }
