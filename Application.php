@@ -66,6 +66,7 @@ final class Application
         }
 
         try {
+            /** @var Config_Abstract $zconfig */
             $zconfig = null;
 
             $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
@@ -78,6 +79,11 @@ final class Application
             }
         } catch (\Exception $e) {
             throw new \Exception("Initialization of application config failed", STARTUP_FAILED);
+        }
+
+        if (!is_object($zconfig) || self::parseOption($zconfig->_config) === FAILURE) {
+            yaf_trigger_error(STARTUP_FAILED, 'Initialization of application config failed');
+            return false;
         }
 
         try {
