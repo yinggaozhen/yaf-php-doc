@@ -78,7 +78,7 @@ class P002Test extends Base
         $this->assertNull($request->getParam("xxxx"));
         $this->assertSame([
             'name' => 'Laruence'
-        ], $request->getParam("xxxx"));
+        ], $request->getParams());
     }
 
     public function tearDown()

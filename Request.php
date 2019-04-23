@@ -106,7 +106,9 @@ abstract class Request_Abstract
      */
     public function setParam(...$params)
     {
-        if (count($params) == 1) {
+        if (count($params) === 1) {
+            $params = $params[0];
+
             if (!is_array($params)) {
                 return;
             }
@@ -391,9 +393,8 @@ abstract class Request_Abstract
 
     private function setParamsMulti($values): int
     {
-        $params = &$this->_params;
         if ($values && is_array($values)) {
-            $params = $values;
+            $this->_params = $values;
 
             return 1;
         }
