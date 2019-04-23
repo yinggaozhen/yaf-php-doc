@@ -36,9 +36,6 @@ class P002Test extends Base
         $this->assertSame('Laruence', $request->getParam('name'));
         $this->assertNull($request->getParam('notexists'));
 
-        /**
-         * TODO 这个测试跑不通
-         */
         $catch = false;
         try {
             $app = new Application([
