@@ -52,7 +52,7 @@ abstract class Response_Abstract
      * @param string|null $name
      * @return $this|bool
      */
-    public function appendBody(string $body, string $name = null)
+    public function appendBody(?string $body, ?string $name = null)
     {
         if ($this->alterBody($name, $body, 'YAF_RESPONSE_APPEND')) {
             return $this;
@@ -115,7 +115,7 @@ abstract class Response_Abstract
                 continue;
             }
 
-            echo $body . PHP_EOL;
+            echo $body;
         }
 
         return true;
@@ -127,7 +127,7 @@ abstract class Response_Abstract
      * @param string        $response_type 其实是int
      * @return int
      */
-    private function alterBody(string $name, string $body, string $response_type): int
+    private function alterBody(?string $name, ?string $body, string $response_type): int
     {
         if (strlen($body) === 0) {
             return 1;
@@ -142,7 +142,7 @@ abstract class Response_Abstract
         } else {
             switch ($response_type) {
                 case 'YAF_RESPONSE_PREPEND':
-                    $this->_body[$name] = $this->_body[$name] . $body;
+                    $this->_body[$name] = $body . $this->_body[$name];
                     break;
                 case 'YAF_RESPONSE_APPEND':
                     $this->_body[$name] .= $body;
