@@ -33,6 +33,8 @@ class P003Test extends Base
 
         $this->assertEquals('Baidu;Sina;Wb;Inf;123', $loader->getLocalNamespace());
 
+        //---------------------------------------
+
         $catch = false;
         try {
             $loader->autoload('Baidu_Name');
@@ -42,6 +44,8 @@ class P003Test extends Base
             $catch = true;
         }
         $this->assertTrue($catch);
+
+        //---------------------------------------
 
         $catch = false;
         try {
