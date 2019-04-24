@@ -351,13 +351,13 @@ out:
             if ($library_path) {
                 $property = new \ReflectionProperty($instance, '_library');
                 $property->setAccessible(true);
-                $property->setValue($library_path);
+                $property->setValue($instance, $library_path);
             }
 
             if ($global_path) {
                 $property = new \ReflectionProperty($instance, '_global_library');
                 $property->setAccessible(true);
-                $property->setValue($global_path);
+                $property->setValue($instance, $global_path);
             }
 
             return $instance;

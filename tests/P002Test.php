@@ -7,7 +7,7 @@ use Yaf\Exception\LoadFailed\Controller;
 use Yaf\Request\Simple;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap P003Test.php
+ * @run ./vendor/bin/phpunit --bootstrap P002Test.php
  */
 class P002Test extends Base
 {

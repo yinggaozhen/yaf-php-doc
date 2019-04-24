@@ -4,6 +4,9 @@ namespace tests;
 
 use Yaf\Loader;
 
+/**
+ * @run ./vendor/bin/phpunit --bootstrap P003Test.php
+ */
 class P003Test extends Base
 {
     public function setUp()
@@ -28,12 +31,17 @@ class P003Test extends Base
         $loader->registerLocalNamespace('Sina');
         $loader->registerLocalNamespace(['Wb', 'Inf', null, [], '123']);
 
-         $this->assertSame(1, 2);
-        // $this->assertEquals('Baidu%cSina%cWb%cInf%c123', $loader->getLocalNamespace());
-//        $this->assertEquals('Baidu;Sina;Wb;Inf;123', $loader->getLocalNamespace());
-//
-//        $this->assertTrue($loader->autoload("Baidu_Name"));
-//        $this->assertTrue($loader->autoload("Global_Name"));
+        $this->assertEquals('Baidu;Sina;Wb;Inf;123', $loader->getLocalNamespace());
+
+        try {
+            $loader->autoload('Baidu_Name');
+        } catch (\Exception $e) {
+            $this->assertSame(E_WARNING, $e->getCode());
+            // TODO get message
+            // var_dump($e->getMessage());
+        }
+
+        // $this->assertTrue($loader->autoload("Global_Name"));
     }
 
     public function tearDown()

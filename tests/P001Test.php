@@ -3,9 +3,7 @@
 namespace tests;
 
 /**
- * Class P001Test
- * @package tests
- * @a
+ * @run ./vendor/bin/phpunit --bootstrap P001Test.php
  */
 class P001Test extends Base
 {

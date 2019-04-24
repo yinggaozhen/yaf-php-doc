@@ -65,18 +65,18 @@ namespace
         $message = call_user_func_array('sprintf', $format);
 
         if (YAF_G('throw_exception')) {
+            $base_exception = \YAF\Exception::class;
             if (($type & \Yaf\Exception\Internal\YAF_ERR_BASE) === \Yaf\Exception\Internal\YAF_ERR_BASE) {
                 /** @var \Exception $exception */
-                $exception = \Yaf\Exception\Internal\yaf_buildin_exceptions($type);
-                throw new $exception($message, $type);
+                $base_exception = \Yaf\Exception\Internal\yaf_buildin_exceptions($type);
             }
 
-            throw new \Exception($message, $type);
+            throw new $base_exception($message, $type);
         } else {
             $property = new \ReflectionProperty(Application::class, '_app');
             $property->setAccessible(true);
             /** @var Application $app */
-            $app = $property->getValue();
+            $app = $property->getValue(null);
 
             $errNoProperty = new ReflectionProperty($app, '_err_no');
             $errNoProperty->setAccessible(true);

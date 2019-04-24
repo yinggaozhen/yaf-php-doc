@@ -513,7 +513,7 @@ final class Dispatcher
         $request->setActionName($action);
         $reflectProperty = new \ReflectionProperty($request, '_exception');
         $reflectProperty->setAccessible(true);
-        $reflectProperty->setValue($exception);
+        $reflectProperty->setValue($request, $exception);
 
         if ($request->setParamsSingle('exception', $exception)) {
             // DO NOTHING IN PHP
@@ -669,7 +669,7 @@ final class Dispatcher
                 YAF_G('view_directory', $view_dir);
                 $property = new \ReflectionProperty($iController, '_name');
                 $property->setAccessible(true);
-                $property->setValue($controller);
+                $property->setValue($iController, $controller);
 
                 $action = $request->getActionName();
                 $func_name = sprintf('%s%s', strtolower($action), 'action');
@@ -711,10 +711,10 @@ final class Dispatcher
 
                     $nameProperty = new \ReflectionProperty($iAction, '_name');
                     $nameProperty->setAccessible(true);
-                    $nameProperty->setValue($controller);
+                    $nameProperty->setValue($iAction, $controller);
                     $controllerProperty = new \ReflectionProperty($iAction, '_controller');
                     $controllerProperty->setAccessible(true);
-                    $controllerProperty->setValue($iController);
+                    $controllerProperty->setValue($iAction, $iController);
 
                     if ($fptr->getNumberOfParameters()) {
                         $this->_getCallParameters($request, $fptr, $call_args, $count);
