@@ -37,7 +37,7 @@ final class Loader
             }
 
             if (strncmp($class_name, self::YAF_LOADER_RESERVERD, self::YAF_LOADER_LEN_RESERVERD) == 0) {
-                yaf_trigger_error(E_WARNING, "You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD);
+                trigger_error(sprintf("You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD), E_WARNING);
             }
 
             if (self::isCategory($class_name, self::YAF_LOADER_MODEL, self::YAF_LOADER_LEN_MODEL)) {
@@ -100,9 +100,10 @@ final class Loader
             goto out;
         }
 
+        // TODO 设置有问题,取值为null,实际为0. from 003
         if (!YAF_G('use_spl_autoload')) {
             /** directory might be NULL since we passed a NULL */
-            if ($this->internalAutoload($file_name, $file_name_len, $directory)) {
+            if (Loader::internalAutoload($file_name, $file_name_len, $directory)) {
                 $lc_classname = substr($origin_classname, 0, strlen($class_name));
                 if (class_exists($lc_classname, false)) {
                     goto out;
@@ -115,7 +116,7 @@ final class Loader
             goto out;
         } else {
             $lower_case_name = strtolower(substr($origin_classname, 0, strlen($class_name)));
-            if ($this->internalAutoload($file_name, $file_name_len, $directory) && class_exists($lower_case_name, false)) {
+            if (Loader::internalAutoload($file_name, $file_name_len, $directory) && class_exists($lower_case_name, false)) {
                 goto out;
             }
 
@@ -460,6 +461,7 @@ out:
         $buf .= '.';
         $buf .= YAF_G('ext');
 
+        $directory = $buf;
         $status = Loader::loaderImport($buf, 0);
 
         return $status;

@@ -33,15 +33,25 @@ class P003Test extends Base
 
         $this->assertEquals('Baidu;Sina;Wb;Inf;123', $loader->getLocalNamespace());
 
+        $catch = false;
         try {
             $loader->autoload('Baidu_Name');
         } catch (\Exception $e) {
             $this->assertSame(E_WARNING, $e->getCode());
-            // TODO get message
-            // var_dump($e->getMessage());
+            $this->assertTrue((bool) preg_match('/^Failed opening script [\s\S]+/', $e->getMessage()));
+            $catch = true;
         }
+        $this->assertTrue($catch);
 
-        // $this->assertTrue($loader->autoload("Global_Name"));
+        $catch = false;
+        try {
+            $loader->autoload('Global_Name');
+        } catch (\Exception $e) {
+            $this->assertSame(E_WARNING, $e->getCode());
+            $this->assertTrue((bool) preg_match('/^Failed opening script [\s\S]+/', $e->getMessage()));
+            $catch = true;
+        }
+        $this->assertTrue($catch);
     }
 
     public function tearDown()
