@@ -5,7 +5,7 @@ use Yaf\Request\Http;
 use Yaf\Route\Route_Static;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap P006Test.php
+ * @run ./vendor/bin/phpunit --bootstrap bootstrap.php P006Test.php
  */
 class P006Test extends Base
 {

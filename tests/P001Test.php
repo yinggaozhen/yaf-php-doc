@@ -3,7 +3,7 @@
 namespace tests;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap P001Test.php
+ * @run ./vendor/bin/phpunit --bootstrap bootstrap.php P001Test.php
  */
 class P001Test extends Base
 {

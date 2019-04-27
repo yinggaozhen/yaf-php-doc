@@ -14,7 +14,7 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
     public $_readonly = false;
 
     /**
-     * TODO 其实是public
+     * TODO 其实是protected
      *
      * @var array
      */
@@ -29,7 +29,7 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
     public function __construct($values, $readonly = null)
     {
         if ($readonly !== true) {
-            $values = [];
+            $values = (array) $values;
         }
 
         return $this->instance($values, $readonly);
@@ -48,7 +48,7 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
             $properties = $this->_config;
             $hash = (array) $properties;
 
-            $pzval = $hash[$name];
+            $pzval = $hash[$name] ?? null;
             if (is_null($pzval)) {
                 return false;
             }
@@ -169,7 +169,7 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
 
     public function __isset($name): bool
     {
-        return array_key_exists($this->_config, $name);
+        return array_key_exists($name, $this->_config);
     }
 
     public function __set($key, $value)
@@ -193,7 +193,7 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
      * @return null|Simple
      * @throws \Exception
      */
-    private function instance($values, bool $readonly): ?Simple
+    private function instance($values, ?bool $readonly): ?Simple
     {
         switch (gettype($values)) {
             case 'array':
@@ -216,7 +216,7 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
     private function format($pzval)
     {
 	    $readonly = $this->_readonly;
-	    $ret = $this->instance($pzval, $readonly);
+	    $ret = new Simple($pzval, $readonly);
 
 	    return $ret;
     }
