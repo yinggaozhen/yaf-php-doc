@@ -1,0 +1,22 @@
+sudo: false
+language: php
+
+php:
+  - 7.1
+  - 7.2
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+
+before_install:
+  - travis_retry composer self-update
+
+install:
+  - composer install
+
+before_script:
+  - composer test --coverage-clover=coverage.xml --configuration=phpunit.xml
+
+
