@@ -418,11 +418,11 @@ abstract class Request_Abstract
 
     /**
      * @internal
-     * @param int $type
+     * @param string $type
      * @param string $name
      * @return array|mixed|null
      */
-    public static function queryEx(int $type, string $name): ?string
+    public static function queryEx(string $type, string $name): ?string
     {
         $carrier = [];
 

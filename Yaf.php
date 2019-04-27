@@ -109,6 +109,7 @@ namespace YAF
     const ENVIRON          = '';
     const VERSION          = '3.0.8-dev';
 }
+
 namespace YAF\ERR
 {
     const STARTUP_FAILED   = 512;
@@ -118,6 +119,7 @@ namespace YAF\ERR
     const AUTOLOAD_FAILED  = 520;
     const TYPE_ERROR       = 521;
 }
+
 namespace YAF\ERR\NOTFOUND
 {
     const MODULE           = 515;

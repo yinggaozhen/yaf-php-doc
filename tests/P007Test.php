@@ -1,6 +1,7 @@
 <?php
 
 namespace tests;
+
 use Yaf\Config\Simple;
 
 /**

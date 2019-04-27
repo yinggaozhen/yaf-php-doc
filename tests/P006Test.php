@@ -1,6 +1,7 @@
 <?php
 
 namespace tests;
+
 use Yaf\Request\Http;
 use Yaf\Route\Route_Static;
 
