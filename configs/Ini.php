@@ -243,39 +243,53 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
     private function iniParse(string $ini_file)
     {
         $result = [];
-
         $parse_array = parse_ini_file($ini_file, true);
+
         // 基础配置解析
-        foreach ($parse_array as $key => $value) {
+        foreach ($parse_array as $key => $iniInfo) {
             if (stripos($key, ':') !== false) {
                 continue;
             }
 
-            $result[$key] = $this->generateRecvParsePath($value);
+            $result[$key] = [];
+
+            foreach ($iniInfo as $path => $value) {
+                $this->generateRecvParsePath($result[$key], $path, $value);
+            }
         }
 
         // 继承配置解析
-        foreach ($parse_array as $key => $value) {
+        foreach ($parse_array as $key => $iniInfo) {
             if (stripos($key, ':') === false) {
                 continue;
             }
 
-            list($newKey, $inheritedKey) = explode(':', $key)[0];
+            // TODO 多重继承
+            list($newKey, $inheritedKey) = array_map(function($value) {
+                return trim($value);
+            }, explode(':', $key));
+
             if (isset($result[$inheritedKey])) {
-                $result[$newKey] = array_merge((array) $result[$inheritedKey], $this->generateRecvParsePath($value));
+                $result[$newKey] = $result[$inheritedKey];
+            }
+
+            foreach ($iniInfo as $path => $value) {
+                $this->generateRecvParsePath($result[$newKey], $path, $value);
             }
         }
 
         return $result;
     }
 
-    private function generateRecvParsePath(string $path, $value): array
+    private function generateRecvParsePath(&$result, string $path, $value): array
     {
-        $result = [];
         $current = &$result;
 
         foreach (explode('.', $path) as $node) {
-            $current[$node] = [];
+            if (!isset($current[$node])) {
+                $current[$node] = [];
+            }
+
             $current = &$current[$node];
         }
 
