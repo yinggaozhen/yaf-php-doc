@@ -69,7 +69,6 @@ class Simple implements View_Interface
     function display($tpl, $tpl_vars = null): void
     {
         $null = null;
-
         $this->simpleRender($tpl, $tpl_vars, $null);
     }
 
