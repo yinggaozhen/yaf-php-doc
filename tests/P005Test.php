@@ -7,7 +7,7 @@ use Yaf\Response\Cli;
 use Yaf\Response_Abstract;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap bootstrap.php P005Test.php
+ * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P005Test.php
  */
 class P005Test extends Base
 {

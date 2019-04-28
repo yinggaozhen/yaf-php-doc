@@ -5,7 +5,7 @@ namespace tests;
 use Yaf\Registry;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap bootstrap.php P004Test.php
+ * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P004Test.php
  */
 class P004Test extends Base
 {

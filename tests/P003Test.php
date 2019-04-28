@@ -5,7 +5,7 @@ namespace tests;
 use Yaf\Loader;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap bootstrap.php P003Test.php
+ * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P003Test.php
  */
 class P003Test extends Base
 {

@@ -5,7 +5,7 @@ namespace tests;
 use Yaf\Config\Simple;
 
 /**
- * @run ./vendor/bin/phpunit --bootstrap bootstrap.php P007Test.php
+ * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P007Test.php
  */
 class P006Test extends Base
 {

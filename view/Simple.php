@@ -44,13 +44,13 @@ class Simple implements View_Interface
      */
     function assign($name, $value = null)
     {
-        $argc = func_get_args();
+        $argc = func_num_args();
 
-        if ($argc == 1) {
-            if ($this->assignMulti($value)) {
+        if ($argc === 1) {
+            if ($this->assignMulti($name)) {
                 return $this;
             }
-        } else if ($argc == 2) {
+        } else if ($argc === 2) {
             if ($this->assignSingle($name, $value)) {
                 return $this;
             }
@@ -68,17 +68,23 @@ class Simple implements View_Interface
      */
     function display($tpl, $tpl_vars = null): void
     {
+        $null = null;
+
         $this->simpleRender($tpl, $tpl_vars, $null);
     }
 
     /**
-     * @param $tpl
-     * @param $tpl_vars
+     * @param string $tpl
+     * @param array $tpl_vars
+     * @return string $return_value
      * @throws \Exception
      */
-    function render($tpl, $tpl_vars): void
+    function render($tpl, $tpl_vars = [])
     {
+        $return_value = '';
         $this->simpleRender($tpl, $tpl_vars, $return_value);
+
+        return $return_value;
     }
 
     /**
@@ -200,12 +206,12 @@ class Simple implements View_Interface
      */
     private function simpleRender(string $tpl, $vars, &$result): int
     {
-        $tpl_vars = $this->_tpl_vars[$tpl];
+        $tpl_vars = $this->_tpl_vars;
 
         $symbol_table = $this->buildSymtable($tpl_vars, $vars);
 
         // 判断是否为绝对路径
-        if (realpath($tpl) == $tpl) {
+        if (realpath($tpl) === $tpl) {
             if ($this->renderTpl($symbol_table, $tpl, $result) == 0) {
                 return 0;
             }
@@ -220,7 +226,7 @@ class Simple implements View_Interface
                     throw new \Exception($message, VIEW);
                 }
             } else {
-                $script = sprintf("%s%c%s", $tpl_dir, DIRECTORY_SEPARATOR, $tpl);
+                $script = $tpl_dir . DIRECTORY_SEPARATOR . $tpl;
             }
 
             if ($this->renderTpl($symbol_table, $script, $result) == 0) {
@@ -243,7 +249,7 @@ class Simple implements View_Interface
         // TODO 是否需要extract
         extract($symbol_table);
 
-        if (realpath($_internal_tpl) != $_internal_tpl) {
+        if (!file_exists($_internal_tpl)) {
             throw new \Exception(sprintf("Failed opening template %s", $_internal_tpl), VIEW);
         }
 
@@ -253,12 +259,13 @@ class Simple implements View_Interface
         }
 
         ob_start();
-        $_internal_result = include $_internal_tpl;
+        include $_internal_tpl;
 
-        if (is_null($_internal_result)) {
-            ob_end_flush(); // display方式. 直接输出页面
-        } else {
-            ob_end_clean(); // render. 获取页面内容,不直接输出
+        if (is_null($_internal_result)) { // display方式. 直接输出页面
+            ob_end_flush();
+        } else { // render. 获取页面内容,不直接输出
+            $_internal_result = ob_get_contents();
+            ob_end_clean();
         }
 
         return 1;
