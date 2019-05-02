@@ -58,7 +58,7 @@ final class Rewrite implements Route_Interface
             return false;
         }
 
-        return (bool) ($this->_rewriteRoute($request));
+        return (bool)($this->_rewriteRoute($request));
     }
 
     /**
@@ -131,13 +131,13 @@ final class Rewrite implements Route_Interface
 
     private function _rewriteRoute(Request_Abstract $request): int
     {
-        $zuri 	 = $request->getRequestUri();
+        $zuri = $request->getRequestUri();
         $baseUri = $request->getBaseUri();
 
         if ($baseUri && is_string($baseUri) && !stripos($zuri, $baseUri) !== false) {
-            $requestUri  = substr($zuri, strlen($baseUri));
+            $requestUri = substr($zuri, strlen($baseUri));
         } else {
-            $requestUri  = $zuri;
+            $requestUri = $zuri;
         }
 
         $args = null;
@@ -202,24 +202,24 @@ final class Rewrite implements Route_Interface
             if (strlen($seg)) {
                 $pattern .= Route_Interface::YAF_ROUTER_URL_DELIMIETER;
 
-                if ($seg == '*') {
+                if ($seg[0] == '*') {
                     $pattern .= "(?P<__yaf_route_rest>.*)";
                 }
 
-                if ($seg == ':') {
+                if ($seg[0] == ':') {
                     $pattern .= "(?P<" . substr($seg, 1) . ">[^" . Route_Interface::YAF_ROUTER_URL_DELIMIETER . "]+)";
                 } else {
                     $pattern .= $seg;
                 }
             }
         }
-
         $pattern .= Route_Interface::YAF_ROUTE_REGEX_DILIMITER . 'i';
 
-        if (!preg_match_all($pattern, $uri, $matches, PREG_OFFSET_CAPTURE)) {
+        $matched = preg_match_all($pattern, $uri, $matches, PREG_OFFSET_CAPTURE);
+        if (!$matched) {
             return 0;
         }
-var_dump('TODO' . $pattern);
+        var_dump('TODO' . $pattern);
         exit;
         // TODO 这里需要结合TC再看一下
         // TODO Router::_parseParameters() 已经写好了

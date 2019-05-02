@@ -7,7 +7,7 @@ use Yaf\Route\Route_Static;
 class Router
 {
     /**
-     * @var Route_Interface
+     * @var Route_Interface[]
      */
     protected $_routes;
 
@@ -29,7 +29,6 @@ class Router
             return false;
         }
 
-        $routes = $this->_routes;
         $this->_routes[$name] = $route;
 
         return $this;

@@ -22,26 +22,24 @@ class P011Test extends Base
     public function test()
     {
         $request = new Http('/subdir/ap/1.2/name/value', '/subdir');
-        $router = new Router();
-        $route = new Rewrite(
-            '/subdir/:name/:version', [
-                'action' => 'version',
-            ]
-        );
 
+        $router = new Router();
         $router
-            ->addRoute('subdir', $route)
-            ->addRoute('ap', new Rewrite(
-                '/ap/:version/*', [
+            ->addRoute('subdir', new Rewrite('/subdir/:name/:version', [
+                    'action' => 'version',
+                ]
+            ))
+            ->addRoute('ap', new Rewrite('/ap/:version/*', [
                     'action' => 'ap',
-                    ]
+                ]
             ))
             ->route($request);
-
         var_dump($router->getCurrentRoute());
-        var_dump($request->getParam('version'));
-        var_dump($request->getActionName());
-        var_dump($request->getControllerName());
-        var_dump($request->getParam('name'));
+        exit;
+        $this->assertSame('ap', $router->getCurrentRoute());
+        $this->assertSame('1.2', $request->getParam('version'));
+        $this->assertSame('ap', $request->getActionName());
+        $this->assertNull($request->getControllerName());
+        $this->assertSame('value', $request->getParam('name'));
     }
 }
