@@ -515,7 +515,7 @@ final class Dispatcher
         $reflectProperty->setAccessible(true);
         $reflectProperty->setValue($request, $exception);
 
-        if ($request->setParamsSingle('exception', $exception)) {
+        if ($request->_setParamsSingle('exception', $exception)) {
             // DO NOTHING IN PHP
         } else {
             return;

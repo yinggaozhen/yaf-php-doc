@@ -120,7 +120,7 @@ abstract class Request_Abstract
             list($name, $value) = $params;
 
             $this->_params[$name] = $value;
-            if ($this->setParamsSingle($name, $value)) {
+            if ($this->_setParamsSingle($name, $value)) {
                 return $this;
             }
         }
@@ -391,7 +391,14 @@ abstract class Request_Abstract
         return strcasecmp($this->method, $method) === 0;
     }
 
-    private function setParamsMulti($values): int
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * @internal
+     * @param array $values
+     * @return int
+     */
+    public function _setParamsMulti($values): int
     {
         if ($values && is_array($values)) {
             $this->_params = $values;
@@ -402,15 +409,13 @@ abstract class Request_Abstract
         return 0;
     }
 
-    // ================================================== 内部方法 ==================================================
-
     /**
      * @internal
      * @param string $key
      * @param $value
      * @return int
      */
-    public function setParamsSingle(string $key, $value): int
+    public function _setParamsSingle(string $key, $value): int
     {
         $this->_params[$key] = $value;
         return 1;
@@ -422,7 +427,7 @@ abstract class Request_Abstract
      * @param string $name
      * @return array|mixed|null
      */
-    public static function queryEx(string $type, string $name): ?string
+    public static function _queryEx(string $type, string $name): ?string
     {
         $carrier = [];
 

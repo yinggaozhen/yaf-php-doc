@@ -100,7 +100,7 @@ final class Supervar implements Route_Interface
     private function _route(Request_Abstract $request): int
     {
         $varname = $this->_var_name;
-        $uri = Request_Abstract::queryEx('GET', $varname);
+        $uri = Request_Abstract::_queryEx('GET', $varname);
 
         if (!$uri) {
             return 0;

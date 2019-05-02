@@ -167,4 +167,25 @@ static_route:
             return 1;
         }
     }
+
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * @internal
+     * @param string $uri
+     * @param $params
+     */
+    public static function _parseParameters(string $uri, &$params)
+    {
+        $params = [];
+        $key = strtok($uri, Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+
+        while ($key !== false) {
+            if (strlen($key)) {
+                $value = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+                $params[$key] = $value && strlen($value) ? $value : null;
+            }
+            $key = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+        }
+    }
 }
