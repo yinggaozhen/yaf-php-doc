@@ -2,15 +2,11 @@
 
 namespace Yaf\Config;
 
+use Yaf\Config_Abstract;
 use const YAF\ERR\TYPE_ERROR;
 
-final class Ini implements \Countable, \Iterator, \ArrayAccess
+final class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
-    /**
-     * @var array
-     */
-    public $_config = [];
-
     /**
      * Ini constructor.
      *
@@ -18,23 +14,34 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
      * @param string $section
      * @throws \Exception
      */
-    public function __construct($filename, $section = null)
+    public function __construct($filename = null, $section = null)
     {
-        return $this->instance($filename, $section);
+        if (is_null($filename)) {
+            $this->_config = [];
+            return;
+        }
+
+        return $this->iniInstance($filename, $section);
     }
 
     /**
+     * @inheritdoc
      * @return bool
      * @throws \Exception
      */
     public function set(): bool
     {
-        yaf_trigger_error(E_NOTICE, 'Yaf_Config_Ini is readonly');
+        \trigger_error('Yaf_Config_Ini is readonly', E_USER_WARNING);
 
         return false;
     }
 
-    // TODO strok
+    /**
+     * @inheritdoc
+     * @param string|null $name
+     * @return $this|mixed|null|Ini
+     * @throws \Exception
+     */
     public function get(string $name = null)
     {
         $pzval = null;
@@ -48,24 +55,18 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
                 return null;
             }
 
-            if (strchr($name, '.')) {
-                $entry = $name;
+            if (strchr($name, '.') !== false) {
+                $pzval = $this->_config;
 
-                if ($seg = strtok($entry, '.')) {
-                    while ($seg) {
-                        $pzval = $properties[$seg];
-
-                        if (!$pzval) {
-                            return null;
-                        }
-
-                        $properties = $pzval;
-                        $seg = strtok(".");
+                foreach (explode('.', $name) as $value) {
+                    if (!isset($pzval[$value])) {
+                        return null;
                     }
-                }
 
+                    $pzval = $pzval[$value];
+                }
             } else {
-                $pzval = $properties[$name];
+                $pzval = $properties[$name] ?? null;
                 if (is_null($pzval)) {
                     return $pzval;
                 }
@@ -94,8 +95,13 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return count(array_keys($this->_config));
     }
 
+    /**
+     * @return bool|mixed|null|Ini
+     * @throws \Exception
+     */
     public function current()
     {
+        return current($this->_config);
         $prop = $this->_config;
 
         $pzval = null;
@@ -136,6 +142,11 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return isset($this[$offset]);
     }
 
+    /**
+     * @param mixed $offset
+     * @return mixed|null|Ini
+     * @throws \Exception
+     */
     public function offsetGet($offset)
     {
         return $this->get($offset);
@@ -170,6 +181,11 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         return (bool) array_key_exists($name, $this->_config);
     }
 
+    /**
+     * @param $name
+     * @return mixed|null|Ini
+     * @throws \Exception
+     */
     public function __get($name)
     {
         return $this->get($name);
@@ -187,16 +203,15 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
     }
 
     /**
-     * @param null|string $filename
+     * @param null|string|array $filename
      * @param null|string $section_name
      * @return null|Ini
      * @throws \Exception
      */
-    private function instance(?string $filename, ?string $section_name): ?Ini
+    private function iniInstance($filename, ?string $section_name): ?Ini
     {
         if (is_array($filename)) {
-            $this->_config = $filename;
-            return $this;
+            return new Ini($filename);
         } else if ($filename && is_string($filename)) {
             $ini_file = $filename;
 
@@ -225,6 +240,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
                     yaf_trigger_error(E_ERROR, "There is no section '%s' in '%s'", $section_name, $ini_file);
                     return null;
                 }
+                $configs = $section;
             }
 
             $this->_config = $configs;
@@ -235,19 +251,27 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         }
     }
 
+    /**
+     * @param $pzval
+     * @return null|Ini
+     * @throws \Exception
+     */
     private function format($pzval)
     {
-        return $this->instance($pzval, null);
+        return $this->iniInstance($pzval, null);
     }
 
     private function iniParse(string $ini_file)
     {
         $result = [];
-        $parse_array = parse_ini_file($ini_file, true);
+        $parse_array = parse_ini_file($ini_file, true, INI_SCANNER_TYPED);
 
         // 基础配置解析
         foreach ($parse_array as $key => $iniInfo) {
             if (stripos($key, ':') !== false) {
+                list($newKey) = $this->parseKeyGroup($key);
+                $result[$newKey] = null;
+
                 continue;
             }
 
@@ -265,10 +289,7 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
             }
 
             // TODO 多重继承
-            list($newKey, $inheritedKey) = array_map(function($value) {
-                return trim($value);
-            }, explode(':', $key));
-
+            list($newKey, $inheritedKey) = $this->parseKeyGroup($key);
             if (isset($result[$inheritedKey])) {
                 $result[$newKey] = $result[$inheritedKey];
             }
@@ -297,5 +318,12 @@ final class Ini implements \Countable, \Iterator, \ArrayAccess
         unset($current);
 
         return $result;
+    }
+
+    private function parseKeyGroup($key)
+    {
+        return array_map(function($value) {
+            return trim($value);
+        }, explode(':', $key));
     }
 }

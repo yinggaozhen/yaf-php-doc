@@ -69,7 +69,7 @@ final class Application
             /** @var Config_Abstract $zconfig */
             $zconfig = null;
 
-            $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
+            $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'iniInstance');
             $instanceFunc->setAccessible(true);
             if (!$section || !is_string($section) || empty($section)) {
                 $zsection = YAF_G('environ_name');
@@ -148,7 +148,7 @@ final class Application
         $running = $this->_running;
 
         if ($running === true) {
-            yaf_trigger_error(STARTUP_FAILED, "An application instance already run");
+            yaf_trigger_error(STARTUP_FAILED, "An application iniInstance already run");
             return true;
         }
 
@@ -210,7 +210,7 @@ final class Application
                 trigger_error(sprintf("Couldn't find class %s in %s", Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, $bootstrapPath), E_WARNING);
                 $retval = 0;
             } else if (!Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER instanceof Bootstrap_Abstract) {
-                trigger_error(sprintf("Expect a %s instance, %s give", Bootstrap_Abstract::class, get_class(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP)), E_WARNING);
+                trigger_error(sprintf("Expect a %s iniInstance, %s give", Bootstrap_Abstract::class, get_class(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP)), E_WARNING);
             }
         }
 

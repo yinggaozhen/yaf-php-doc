@@ -53,7 +53,7 @@ final class Rewrite implements Route_Interface
     public function route(?Request_Abstract $request): bool
     {
         if (!$request || !is_object($request) || !($request instanceof Request_Abstract)) {
-            trigger_error("Expect a %s instance", get_class($request));
+            trigger_error("Expect a %s iniInstance", get_class($request));
             return false;
         }
 

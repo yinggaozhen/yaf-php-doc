@@ -47,7 +47,7 @@ class Router
         } else if (is_array($config)) {
             $routes = $config;
         } else {
-            yaf_trigger_error(E_WARNING, "Expect a %s instance or an array, %s given", Config_Abstract::class, gettype($config));
+            yaf_trigger_error(E_WARNING, "Expect a %s iniInstance or an array, %s given", Config_Abstract::class, gettype($config));
             return false;
         }
 

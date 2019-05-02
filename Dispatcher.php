@@ -175,7 +175,7 @@ final class Dispatcher
     public function setRequest(Request_Abstract $request)
     {
         if (!is_object($request) || !($request instanceof Request_Abstract)) {
-            yaf_trigger_error(E_WARNING, "Expects a %s instance", get_class($request));
+            yaf_trigger_error(E_WARNING, "Expects a %s iniInstance", get_class($request));
             return false;
         }
 
@@ -354,7 +354,7 @@ final class Dispatcher
     public function registerPlugin(Plugin_Abstract $plugin)
     {
         if (!is_object($plugin) || !($plugin instanceof Plugin_Abstract)) {
-            yaf_trigger_error(E_WARNING, "Expect a %s instance", get_class($plugin));
+            yaf_trigger_error(E_WARNING, "Expect a %s iniInstance", get_class($plugin));
             return false;
         }
 
@@ -397,7 +397,7 @@ final class Dispatcher
         $plugins = $this->_plugins;
 
         if (!is_object($request)) {
-            yaf_trigger_error(TYPE_ERROR, 'Expect a %s instance', get_class($request));
+            yaf_trigger_error(TYPE_ERROR, 'Expect a %s iniInstance', get_class($request));
             return null;
         }
 
@@ -816,7 +816,7 @@ final class Dispatcher
                 $ce = $class_lowercase;
 
                 if (!($ce instanceof Controller_Abstract)) {
-                    yaf_trigger_error(TYPE_ERROR, "Controller must be an instance of %s", Controller_Abstract::class);
+                    yaf_trigger_error(TYPE_ERROR, "Controller must be an iniInstance of %s", Controller_Abstract::class);
                     return 0;
                 }
             }
@@ -912,7 +912,7 @@ final class Dispatcher
                 }
 
                 if (!($ce instanceof Action_Abstract)) {
-                    yaf_trigger_error(TYPE_ERROR, "Action must be an instance of %s", Action_Abstract::class);
+                    yaf_trigger_error(TYPE_ERROR, "Action must be an iniInstance of %s", Action_Abstract::class);
                     return null;
                 }
 

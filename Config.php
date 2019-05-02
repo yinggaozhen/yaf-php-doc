@@ -8,11 +8,17 @@ use const YAF\ERR\TYPE_ERROR;
 
 abstract class Config_Abstract
 {
-    // 其实是protected
+    /**
+     * @access protected
+     * @array
+     */
     public $_config;
 
-    // 其实是protected
-    public $_readonly;
+    /**
+     * @access protected
+     * @var bool
+     */
+    public $_readonly = true;
 
     abstract function get();
 
