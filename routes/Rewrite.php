@@ -58,7 +58,7 @@ final class Rewrite implements Route_Interface
             return false;
         }
 
-        return (bool)($this->_rewriteRoute($request));
+        return (bool) ($this->_rewriteRoute($request));
     }
 
     /**
@@ -134,7 +134,7 @@ final class Rewrite implements Route_Interface
         $zuri = $request->getRequestUri();
         $baseUri = $request->getBaseUri();
 
-        if ($baseUri && is_string($baseUri) && !stripos($zuri, $baseUri) !== false) {
+        if ($baseUri && is_string($baseUri) && stripos($zuri, $baseUri) !== false) {
             $requestUri = substr($zuri, strlen($baseUri));
         } else {
             $requestUri = $zuri;
@@ -158,7 +158,7 @@ final class Rewrite implements Route_Interface
                 }
             }
 
-            $controller = $routes['controller'];
+            $controller = $routes['controller'] ?? null;
             if (isset($controller) && is_string($controller)) {
                 if ($controller[0] != ':') {
                     $request->setControllerName($controller);
@@ -170,7 +170,7 @@ final class Rewrite implements Route_Interface
                 }
             }
 
-            $action = $routes['action'];
+            $action = $routes['action'] ?? null;
             if (isset($action) && is_string($action)) {
                 if ($action[0] != ':') {
                     $request->setActionName($action);
@@ -204,6 +204,7 @@ final class Rewrite implements Route_Interface
 
                 if ($seg[0] == '*') {
                     $pattern .= "(?P<__yaf_route_rest>.*)";
+                    break;
                 }
 
                 if ($seg[0] == ':') {
@@ -215,20 +216,26 @@ final class Rewrite implements Route_Interface
         }
         $pattern .= Route_Interface::YAF_ROUTE_REGEX_DILIMITER . 'i';
 
-        $matched = preg_match_all($pattern, $uri, $matches, PREG_OFFSET_CAPTURE);
+        $matched = preg_match_all($pattern, $uri, $matches);
         if (!$matched) {
             return 0;
         }
-        var_dump('TODO' . $pattern);
-        exit;
-        // TODO 这里需要结合TC再看一下
-        // TODO Router::_parseParameters() 已经写好了
-//        foreach ($matches as $key => $value) {
-//            if ($key != '__yaf_route_rest') {
-//                continue;
-//            }
-//
-//            // TODO route_parse
-//        }
+
+        foreach ($matches as $key => $pzval) {
+            // 只遍历字符串
+            if (is_numeric($key) || empty($key)) {
+                continue;
+            }
+
+            if ($key == '__yaf_route_rest') {
+                $args = null;
+                Router::_parseParameters($pzval[0], $args);
+                $result = array_merge($result, $args);
+            } else {
+                $result[$key] = $pzval[0];
+            }
+        }
+
+        return 1;
     }
 }

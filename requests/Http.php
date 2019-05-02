@@ -53,7 +53,7 @@ class Http extends Request_Abstract
         }
 
         if ($settled_uri) {
-            $this->_uri = ltrim($settled_uri, '/');
+            $this->_uri = str_replace('//', '/', $settled_uri);
             $this->_setBaseUri($base_uri, $settled_uri);
         }
 

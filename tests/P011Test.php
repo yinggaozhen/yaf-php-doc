@@ -34,8 +34,7 @@ class P011Test extends Base
                 ]
             ))
             ->route($request);
-        var_dump($router->getCurrentRoute());
-        exit;
+
         $this->assertSame('ap', $router->getCurrentRoute());
         $this->assertSame('1.2', $request->getParam('version'));
         $this->assertSame('ap', $request->getActionName());
