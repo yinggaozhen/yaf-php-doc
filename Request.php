@@ -290,7 +290,16 @@ abstract class Request_Abstract
             } else if (!is_string($accept_langs)) {
                 return null;
             } else {
-                // TODO php_strtok_r
+                $preferLen = 0;
+                /** @var double $maxQvlaue */
+			    $maxQvlaue = 0;
+			    $prefer = '';
+			    $langs = $accept_langs;
+
+                foreach (explode(',', $langs) as $seg) {
+                    $seg = ltrim($seg, ' ');
+                    // TODO 待完成
+                }
             }
         }
 

@@ -117,13 +117,8 @@ final class Map implements Route_Interface
                 }
             }
 
-            $seg = strtok($pname, '_');
-            while ($seg) {
-                if (!empty($seg)) {
-                    $uri .= '/';
-                    $uri .= $seg;
-                }
-                $seg = strtok('_');
+            foreach (explode('_', $pname) as $seg) {
+                $seg .= empty($seg) ? '' : '/' . $seg;
             }
 
             if ($query && is_array($query)) {
