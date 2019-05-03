@@ -23,7 +23,7 @@ final class Regex implements Route_Interface
      * @param string $reverse
      * @throws \Exception
      */
-    public function __construct($match, $route, $map, $verify, $reverse)
+    public function __construct($match, $route, $map = null, $verify = null, $reverse = null)
     {
         if (!is_string($match) || !strlen($match)) {
             yaf_trigger_error(TYPE_ERROR, 'Expects a valid string as the first parameter');
@@ -199,18 +199,18 @@ final class Regex implements Route_Interface
             return 0;
         }
 
-		$matched = preg_match_all($uri, (string) $this->_route, $matches);
+		$matched = preg_match_all((string) $this->_route, $uri, $matches);
 		if (!$matched) {
 		    return 0;
         }
 
         foreach ($matches as $key => $pzval) {
 		    if (!is_numeric($key)) {
-		        $result[$key] = $pzval;
+		        $result[$key] = $pzval[0];
             } else {
 		        $name = $this->_maps[$key] ?? null;
 		        if (is_array($this->_maps) && !is_null($name) && is_string($name)) {
-		            $result[$name] = $pzval;
+		            $result[$name] = $pzval[0];
                 }
             }
         }

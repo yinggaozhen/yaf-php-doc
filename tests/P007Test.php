@@ -7,7 +7,7 @@ use Yaf\Config\Simple;
 /**
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P007Test.php
  */
-class P006Test extends Base
+class P007Test extends Base
 {
     public function setUp()
     {
