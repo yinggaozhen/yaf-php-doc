@@ -12,9 +12,9 @@ final class Rewrite implements Route_Interface
     /**
      * @var string
      */
-    protected $_match;
-
     protected $_route;
+
+    protected $_default;
 
     protected $_verify;
 
@@ -37,8 +37,8 @@ final class Rewrite implements Route_Interface
             return false;
         }
 
-        $this->_match = $match;
-        $this->_route = $route;
+        $this->_route = $match;
+        $this->_default = $route;
 
         if (!$verify) {
             $this->_verify = null;
@@ -86,7 +86,7 @@ final class Rewrite implements Route_Interface
     {
         $query_str = $wildcard = '';
 
-        $uri = $match = $this->_match;
+        $uri = $match = $this->_route;
         $pidents = $info;
 
         $seg = strtok($match, Route_Interface::YAF_ROUTER_URL_DELIMIETER);
@@ -144,7 +144,7 @@ final class Rewrite implements Route_Interface
         if (!$this->_rewriteMatch($requestUri, $args)) {
             return 0;
         } else {
-            $routes = $this->_route;
+            $routes = $this->_default;
 
             $module = $routes['module'] ?? null;
             if (isset($module) && is_string($module)) {
@@ -183,8 +183,9 @@ final class Rewrite implements Route_Interface
             }
 
             $request->_setParamsMulti($args);
-            return 1;
         }
+
+        return 1;
     }
 
     private function _rewriteMatch(string $uri, &$result): int
@@ -195,7 +196,7 @@ final class Rewrite implements Route_Interface
             return 0;
         }
 
-        $match = $this->_match;
+        $match = $this->_route;
 
         $pattern .= Route_Interface::YAF_ROUTE_REGEX_DILIMITER . '^';
         foreach (explode(Route_Interface::YAF_ROUTER_URL_DELIMIETER, $match) as $seg) {

@@ -55,7 +55,7 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
                 return null;
             }
 
-            if (strchr($name, '.') !== false) {
+            if (stripos($name, '.') !== false) {
                 $pzval = $this->_config;
 
                 foreach (explode('.', $name) as $value) {
@@ -205,13 +205,17 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
     /**
      * @param null|string|array $filename
      * @param null|string $section_name
+     * @param bool $create
      * @return null|Ini
      * @throws \Exception
      */
-    private function iniInstance($filename, ?string $section_name): ?Ini
+    private function iniInstance($filename, ?string $section_name, bool $create = false): ?Ini
     {
-        if (is_array($filename)) {
-            return new Ini($filename);
+        if ($create) {
+            return new Ini($filename, $section_name);
+        } else if (is_array($filename)) {
+            $this->_config = $filename;
+            return $this;
         } else if ($filename && is_string($filename)) {
             $ini_file = $filename;
 
@@ -258,7 +262,7 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
      */
     private function format($pzval)
     {
-        return $this->iniInstance($pzval, null);
+        return $this->iniInstance($pzval, null, true);
     }
 
     private function iniParse(string $ini_file)

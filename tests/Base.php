@@ -18,4 +18,17 @@ class Base extends TestCase
     {
         $this->assertFalse(extension_loaded("yaf"));
     }
+
+    /**
+     * @param $object
+     * @param string $property
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    public function proxyGetProperty($object, string $property)
+    {
+        $reflectionProperty = new \ReflectionProperty($object, $property);
+        $reflectionProperty->setAccessible(true);
+        return $reflectionProperty->getValue($object);
+    }
 }

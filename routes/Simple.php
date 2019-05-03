@@ -71,7 +71,7 @@ final class Simple implements Route_Interface
         $naction = $this->action;
 
         do {
-            if (!is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_MODULE_FORMAT])) {
+            if (!is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT])) {
                 $uri .= $nmodule . '=' . $zv . '&';
             }
 

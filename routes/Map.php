@@ -98,7 +98,7 @@ final class Map implements Route_Interface
 
         do {
             if ($ctl_prefer === true) {
-                $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MODULE_FORMAT];
+                $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT];
 
                 if (!is_null($zv) && is_string($zv)) {
                     $pname = $zv;

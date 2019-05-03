@@ -23,9 +23,14 @@ class Router
      * @param Route_Interface $route
      * @return $this|bool
      */
-    public function addRoute(string $name, Route_Interface $route)
+    public function addRoute(string $name, $route)
     {
         if (empty($name)) {
+            return false;
+        }
+
+        if (!is_object($route) || !($route instanceof Route_Interface)) {
+            trigger_error(sprintf('Expects a %s instance', Route_Interface::class), E_USER_WARNING);
             return false;
         }
 
@@ -50,7 +55,7 @@ class Router
             return false;
         }
 
-        if ($this->_addRoute($routes)) {
+        if ($this->_addConfig($routes)) {
             return $this;
         } else {
             return false;
@@ -136,33 +141,33 @@ static_route:
      * @return int
      * @throws \Exception
      */
-    private function _addRoute($configs): int
+    private function _addConfig($configs): int
     {
         if (empty($configs) || !is_array($configs)) {
             return 0;
         } else {
-            $routes = $this->_routes;
-
             foreach ($configs as $key => $entry) {
                 if (!is_array($entry)) {
                     continue;
                 }
 
-                // TODO 源码是有问题的，会实例化比存在的路由类
-                try {
-                    $route = new $entry();
-                } catch (\Exception $e) {
-                    if (is_numeric($key)) {
-                        yaf_trigger_error(E_WARNING, "Unable to initialize route at index '%ld'", $key);
-                    } else {
-                        yaf_trigger_error(E_WARNING, "Unable to initialize route named '%s'", $key);
+                $route = \Yaf\routerInstance($entry);
+
+                if (is_numeric($key)) {
+                    if (empty($route)) {
+                        trigger_error(sprintf("Unable to initialize route at index '%ld'", $key), E_USER_WARNING);
+                        continue;
                     }
-
-                    continue;
+                    $this->_routes[$key] = $route;
+                } else {
+                    if (empty($route)) {
+                        trigger_error(sprintf("Unable to initialize route named '%s'", $key), E_USER_WARNING);
+                        continue;
+                    }
+                    $this->_routes[$key] = $route;
                 }
-
-                $this->_routes[$key] = $route;
             }
+
             return 1;
         }
     }

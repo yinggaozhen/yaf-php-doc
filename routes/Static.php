@@ -45,7 +45,7 @@ final class Route_Static implements Route_Interface
         $str = '';
 
         do {
-            if (!is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_MODULE_FORMAT])) {
+            if (!is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT])) {
                 $str .= '/' . $zv;
             }
 
@@ -75,11 +75,11 @@ final class Route_Static implements Route_Interface
     private function _route(Request_Abstract $request): int
     {
         $zuri = $request->getRequestUri();
-        $base_uri = $request->getBaseUri();
+        $baseUri = $request->getBaseUri();
 
         $req_uri = $zuri;
-        if ($base_uri && is_string($base_uri) && !strcasecmp($zuri, $base_uri)) {
-            $req_uri = substr($zuri, strlen($base_uri));
+        if ($baseUri && is_string($baseUri) && !strcasecmp($zuri, $baseUri)) {
+            $req_uri = substr($zuri, strlen($baseUri));
         }
 
         $this->_pathinfoRoute($request, $req_uri);

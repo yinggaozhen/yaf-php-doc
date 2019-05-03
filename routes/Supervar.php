@@ -16,7 +16,7 @@ final class Supervar implements Route_Interface
      */
     public function __construct($var)
     {
-        if (is_string($var) || empty($var)) {
+        if (!is_string($var) || empty($var)) {
             yaf_trigger_error(TYPE_ERROR, "Expects a valid string super var name");
             return false;
         }
@@ -63,7 +63,7 @@ final class Supervar implements Route_Interface
             $uri .= $pname;
             $uri .= '=';
 
-            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MODULE_FORMAT];
+            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT];
             if (!is_null($zv)) {
                 $uri .= '/' . $zv;
             }
