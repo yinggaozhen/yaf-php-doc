@@ -26,7 +26,7 @@ class P013Test extends Base
      */
     public function test($extra)
     {
-        $config = new Ini(__DIR__ . '/common/configs/p013_simple.ini', 'extra');
+        $config = new Ini(__DIR__ . '/common/configs/simple.ini', 'extra');
 
         $routes = $config->routes;
         $this->assertInstanceOf(Ini::class, $routes);
