@@ -53,12 +53,17 @@ OUTPUT;
 
         $this->assertSame($expected, $actual);
         unset($session2);
-        $session3 = @Session::getInstance();
 
+        $session3 = @Session::getInstance();
         $session3->del("name");
         unset($session3["company"]);
         unset($session3->age);
 
         $this->assertSame(0, count($session3));
+    }
+
+    public function tearDown()
+    {
+        $_SESSION = [];
     }
 }

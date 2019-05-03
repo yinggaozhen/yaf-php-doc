@@ -14,7 +14,7 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
      * @param string $section
      * @throws \Exception
      */
-    public function __construct($filename = null, $section = null)
+    public function __construct($filename, $section = null)
     {
         if (is_null($filename)) {
             $this->_config = [];
