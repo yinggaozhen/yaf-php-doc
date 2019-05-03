@@ -40,8 +40,8 @@ final class Session implements Iterator, ArrayAccess, Countable
             $instance = new Session();
             $instance->start();
 
-            if ($_SESSION == null || !is_array($_SESSION)) {
-                yaf_trigger_error(E_WARNING, "Attempt to start session failed");
+            if (!isset($_SESSION) || !is_array($_SESSION)) {
+                trigger_error("Attempt to start session failed", E_USER_WARNING);
                 return null;
             }
 
@@ -56,13 +56,17 @@ final class Session implements Iterator, ArrayAccess, Countable
      */
     public function start()
     {
-        if ($this->_started) {
+        if ($this->_started || session_status() === PHP_SESSION_ACTIVE) {
+            $this->_started = 1;
+            // 这里赋值其实是在instance
+            $this->_session = &$_SESSION;
+
             return $this;
         }
 
         session_start();
-        $this->_started = 1;
 
+        $this->_started = 1;
         // 这里赋值其实是在instance
         $this->_session = &$_SESSION;
 
@@ -81,7 +85,7 @@ final class Session implements Iterator, ArrayAccess, Countable
             return $session;
         }
 
-        return $session[$name] ?? null;
+        return $this->_session[$name] ?? null;
     }
 
     /**
@@ -153,22 +157,22 @@ final class Session implements Iterator, ArrayAccess, Countable
 
     public function offsetExists($offset)
     {
-        // do nothing...
+        return $this->has($offset);
     }
 
     public function offsetGet($offset)
     {
-        // do nothing...
+        return $this->get($offset);
     }
 
     public function offsetSet($offset, $value)
     {
-        // do nothing...
+        return $this->set($offset, $value);
     }
 
     public function offsetUnset($offset)
     {
-        // do nothing...
+        return $this->del($offset);
     }
 
     public function count(): int
@@ -178,6 +182,26 @@ final class Session implements Iterator, ArrayAccess, Countable
         }
 
         return count($this->_session);
+    }
+
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        return $this->set($name, $value);
+    }
+
+    public function __isset($name)
+    {
+        return $this->has($name);
+    }
+
+    public function __unset($name)
+    {
+        return $this->del($name);
     }
 
     private function __sleep()
