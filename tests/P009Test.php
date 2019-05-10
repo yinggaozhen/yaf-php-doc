@@ -1,7 +1,6 @@
 <?php
 
-namespace tests;
-
+use tests\Base;
 use Yaf\View\Simple;
 
 /**

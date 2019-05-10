@@ -1,7 +1,6 @@
 <?php
 
-namespace tests;
-
+use tests\Base;
 use Yaf\Request\Http;
 use Yaf\Route\Regex;
 use Yaf\Router;

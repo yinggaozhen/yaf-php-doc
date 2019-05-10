@@ -1,6 +1,6 @@
 <?php
 
-namespace tests;
+use tests\Base;
 
 /**
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P001Test.php

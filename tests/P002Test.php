@@ -1,7 +1,6 @@
 <?php
 
-namespace tests;
-
+use tests\Base;
 use Yaf\Application;
 use Yaf\Exception\LoadFailed\Controller;
 use Yaf\Request\Simple;

@@ -1,7 +1,6 @@
 <?php
 
-namespace tests;
-
+use tests\Base;
 use Yaf\Config\Ini;
 use Yaf\Route\Regex;
 use Yaf\Route\Rewrite;

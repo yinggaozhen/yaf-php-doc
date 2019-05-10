@@ -69,7 +69,7 @@ final class Application
             /** @var Config_Abstract $zconfig */
             $zconfig = null;
 
-            $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'iniInstance');
+            $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
             $instanceFunc->setAccessible(true);
             if (!$section || !is_string($section) || empty($section)) {
                 $zsection = YAF_G('environ_name');
@@ -466,17 +466,17 @@ final class Application
 
         $pzval = $app['dispatcher'] ?? null;
         if (!is_null($pzval) && is_array($pzval)) {
-            $psval = $pzval['defaultModule'];
+            $psval = $pzval['defaultModule'] ?? null;
             if (!is_null($psval) && is_string($psval)) {
                 YAF_G('default_module', strtolower($psval));
             }
 
-            $psval = $pzval['defaultController'];
+            $psval = $pzval['defaultController'] ?? null;
             if (!is_null($psval) && is_string($psval)) {
                 YAF_G('default_controller', strtolower($psval));
             }
 
-            $psval = $pzval['defaultAction'];
+            $psval = $pzval['defaultAction'] ?? null;
             if (!is_null($psval) && is_string($psval)) {
                 YAF_G('default_action', strtolower($psval));
             }
@@ -489,7 +489,7 @@ final class Application
                 YAF_G('catch_exception', true);
             }
 
-            $psval = $pzval['defaultRoute'];
+            $psval = $pzval['defaultRoute'] ?? null;
             if (!is_null($psval) && is_array($psval)) {
                 YAF_G('default_route', $psval);
             }

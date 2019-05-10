@@ -284,15 +284,16 @@ final class Dispatcher
     /**
      * @param callable $callback
      * @param int $error_type
-     * @return Dispatcher
+     * @return Dispatcher | boolean
      * @throws \Exception
      */
-    public function setErrorHandler(callable $callback, int $error_type = E_ALL | E_STRICT): Dispatcher
+    public function setErrorHandler($callback, int $error_type = E_ALL | E_STRICT)
     {
         try {
             set_error_handler($callback, $error_type);
         } catch (\Throwable $e) {
-            yaf_trigger_error(E_WARNING, 'Call to set_error_handler failed');
+            trigger_error('Call to set_error_handler failed', E_USER_WARNING);
+            return false;
         }
 
         return $this;
