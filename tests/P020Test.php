@@ -29,10 +29,11 @@ class P020Test extends Base
             ],
         ];
 
+        $GLOBALS['P020Test'] = 0;
         function error_handler(...$errInfo) {
             echo PHP_EOL . 'P020Test begin' . PHP_EOL;
 
-            $GLOBALS['P020Test']++;
+            ++$GLOBALS['P020Test'];
             TestCase::assertSame(516, Application::app()->getLastErrorNo());
             TestCase::assertTrue(
                 strncmp(
