@@ -29,7 +29,10 @@ class P020Test extends Base
             ],
         ];
 
-        function error_handler($errno, $errstr, $errfile, $errline) {
+        function error_handler(...$errInfo) {
+            echo PHP_EOL . 'P020Test begin' . PHP_EOL;
+
+            $GLOBALS['P020Test']++;
             TestCase::assertSame(516, Application::app()->getLastErrorNo());
             TestCase::assertTrue(
                 strncmp(
@@ -41,6 +44,7 @@ class P020Test extends Base
             Application::app()->clearLastError();
             TestCase::assertSame(0, Application::app()->getLastErrorNo());
             TestCase::assertSame("", Application::app()->getLastErrorMsg());
+            TestCase::assertSame(1, $GLOBALS['P020Test']);
         };
 
         $app = new Application($config);

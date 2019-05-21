@@ -3,6 +3,7 @@
 namespace Yaf;
 
 use const INTERNAL\PHP\DEFAULT_SLASH;
+use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use const YAF\ERR\AUTOLOAD_FAILED;
 use const YAF\ERR\DISPATCH_FAILED;
 use const YAF\ERR\NOTFOUND\ACTION;
@@ -401,24 +402,41 @@ final class Dispatcher
         }
 
         if (!$request->isRouted()) {
-            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
-            $this->_exceptionHandle($request, $response);
-            if (!$this->_route($request)) {
-                yaf_trigger_error(ROUTE_FAILED, 'Routing request failed');
-                $this->_exceptionHandleNoret($request, $response);
+            try {
+                $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
+            } catch (\Exception $e) {
+                $this->_exceptionHandle($e, $request, $response);
                 return null;
             }
 
+            if (!$this->_route($request)) {
+                try {
+                    yaf_trigger_error(ROUTE_FAILED, 'Routing request failed');
+                } catch (\Exception $e) {
+                    $this->_exceptionHandle($e, $request, $response);
+                    return null;
+                }
+            }
+
             $this->_fixDefault($request);
-            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
-            $this->_exceptionHandle($request, $response);
+            try {
+                $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
+            } catch (\Exception $e) {
+                $this->_exceptionHandle($e, $request, $response);
+                return null;
+            }
+
             $request->setRouted();
         } else {
             $this->_fixDefault($request);
         }
 
-        $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_LOOPSTARTUP, $request, $response);
-        $this->_exceptionHandle($request, $response);
+        try {
+            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_LOOPSTARTUP, $request, $response);
+        } catch (\Exception $e) {
+            $this->_exceptionHandle($e, $request, $response);
+            return null;
+        }
 
         $view = $this->_initView(null, null);
         if (!$view) {
@@ -426,27 +444,46 @@ final class Dispatcher
         }
 
         do {
-            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
-            $this->_exceptionHandle($request, $response);
+            try {
+                $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
+            } catch (\Exception $e) {
+                $this->_exceptionHandle($e, $request, $response);
+                return null;
+            }
 
-            if ($this->_handle($request, $response, $view)) {
-                $this->_exceptionHandle($request, $response);
+            try {
+                $this->_handle($request, $response, $view);
+            } catch (\Exception $e) {
+                $this->_exceptionHandle($e, $request, $response);
                 return null;
             }
 
             $this->_fixDefault($request);
-            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
-            $this->_exceptionHandle($request, $response);
+            try {
+                $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
+            } catch (\Exception $e) {
+                $this->_exceptionHandle($e, $request, $response);
+                return null;
+            }
+
+
         } while (--$nesting > 0 && !$request->isDispatched());
 
-        $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
-        $this->_exceptionHandle($request, $response);
-
-        if (0 == $nesting && !$request->isDispatched()) {
-            yaf_trigger_error(DISPATCH_FAILED, "The max dispatch nesting %ld was reached", YAF_G('forward_limit'));
-            $this->_exceptionHandleNoret($request, $response);
+        try {
+            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
+        } catch (\Exception $e) {
+            $this->_exceptionHandle($e, $request, $response);
             return null;
         }
+
+        if (0 == $nesting && !$request->isDispatched()) {
+            try {
+                yaf_trigger_error(DISPATCH_FAILED, "The max dispatch nesting %ld was reached", YAF_G('forward_limit'));
+            } catch (\Exception $e) {
+                $this->_exceptionHandle($e, $request, $response);
+                return null;
+            }
+       }
 
         $return_response = $this->_return_response;
 
@@ -489,8 +526,6 @@ final class Dispatcher
      */
     private function _dispatcherExceptionHandler(Request_Abstract $request, Response_Abstract $response)
     {
-        // TODO 是否要加入 try catch
-
         if (YAF_G('in_exception')) {
             return;
         }
@@ -527,10 +562,11 @@ final class Dispatcher
             return;
         }
 
-        if (!$this->_handle($request, $response, $view)) {
-            if (yaf_buildin_exceptions(CONTROLLER)) {
-                $m = $this->_default_module;
-                $request->setModuleName($m);
+        try {
+            $this->_handle($request, $response, $view);
+        } catch (\Exception $e) {
+            if (is_subclass_of($e, yaf_buildin_exceptions(CONTROLLER))) {
+                $request->setModuleName($this->_default_module);
                 $this->_handle($request, $response, $view);
             }
         }
@@ -574,7 +610,6 @@ final class Dispatcher
         $module     = $request->getModuleName();
         $action     = $request->getActionName();
         $controller = $request->getControllerName();
-
 
         // module
         if (!is_string($module) || empty($module)) {
@@ -979,33 +1014,19 @@ final class Dispatcher
      * @see yaf_exception.h
      *
      * @internal
+     * @param \Exception $e
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      * @return null|void
-     * @throws \Exception | \ReflectionException
+     * @throws \Exception
+     * @throws \ReflectionException
      */
-    private function _exceptionHandle(Request_Abstract $request, Response_Abstract $response): void
-    {
-        if (YAF_G('catch_exception')) {
-             $this->_dispatcherExceptionHandler($request, $response);
-        }
-    }
-
-    /**
-     * 内部方法, YAF对外无此方法(无返回值)
-     *
-     * 原宏位置在
-     * @see yaf_exception.h
-     *
-     * @internal
-     * @param Request_Abstract $request
-     * @param Response_Abstract $response
-     * @throws \Exception | \ReflectionException
-     */
-    private function _exceptionHandleNoret(Request_Abstract $request, Response_Abstract $response): void
+    private function _exceptionHandle(\Exception $e, Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);
+        } else {
+            throw $e;
         }
     }
 

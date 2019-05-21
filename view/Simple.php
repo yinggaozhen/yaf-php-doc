@@ -28,7 +28,7 @@ class Simple implements View_Interface
             if (realpath($tpl_dir) == $tpl_dir) {
                 $this->_tpl_dir = $tpl_dir;
             } else {
-                throw new \Exception("Expects an absolute path for templates directory", TYPE_ERROR);
+                yaf_trigger_error(TYPE_ERROR, 'Expects an absolute path for templates directory');
             }
         }
 
