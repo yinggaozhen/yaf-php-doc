@@ -13,6 +13,7 @@ use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
 use function Yaf\Exception\Internal\yaf_buildin_exceptions;
 use Yaf\View\Simple;
+use function YP\internalCall;
 
 
 final class Dispatcher
@@ -287,7 +288,7 @@ final class Dispatcher
      * @return Dispatcher | boolean
      * @throws \Exception
      */
-    public function setErrorHandler($callback, int $error_type = E_ALL | E_STRICT)
+    public function setErrorHandler($callback, int $error_type = null)
     {
         try {
             set_error_handler($callback, $error_type);
@@ -382,14 +383,11 @@ final class Dispatcher
     // ================================================== 内部方法 ==================================================
 
     /**
-     * TODO 这个写法好丑啊
-     *
-     * @internal
      * @param null|Response_Abstract $response
      * @return null|Response_Abstract
      * @throws \Exception
      */
-    private function _dispatch(?Response_Abstract $response): ?Response_Abstract
+    public function _dispatch(?Response_Abstract &$response): ?Response_Abstract
     {
         $nesting = YAF_G('forward_limit');
 
@@ -403,24 +401,24 @@ final class Dispatcher
         }
 
         if (!$request->isRouted()) {
-            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
-            $this->YAF_EXCEPTION_HANDLE($request, $response);
+            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_ROUTESTARTUP, $request, $response);
+            $this->_exceptionHandle($request, $response);
             if (!$this->_route($request)) {
                 yaf_trigger_error(ROUTE_FAILED, 'Routing request failed');
-                $this->YAF_EXCEPTION_HANDLE_NORET($request, $response);
+                $this->_exceptionHandleNoret($request, $response);
                 return null;
             }
 
-            $this->fixDefault($request);
-            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
-            $this->YAF_EXCEPTION_HANDLE($request, $response);
+            $this->_fixDefault($request);
+            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_ROUTESHUTDOWN, $request, $response);
+            $this->_exceptionHandle($request, $response);
             $request->setRouted();
         } else {
-            $this->fixDefault($request);
+            $this->_fixDefault($request);
         }
 
-        $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSTARTUP, $request, $response);
-        $this->YAF_EXCEPTION_HANDLE($request, $response);
+        $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_LOOPSTARTUP, $request, $response);
+        $this->_exceptionHandle($request, $response);
 
         $view = $this->_initView(null, null);
         if (!$view) {
@@ -428,25 +426,25 @@ final class Dispatcher
         }
 
         do {
-            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
-            $this->YAF_EXCEPTION_HANDLE($request, $response);
+            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_PREDISPATCH, $request, $response);
+            $this->_exceptionHandle($request, $response);
 
             if ($this->_handle($request, $response, $view)) {
-                $this->YAF_EXCEPTION_HANDLE($request, $response);
+                $this->_exceptionHandle($request, $response);
                 return null;
             }
 
-            $this->fixDefault($request);
-            $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
-            $this->YAF_EXCEPTION_HANDLE($request, $response);
+            $this->_fixDefault($request);
+            $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_POSTDISPATCH, $request, $response);
+            $this->_exceptionHandle($request, $response);
         } while (--$nesting > 0 && !$request->isDispatched());
 
-        $this->YAF_PLUGIN_HANDLE($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
-        $this->YAF_EXCEPTION_HANDLE($request, $response);
+        $this->_pluginHandle($plugins, self::YAF_PLUGIN_HOOK_LOOPSHUTDOWN, $request, $response);
+        $this->_exceptionHandle($request, $response);
 
         if (0 == $nesting && !$request->isDispatched()) {
             yaf_trigger_error(DISPATCH_FAILED, "The max dispatch nesting %ld was reached", YAF_G('forward_limit'));
-            $this->YAF_EXCEPTION_HANDLE_NORET($request, $response);
+            $this->_exceptionHandleNoret($request, $response);
             return null;
         }
 
@@ -516,7 +514,8 @@ final class Dispatcher
         $reflectProperty->setAccessible(true);
         $reflectProperty->setValue($request, $exception);
 
-        if ($request->_setParamsSingle('exception', $exception)) {
+        /** @see Request_Abstract::_setParamsSingle() */
+        if (internalCall($request, '_setParamsSingle', ['exception', $exception])) {
             // DO NOTHING IN PHP
         } else {
             return;
@@ -528,7 +527,7 @@ final class Dispatcher
             return;
         }
 
-        if (!$this->_handle($request, $view)) {
+        if (!$this->_handle($request, $response, $view)) {
             if (yaf_buildin_exceptions(CONTROLLER)) {
                 $m = $this->_default_module;
                 $request->setModuleName($m);
@@ -570,7 +569,7 @@ final class Dispatcher
     /**
      * @param Request_Abstract $request
      */
-    private function fixDefault(Request_Abstract $request): void
+    private function _fixDefault(Request_Abstract $request): void
     {
         $module     = $request->getModuleName();
         $action     = $request->getActionName();
@@ -602,7 +601,7 @@ final class Dispatcher
 
         // action
         if (!is_string($action) || empty($action)) {
-            $request->setActionName($action);
+            $request->setActionName($this->_default_action);
         } else {
             $request->setActionName(ucfirst(strtolower($action)));
         }
@@ -658,9 +657,9 @@ final class Dispatcher
 
                 /* view template directory for application, please notice that view engine's directory has high priority */
                 if ($is_def_module) {
-                    $view_dir = sprintf("%s%c%s", $app_dir, DEFAULT_SLASH, "views");
+                    $view_dir = sprintf("%s%s%s", $app_dir, DEFAULT_SLASH, "views");
                 } else {
-                    $view_dir = sprintf("%s%c%s%c%s%c%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "views");
+                    $view_dir = sprintf("%s%s%s%s%s%s%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "views");
                 }
 
                 if (YAF_G('view_directory')) {
@@ -786,10 +785,10 @@ final class Dispatcher
     private function _getController(string $app_dir, string $module, string $controller, int $def_module)
     {
         if ($def_module) {
-            $directory = sprintf("%s%c%s", $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
+            $directory = sprintf("%s%s%s", $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
             $directory_len = strlen($directory);
         } else {
-            $directory = sprintf("%s%c%s%c%s%c%s",
+            $directory = sprintf("%s%s%s%s%s%s%s",
                 $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_MODULE_DIRECTORY_NAME, DIRECTORY_SEPARATOR, $module, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
             $directory_len = strlen($directory);
         }
@@ -864,7 +863,7 @@ final class Dispatcher
             $paction = $actions_map[$action];
             if (!is_null($paction)) {
 
-                $action_path = sprintf('%s%c%s', $app_dir, DEFAULT_SLASH, $paction);
+                $action_path = sprintf('%s%s%s', $app_dir, DEFAULT_SLASH, $paction);
                 if (Loader::import($action_path)) {
                     if (class_exists($class_lowercase)) {
                         if ($class_lowercase instanceof Action_Abstract) {
@@ -886,9 +885,9 @@ final class Dispatcher
             }, $action);
 
             if ($def_module) {
-                $directory = sprintf("%s%c%s", $app_dir, DEFAULT_SLASH, "actions");
+                $directory = sprintf("%s%s%s", $app_dir, DEFAULT_SLASH, "actions");
             } else {
-                $directory = sprintf("%s%c%s%c%s%c%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "actions");
+                $directory = sprintf("%s%s%s%s%s%s%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "actions");
             }
 
             if (YAF_G('name_suffix')) {
@@ -962,7 +961,7 @@ final class Dispatcher
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      */
-    private function YAF_PLUGIN_HANDLE(array $plugins, string $hook, Request_Abstract $request, Response_Abstract $response): void
+    private function _pluginHandle(array $plugins, string $hook, Request_Abstract $request, Response_Abstract $response): void
     {
         if (!is_null($plugins)) {
             foreach ($plugins as $plugin) {
@@ -985,10 +984,10 @@ final class Dispatcher
      * @return null|void
      * @throws \Exception | \ReflectionException
      */
-    private function YAF_EXCEPTION_HANDLE(Request_Abstract $request, Response_Abstract $response): void
+    private function _exceptionHandle(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
-            $this->_dispatcherExceptionHandler($request, $response);
+             $this->_dispatcherExceptionHandler($request, $response);
         }
     }
 
@@ -1003,7 +1002,7 @@ final class Dispatcher
      * @param Response_Abstract $response
      * @throws \Exception | \ReflectionException
      */
-    private function YAF_EXCEPTION_HANDLE_NORET(Request_Abstract $request, Response_Abstract $response): void
+    private function _exceptionHandleNoret(Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($request, $response);

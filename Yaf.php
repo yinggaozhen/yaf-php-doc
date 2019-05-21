@@ -44,7 +44,8 @@ namespace
      */
     function YAF_G(...$args)
     {
-        @list($name, $value) = $args;
+        $name = $args[0] ?? null;
+        $value = $args[1] ?? null;
 
         if (count($args) == 1) {
             return YAF_G_V::$globals[$name] ?? null;
@@ -86,7 +87,7 @@ namespace
             $errMsgProperty->setAccessible(true);
             $errMsgProperty->setValue($app, $message);
 
-            trigger_error(E_RECOVERABLE_ERROR, $message);
+            trigger_error($message);
         }
     }
 }

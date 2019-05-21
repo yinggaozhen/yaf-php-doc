@@ -292,7 +292,7 @@ abstract class Controller_Abstract
         $self_name = str_replace('_', DEFAULT_SLASH, strtolower($name));
         $action_name = str_replace('_', DEFAULT_SLASH, $action_name);
 
-        $path = sprintf("%s%c%s.%s", $self_name, DEFAULT_SLASH, $action_name, $view_ext);
+        $path = sprintf("%s%s%s.%s", $self_name, DEFAULT_SLASH, $action_name, $view_ext);
 
         if ($var_array) {
             $ret = call_user_func([$view, 'render'], $path, $var_array);
@@ -321,7 +321,7 @@ abstract class Controller_Abstract
         $self_name = str_replace('_', DEFAULT_SLASH, strtolower($name));
         $action_name = str_replace('_', DEFAULT_SLASH, $action_name);
 
-        $path = sprintf("%s%c%s.%s", $self_name, DEFAULT_SLASH, $action_name, $view_ext);
+        $path = sprintf("%s%s%s.%s", $self_name, DEFAULT_SLASH, $action_name, $view_ext);
 
         if ($var_array) {
             $ret = call_user_func([$view, 'display'], $path, $var_array);

@@ -107,7 +107,7 @@ final class Application
 
             $loader = Loader::getInstance(YAF_G('local_library'), $globalLibrary);
         } else {
-            $localLibrary = sprintf("%s%c%s", YAF_G('directory'), DEFAULT_SLASH, Loader::YAF_LIBRARY_DIRECTORY_NAME);
+            $localLibrary = sprintf("%s%s%s", YAF_G('directory'), DEFAULT_SLASH, Loader::YAF_LIBRARY_DIRECTORY_NAME);
             $globalLibrary = YAF_G('global_library') ?: null;
 
             $loader = Loader::getInstance($localLibrary, $globalLibrary);
@@ -135,9 +135,7 @@ final class Application
      */
     public static function app(): ?Application
     {
-        $app = self::$_app;
-
-        return $app;
+        return self::$_app;
     }
 
     /**
@@ -154,10 +152,11 @@ final class Application
 
         $this->_running = true;
         $dispatcher = $this->getDispatcher();
-
-        if (is_null($dispatcher->dispatch())) {
+        if (is_null($dispatcher->_dispatch($returnVal))) {
             return false;
         }
+
+        return null;
     }
 
     /**
@@ -200,7 +199,7 @@ final class Application
             if (YAF_G('bootstrap')) {
                 $bootstrapPath = YAF_G('bootstrap');
             } else {
-                $bootstrapPath = sprintf('%s%c%s.%s', YAF_G('directory'), DEFAULT_SLASH, Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, YAF_G('ext'));
+                $bootstrapPath = sprintf('%s%s%s.%s', YAF_G('directory'), DEFAULT_SLASH, Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, YAF_G('ext'));
             }
 
             if (!Loader::import($bootstrapPath)) {
@@ -256,9 +255,7 @@ final class Application
      */
     public function getDispatcher(): Dispatcher
     {
-        $dispatcher = $this->dispatcher;
-
-        return $dispatcher;
+        return $this->dispatcher;
     }
 
     /**
@@ -266,9 +263,7 @@ final class Application
      */
     public function getModules()
     {
-        $modules = $this->_modules;
-
-        return $modules;
+        return $this->_modules;
     }
 
     /**
@@ -482,11 +477,11 @@ final class Application
             }
 
             if (array_key_exists('throwException', $pzval) && !is_null($pzval['throwException'])) {
-                YAF_G('throw_exception', true);
+                YAF_G('throw_exception', $pzval['throwException'] === true);
             }
 
             if (array_key_exists('catchException', $pzval) && !is_null($pzval['catchException'])) {
-                YAF_G('catch_exception', true);
+                YAF_G('catch_exception', $pzval['catchException'] === true);
             }
 
             $psval = $pzval['defaultRoute'] ?? null;

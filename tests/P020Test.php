@@ -2,6 +2,7 @@
 
 use tests\Base;
 use Yaf\Application;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P020Test.php
@@ -29,15 +30,22 @@ class P020Test extends Base
         ];
 
         function error_handler($errno, $errstr, $errfile, $errline) {
-            var_dump(Application::app()->getLastErrorNo());
-            var_dump(Application::app()->getLastErrorMsg());
+            TestCase::assertSame(516, Application::app()->getLastErrorNo());
+            TestCase::assertTrue(
+                strncmp(
+                    'Failed opening controller script %s: %s',
+                    Application::app()->getLastErrorMsg(),
+                    strlen('Failed opening controller script ')
+                ) === 0
+            );
             Application::app()->clearLastError();
-            var_dump(Application::app()->getLastErrorNo());
-            var_dump(Application::app()->getLastErrorMsg());
+            TestCase::assertSame(0, Application::app()->getLastErrorNo());
+            TestCase::assertSame("", Application::app()->getLastErrorMsg());
         };
 
         $app = new Application($config);
-        $app->getDispatcher()->setErrorHandler('error_handler', E_RECOVERABLE_ERROR);
+        // $app->getDispatcher()->setErrorHandler('error_handler', E_RECOVERABLE_ERROR);
+        $app->getDispatcher()->setErrorHandler('error_handler', E_ALL);
         $app->run();
     }
 }

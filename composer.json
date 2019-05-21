@@ -20,6 +20,7 @@
       "./"
     ],
     "files": [
+      "./YP.php",
       "./Yaf.php",
       "./Exception.php"
     ]

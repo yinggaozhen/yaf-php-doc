@@ -42,7 +42,7 @@ final class Loader
 
             if (self::isCategory($class_name, self::YAF_LOADER_MODEL, self::YAF_LOADER_LEN_MODEL)) {
                 /* this is a model class */
-                $directory = sprintf("%s%c%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_MODEL_DIRECTORY_NAME);
+                $directory = sprintf("%s%s%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_MODEL_DIRECTORY_NAME);
                 $file_name_len = strlen($class_name) - $separator_len - self::YAF_LOADER_LEN_MODEL;
 
                 if (YAF_G('name_suffix')) {
@@ -56,7 +56,7 @@ final class Loader
 
             if (self::isCategory($class_name, self::YAF_LOADER_PLUGIN, self::YAF_LOADER_LEN_PLUGIN)) {
                 /* this is a plugin class */
-                $directory = sprintf("%s%c%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_PLUGIN_DIRECTORY_NAME);
+                $directory = sprintf("%s%s%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_PLUGIN_DIRECTORY_NAME);
                 $file_name_len = strlen($class_name) - $separator_len - self::YAF_LOADER_LEN_PLUGIN;
 
                 if (YAF_G('name_suffix')) {
@@ -70,7 +70,7 @@ final class Loader
 
             if (self::isCategory($class_name, self::YAF_LOADER_CONTROLLER, self::YAF_LOADER_LEN_CONTROLLER)) {
                 /* this is a controller class */
-                $directory = sprintf("%s%c%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_CONTROLLER_DIRECTORY_NAME);
+                $directory = sprintf("%s%s%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_CONTROLLER_DIRECTORY_NAME);
                 $file_name_len = strlen($class_name) - $separator_len - self::YAF_LOADER_LEN_CONTROLLER;
 
                 if (YAF_G('name_suffix')) {
@@ -169,7 +169,7 @@ out:
                 $property->setAccessible(true);
                 $library = $property->getValue();
 
-                $file = sprintf("%s%c%s", $library, DIRECTORY_SEPARATOR, $file);
+                $file = sprintf("%s%s%s", $library, DIRECTORY_SEPARATOR, $file);
             }
         }
 
@@ -501,9 +501,9 @@ out:
      * @param int $use_path
      * @return int
      */
-    private static function loaderImport(string $path, int $use_path): int
+    private static function loaderImport($path, int $use_path): int
     {
-        if (!@realpath($path)) {
+        if (!is_readable($path)) {
             return 0;
         }
 

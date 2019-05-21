@@ -253,7 +253,7 @@ abstract class Request_Abstract
 
     public function setDispatched()
     {
-        $this->_dispatched = 1;
+        $this->_dispatched = (boolean) 1;
 
         return true;
     }
@@ -419,12 +419,11 @@ abstract class Request_Abstract
     }
 
     /**
-     * @internal
      * @param string $key
      * @param $value
      * @return int
      */
-    public function _setParamsSingle(string $key, $value): int
+    private function _setParamsSingle(string $key, $value): int
     {
         $this->_params[$key] = $value;
         return 1;

@@ -219,7 +219,7 @@ class Simple implements View_Interface
 
             if (!is_string($tpl_dir)) {
                 if (YAF_G('view_directory')) {
-                    $script = sprintf("%s%c%s", YAF_G('view_directory'), DIRECTORY_SEPARATOR, $tpl);
+                    $script = sprintf("%s%s%s", YAF_G('view_directory'), DIRECTORY_SEPARATOR, $tpl);
                 } else {
                     $message = sprintf("Could not determine the view script path, you should call %s::setScriptPath to specific it", self::class);
                     throw new \Exception($message, VIEW);
