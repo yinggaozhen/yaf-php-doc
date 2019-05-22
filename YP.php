@@ -16,4 +16,19 @@ namespace YP
 
         return $reflectionMethod->invokeArgs($object, $params);
     }
+
+
+    /**
+     * @param $object
+     * @param string $property
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    function internalPropertyGet($object, string $property)
+    {
+        $reflectionProperty = new \ReflectionProperty($object, $property);
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty->getValue($object);
+    }
 }
