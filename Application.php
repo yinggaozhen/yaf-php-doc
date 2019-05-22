@@ -10,7 +10,7 @@ use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request\Http;
 
-final class Application
+class Application
 {
     /**
      * @var Application
@@ -514,3 +514,5 @@ final class Application
         return SUCCESS;
     }
 }
+
+class Yaf_Application extends Application {}

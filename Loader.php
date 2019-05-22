@@ -2,7 +2,11 @@
 
 namespace Yaf;
 
-final class Loader
+/**
+ * Class Loader
+ * @package Yaf
+ */
+class Loader
 {
     protected $_library;
     protected $_global_library;
@@ -548,3 +552,5 @@ out:
     }
 
 }
+
+class Yaf_Loader extends Loader {}
