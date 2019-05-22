@@ -528,7 +528,7 @@ out:
     private static function registerNamespaceSingle($prefix): int
     {
         if (YAF_G('local_namespaces')) {
-            YAF_G('local_namespaces', YAF_G('local_namespaces') . ';' . $prefix);
+            YAF_G('local_namespaces', YAF_G('local_namespaces') . PATH_SEPARATOR . $prefix);
         } else {
             YAF_G('local_namespaces', $prefix);
         }

@@ -103,12 +103,12 @@ class Application
         $this->dispatcher = $zdispatcher;
 
         if (YAF_G('local_library')) {
-            $globalLibrary = YAF_G('global_library') ?: null;
+            $globalLibrary = YAF_G('yaf.library') ?: null;
 
             $loader = Loader::getInstance(YAF_G('local_library'), $globalLibrary);
         } else {
             $localLibrary = sprintf("%s%s%s", YAF_G('directory'), DEFAULT_SLASH, Loader::YAF_LIBRARY_DIRECTORY_NAME);
-            $globalLibrary = YAF_G('global_library') ?: null;
+            $globalLibrary = YAF_G('yaf.library') ?: null;
 
             $loader = Loader::getInstance($localLibrary, $globalLibrary);
         }
@@ -429,15 +429,15 @@ class Application
             if (is_string($pzval)) {
                 YAF_G('local_library', rtrim($pzval, DEFAULT_SLASH));
             } else if (is_array($pzval)) {
-                $psval = $pzval['directory'];
+                $psval = $pzval['directory'] ?? null;
                 if (!is_null($psval) && is_string($psval)) {
-                    YAF_G('local_library', rtrim('$psval', DEFAULT_SLASH));
+                    YAF_G('local_library', rtrim($psval, DEFAULT_SLASH));
                 }
 
                 $psval = $pzval['namespace'];
                 if (!is_null($psval) && is_string($psval) && !empty($psval)) {
                     $src = $psval;
-                    $target = str_replace([' ', ','], ['', DEFAULT_DIR_SEPARATOR], $src);
+                    $target = str_replace([' ', ','], ['', PATH_SEPARATOR], $src);
                     $method = new \ReflectionMethod(Loader::class, 'registerNamespaceSingle');
                     $method->setAccessible(true);
                     $method->invoke(null, $target);

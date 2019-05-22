@@ -1,7 +1,8 @@
 <?php
 
 use tests\Base;
-use Yaf\Yaf_Application;
+use Yaf\Application;
+use Yaf\Loader;
 use Yaf\Yaf_Loader;
 
 /**
@@ -25,7 +26,7 @@ class P024Test extends Base
      */
     public function test()
     {
-        $loader = Yaf_Loader::getInstance('/foo', '/bar');
+        $loader = Loader::getInstance('/foo', '/bar');
         $this->assertSame('/foo', $loader->getLibraryPath());
         $this->assertSame('/bar', $loader->getLibraryPath(true));
 
@@ -35,10 +36,9 @@ class P024Test extends Base
             ],
         ];
 
-        $app = new Yaf_Application($config);
+        $app = new Application($config);
         $this->assertRegExp('/^[\w\/-]+library$/', $loader->getLibraryPath());
-        // TODO
-        // $this->assertSame('/php/global/dir', $loader->getLibraryPath(true));
+        $this->assertSame('/php/global/dir', $loader->getLibraryPath(true));
     }
 
     public function tearDown()
