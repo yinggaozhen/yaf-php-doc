@@ -72,7 +72,7 @@ class Application
             $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
             $instanceFunc->setAccessible(true);
             if (!$section || !is_string($section) || empty($section)) {
-                $zsection = YAF_G('environ_name');
+                $zsection = YAF_G('yaf.environ');
                 $zconfig = $instanceFunc->invoke(null, $config, $zsection);
             } else {
                 $zconfig = $instanceFunc->invoke(null, $config, $section);
@@ -119,7 +119,7 @@ class Application
         }
 
         $this->_running = 0;
-        $this->_environ = YAF_G('environ_name');
+        $this->_environ = YAF_G('yaf.environ');
 
         if (is_array(YAF_G('modules'))) {
             $this->_modules = YAF_G('modules');
@@ -161,16 +161,17 @@ class Application
 
     /**
      * @param callable $func
+     * @param array $args
      * @return bool|mixed
      */
-    public function execute(callback $func)
+    public function execute($func, ...$args)
     {
-        try {
-            $returnVal = call_user_func($func);
-            return $returnVal;
-        } catch (\Exception $e) {
-            return false;
+        if (!is_callable($func)) {
+            return trigger_error('Yaf_Application::execute must be a valid callback', E_USER_WARNING);
         }
+
+        $returnVal = call_user_func_array($func, $args);
+        return $returnVal;
     }
 
     /**

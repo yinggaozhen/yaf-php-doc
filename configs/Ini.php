@@ -29,7 +29,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @return bool
      * @throws \Exception
      */
-    public function set(): bool
+    public function set($name, $value): bool
     {
         \trigger_error('Yaf_Config_Ini is readonly', E_USER_WARNING);
 

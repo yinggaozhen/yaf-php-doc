@@ -2,9 +2,10 @@
 
 namespace Yaf\Config;
 
+use Yaf\Config_Abstract;
 use const YAF\ERR\TYPE_ERROR;
 
-class Simple implements \Countable, \Iterator, \ArrayAccess
+class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
     /**
      * TODO 其实是public
@@ -32,7 +33,7 @@ class Simple implements \Countable, \Iterator, \ArrayAccess
             $values = (array) $values;
         }
 
-        return $this->instance($values, $readonly);
+        return $this->simpleInstance($values, $readonly);
     }
 
     /**
@@ -55,10 +56,7 @@ class Simple implements \Countable, \Iterator, \ArrayAccess
 
             if (is_array($pzval)) {
                 $ret = $this->format($pzval);
-
-                if (!$ret) {
-                    return null;
-                }
+                return $ret ?? null;
             } else {
                 return $pzval;
             }
@@ -67,7 +65,13 @@ class Simple implements \Countable, \Iterator, \ArrayAccess
         return false;
     }
 
-    public function set($name, $value): bool
+    /**
+     * @inheritdoc
+     * @param $name
+     * @param $value
+     * @return bool
+     */
+    public function set($name, $value)
     {
         $readonly = $this->_readonly;
 
@@ -193,7 +197,7 @@ class Simple implements \Countable, \Iterator, \ArrayAccess
      * @return null|Simple
      * @throws \Exception
      */
-    private function instance($values, ?bool $readonly): ?Simple
+    private function simpleInstance($values, ?bool $readonly): ?Simple
     {
         switch (gettype($values)) {
             case 'array':

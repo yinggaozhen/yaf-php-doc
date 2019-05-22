@@ -22,7 +22,7 @@ abstract class Config_Abstract
 
     abstract function get();
 
-    abstract function set();
+    abstract function set($name, $value);
 
     /**
      * @param string|array $arg1
