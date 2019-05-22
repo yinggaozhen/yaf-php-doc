@@ -121,12 +121,14 @@ class Simple implements View_Interface
      */
     public function get(?string $name = null)
     {
-        if (!empty($this->_tpl_vars) && is_array($this->_tpl_vars)) {
-            if (empty($name)) {
+        if (!is_null($this->_tpl_vars) && is_array($this->_tpl_vars)) {
+            if ($name) {
+                if (array_key_exists($name, $this->_tpl_vars)) {
+                    return $this->_tpl_vars[$name];
+                }
+            } else {
                 return $this->_tpl_vars;
             }
-
-            return $this->_tpl_vars[$name] ?? null;
         }
 
         return null;
@@ -158,7 +160,7 @@ class Simple implements View_Interface
         return $this;
     }
 
-    public function clear(string $name): void
+    public function clear(string $name = null): void
     {
         if (empty($name)) {
             $this->_tpl_vars = [];
