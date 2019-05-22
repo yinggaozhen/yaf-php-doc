@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Session;
 
 /**
+ * Check for Yaf_Session
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P016Test.php
  */
 class P016Test extends Base

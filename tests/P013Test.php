@@ -10,6 +10,8 @@ use Yaf\Route\Supervar;
 use Yaf\Router;
 
 /**
+ * Check for Yaf_Router and Config Routes
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P013Test.php
  */
 class P013Test extends Base

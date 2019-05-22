@@ -6,6 +6,8 @@ use Yaf\Route\Rewrite;
 use Yaf\Router;
 
 /**
+ * Check for Yaf_Route_Rewrite
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P011Test.php
  */
 class P011Test extends Base

@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\View\Simple;
 
 /**
+ * Check for Yaf_View_Simple
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P009Test.php
  */
 class P009Test extends Base

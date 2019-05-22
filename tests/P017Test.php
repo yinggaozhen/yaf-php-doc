@@ -1,9 +1,10 @@
 <?php
 
 use tests\Base;
-use Yaf\Config\Ini;
 
 /**
+ * Bug (mem leak and crash in Yaf_Config_Ini)
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P017Test.php
  */
 class P017Test extends Base

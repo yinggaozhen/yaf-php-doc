@@ -3,6 +3,8 @@
 use tests\Base;
 
 /**
+ * Check for yaf presence
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P001Test.php
  */
 class P001Test extends Base

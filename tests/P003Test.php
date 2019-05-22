@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Loader;
 
 /**
+ * Check for Yaf_Loader
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P003Test.php
  */
 class P003Test extends Base
@@ -12,10 +14,10 @@ class P003Test extends Base
     {
         parent::setUp();
 
-        ini_set('use_spl_autoload', 0);
-        ini_set('lowcase_path', 0);
-        ini_set('use_namespace', 0);
-        ini_set('ap.lowcase_path', false);
+        YAF_G('yaf.use_spl_autoload', 0);
+        YAF_G('yaf.lowcase_path', 0);
+        YAF_G('yaf.use_namespace', 0);
+        YAF_G('ap.lowcase_path', false);
     }
 
     /**
@@ -59,9 +61,9 @@ class P003Test extends Base
 
     public function tearDown()
     {
-        ini_set('yaf.use_spl_autoload', null);
-        ini_set('yaf.lowcase_path', null);
-        ini_set('yaf.use_namespace', null);
-        ini_set('ap.lowcase_path', null);
+        YAF_G('yaf.use_spl_autoload', null);
+        YAF_G('yaf.lowcase_path', null);
+        YAF_G('yaf.use_namespace', null);
+        YAF_G('ap.lowcase_path', null);
     }
 }

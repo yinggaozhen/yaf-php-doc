@@ -390,7 +390,7 @@ final class Dispatcher
      */
     public function _dispatch(?Response_Abstract &$response): ?Response_Abstract
     {
-        $nesting = YAF_G('forward_limit');
+        $nesting = YAF_G('yaf.forward_limit');
 
         $response = Response_Abstract::instance(php_sapi_name());
         $request = $this->_request;
@@ -478,7 +478,7 @@ final class Dispatcher
 
         if (0 == $nesting && !$request->isDispatched()) {
             try {
-                yaf_trigger_error(DISPATCH_FAILED, "The max dispatch nesting %ld was reached", YAF_G('forward_limit'));
+                yaf_trigger_error(DISPATCH_FAILED, "The max dispatch nesting %ld was reached", YAF_G('yaf.forward_limit'));
             } catch (\Exception $e) {
                 $this->_exceptionHandle($e, $request, $response);
                 return null;
@@ -830,10 +830,10 @@ final class Dispatcher
 
         $class = '';
         if ($directory_len) {
-            if (YAF_G('name_suffix')) {
-                $class = sprintf("%s%s%s", $controller, YAF_G('name_separator'), 'Controller');
+            if (YAF_G('yaf.name_suffix')) {
+                $class = sprintf("%s%s%s", $controller, YAF_G('yaf.name_separator'), 'Controller');
             } else {
-                $class = sprintf("%s%s%s", 'Controller', YAF_G('name_separator'), $controller);
+                $class = sprintf("%s%s%s", 'Controller', YAF_G('yaf.name_separator'), $controller);
             }
         }
 
@@ -879,10 +879,10 @@ final class Dispatcher
         if (is_array($actions_map)) {
             $action_upper = strtoupper($action);
 
-            if (YAF_G('name_suffix')) {
-                $class = sprintf("%s%s%s", $action_upper, YAF_G('name_separator'), 'Action');
+            if (YAF_G('yaf.name_suffix')) {
+                $class = sprintf("%s%s%s", $action_upper, YAF_G('yaf.name_separator'), 'Action');
             } else {
-                $class = sprintf("%s%s%s", 'Action', YAF_G('name_separator'), $action_upper);
+                $class = sprintf("%s%s%s", 'Action', YAF_G('yaf.name_separator'), $action_upper);
             }
 
             $class_lowercase = strtolower($class);
@@ -913,7 +913,7 @@ final class Dispatcher
                     yaf_trigger_error(ACTION, "Failed opening action script %s", $action_path);
                 }
             }
-        } else if (YAF_G('st_compatible')) {
+        } else if (YAF_G('yaf.st_compatible')) {
             /* This only effects internally */
             $action_upper = preg_replace_callback('/_(\w+)/', function($match) {
                 return '_' . ucfirst($match[1]);
@@ -925,10 +925,10 @@ final class Dispatcher
                 $directory = sprintf("%s%s%s%s%s%s%s", $app_dir, DEFAULT_SLASH, "modules", DEFAULT_SLASH, $module, DEFAULT_SLASH, "actions");
             }
 
-            if (YAF_G('name_suffix')) {
-                $class = sprintf("%s%s%s", $action_upper, YAF_G('name_separator'), "Action");
+            if (YAF_G('yaf.name_suffix')) {
+                $class = sprintf("%s%s%s", $action_upper, YAF_G('yaf.name_separator'), "Action");
             } else {
-                $class = strlen(sprintf("%s%s%s", "Action", YAF_G('name_separator'), $action_upper));
+                $class = strlen(sprintf("%s%s%s", "Action", YAF_G('yaf.name_separator'), $action_upper));
             }
 
             $class_lowercase = strtolower($class);

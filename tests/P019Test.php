@@ -5,6 +5,8 @@ use Yaf\Request\Http;
 use Yaf\Router;
 
 /**
+ * Yaf_Router::getCurrent with number key
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P019Test.php
  */
 class P019Test extends Base

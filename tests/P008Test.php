@@ -5,6 +5,8 @@ use Yaf\Config\Simple;
 use Yaf\Router;
 
 /**
+ * Check for Yaf_Router
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P008Test.php
  */
 class P008Test extends Base

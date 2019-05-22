@@ -4,6 +4,8 @@ namespace tests;
 
 use PHPUnit\Framework\TestCase;
 
+require_once dirname(__DIR__) . '/Yaf.php';
+
 /**
  * Class BasePTest
  * @package tests

@@ -5,6 +5,8 @@ use Yaf\Application;
 use PHPUnit\Framework\TestCase;
 
 /**
+ * Check for Yaf_Application
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P020Test.php
  */
 class P020Test extends Base

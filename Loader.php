@@ -45,7 +45,7 @@ final class Loader
                 $directory = sprintf("%s%s%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_MODEL_DIRECTORY_NAME);
                 $file_name_len = strlen($class_name) - $separator_len - self::YAF_LOADER_LEN_MODEL;
 
-                if (YAF_G('name_suffix')) {
+                if (YAF_G('yaf.name_suffix')) {
                     $file_name = substr($class_name, 0, $file_name_len);
                 } else {
                     $file_name = substr($class_name, self::YAF_LOADER_LEN_MODEL + $separator_len);
@@ -59,7 +59,7 @@ final class Loader
                 $directory = sprintf("%s%s%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_PLUGIN_DIRECTORY_NAME);
                 $file_name_len = strlen($class_name) - $separator_len - self::YAF_LOADER_LEN_PLUGIN;
 
-                if (YAF_G('name_suffix')) {
+                if (YAF_G('yaf.name_suffix')) {
                     $file_name = substr($class_name, 0, $file_name_len);
                 } else {
                     $file_name = substr($class_name, self::YAF_LOADER_LEN_PLUGIN + $separator_len);
@@ -73,7 +73,7 @@ final class Loader
                 $directory = sprintf("%s%s%s", $app_directory, DIRECTORY_SEPARATOR, self::YAF_CONTROLLER_DIRECTORY_NAME);
                 $file_name_len = strlen($class_name) - $separator_len - self::YAF_LOADER_LEN_CONTROLLER;
 
-                if (YAF_G('name_suffix')) {
+                if (YAF_G('yaf.name_suffix')) {
                     $file_name = substr($class_name, 0, $file_name_len);
                 } else {
                     $file_name = substr($class_name, self::YAF_LOADER_LEN_CONTROLLER + $separator_len);
@@ -82,7 +82,7 @@ final class Loader
                 break;
             }
 
-            if (YAF_G('st_compatible')
+            if (YAF_G('yaf.st_compatible')
                 && strncmp($class_name, self::YAF_LOADER_DAO, self::YAF_LOADER_LEN_DAO) == 0
                 && strncmp($class_name, self::YAF_LOADER_SERVICE, self::YAF_LOADER_LEN_SERVICE) == 0
             ) {
@@ -101,7 +101,7 @@ final class Loader
         }
 
         // TODO 设置有问题,取值为null,实际为0. from 003
-        if (!YAF_G('use_spl_autoload')) {
+        if (!YAF_G('yaf.use_spl_autoload')) {
             /** directory might be NULL since we passed a NULL */
             if (Loader::internalAutoload($file_name, $file_name_len, $directory)) {
                 $lc_classname = substr($origin_classname, 0, strlen($class_name));
@@ -109,9 +109,9 @@ final class Loader
                     goto out;
                 }
 
-                yaf_trigger_error(E_STRICT, "Could not find class %s in %s", $class_name, $directory);
+                trigger_error(sprintf("Could not find class %s in %s", $class_name, $directory), E_STRICT);
             } else {
-                yaf_trigger_error(E_WARNING, "Failed opening script %s", $directory);
+                trigger_error(sprintf("Failed opening script %s", $directory), E_USER_WARNING);
             }
             goto out;
         } else {
@@ -199,7 +199,7 @@ out:
                 return $this;
             }
         } else {
-            yaf_trigger_error(E_WARNING, "Invalid parameters provided, must be a string, or an array");
+            trigger_error('Invalid parameters provided, must be a string, or an array', E_USER_WARNING);
         }
 
         return false;
@@ -319,16 +319,16 @@ out:
         $class_name_len = strlen($class_name);
         $separator_len  = YAF_G('name_separator_len');
 
-        if (YAF_G('name_suffix')) {
+        if (YAF_G('yaf.name_suffix')) {
             if ($class_name_len > $category_len && strncmp(substr($class_name, $class_name_len - $category_len), $category, $category_len) == 0) {
-                if (!$separator_len || !strncmp(substr($class_name, $class_name_len - $category_len - $separator_len), YAF_G('name_separator'), $separator_len)) {
+                if (!$separator_len || !strncmp(substr($class_name, $class_name_len - $category_len - $separator_len), YAF_G('yaf.name_separator'), $separator_len)) {
                     return 1;
                 }
             }
         } else {
             if (strncmp($class_name, $category, $category_len) == 0) {
                 if (!$separator_len ||
-                    strncmp(substr($class_name, $category_len), YAF_G('name_separator'), $separator_len) == 0) {
+                    strncmp(substr($class_name, $category_len), YAF_G('yaf.name_separator'), $separator_len) == 0) {
                     return 1;
                 }
             }
@@ -436,7 +436,7 @@ out:
                 if (self::isLocalNamespace($file_name, $name_len)) {
                     $property = new \ReflectionProperty($loader, '_library');
                     $property->setAccessible(true);
-                    $library_dir = $property->getValue();
+                    $library_dir = $property->getValue($loader);
                 } else {
                     $property = new \ReflectionProperty($loader, '_global_library');
                     $property->setAccessible(true);
@@ -454,7 +454,7 @@ out:
         $buf .= DIRECTORY_SEPARATOR;
         $buf .= str_replace('_', DIRECTORY_SEPARATOR, $file_name);
 
-        if (YAF_G('lowcase_path')) {
+        if (YAF_G('yaf.lowcase_path')) {
             $buf = strtolower($buf);
         }
 
@@ -478,20 +478,27 @@ out:
             return 0;
         }
 
-        $ns = YAF_G('local_namespaces');
+        $ns = (string) YAF_G('local_namespaces');
 
-        if (strstr($class_name, '_')) {
-            $prefix = strstr($class_name, '_', true);
-            $backup = strstr($class_name, '_');
-        } else if (strstr($class_name, DIRECTORY_SEPARATOR)) {
-            $prefix = strstr($class_name, DIRECTORY_SEPARATOR, true);
-            $backup = strstr($class_name, DIRECTORY_SEPARATOR);
-        } else {
-            $prefix = $class_name;
-            $backup = $len;
+        $prefix = '';
+        $class_name = ltrim($class_name, '\\');
+
+        if (($pos = strpos($class_name, '_')) !== false) {
+            $prefix = substr($class_name, 0, $pos);
+            $class = substr($class_name, $pos + 1);
+        } else if (($pos = strpos($class_name, '\\')) !== false) {
+            $prefix = substr($class_name, 0, $pos);
+            $class = substr($class_name, $pos + 1);
         }
 
-        // TODO 看不懂
+        if ($prefix == '') {
+            return 0;
+        }
+
+        $prefixes = explode(PATH_SEPARATOR, $ns);
+        if (in_array($prefix, $prefixes)) {
+            return 1;
+        }
 
         return 0;
     }

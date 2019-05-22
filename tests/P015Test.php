@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Exception;
 
 /**
+ * Check for Yaf_Exception
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P015Test.php
  */
 class P015Test extends Base

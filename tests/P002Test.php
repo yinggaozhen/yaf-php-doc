@@ -6,6 +6,8 @@ use Yaf\Exception\LoadFailed\Controller;
 use Yaf\Request\Simple;
 
 /**
+ * Check for Yaf_Request_Simple
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P002Test.php
  */
 class P002Test extends Base
@@ -13,8 +15,6 @@ class P002Test extends Base
     public function setUp()
     {
         parent::setUp();
-
-        ini_set('yaf.use_namespace', 0);
     }
 
     /**

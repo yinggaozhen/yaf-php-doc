@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Config\Ini;
 
 /**
+ * Check for Yaf_Config_Ini
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P010Test.php
  */
 class P010Test extends Base

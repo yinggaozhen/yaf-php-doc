@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Application;
 
 /**
+ * Check for Yaf_Application
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P022Test.php
  */
 class P022Test extends Base

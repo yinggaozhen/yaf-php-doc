@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Registry;
 
 /**
+ * Check for Yaf_Registry
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P004Test.php
  */
 class P004Test extends Base

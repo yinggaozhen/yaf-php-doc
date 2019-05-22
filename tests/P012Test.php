@@ -6,6 +6,8 @@ use Yaf\Route\Regex;
 use Yaf\Router;
 
 /**
+ * Check for Yaf_Route_Regex
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P012Test.php
  */
 class P012Test extends Base

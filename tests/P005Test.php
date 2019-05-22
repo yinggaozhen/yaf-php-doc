@@ -6,6 +6,8 @@ use Yaf\Response\Cli;
 use Yaf\Response_Abstract;
 
 /**
+ * Check for Yaf_Response
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P005Test.php
  */
 class P005Test extends Base

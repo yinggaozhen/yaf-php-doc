@@ -4,6 +4,8 @@ use tests\Base;
 use Yaf\Config\Simple;
 
 /**
+ * Check for Yaf_Config_Simple
+ *
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P007Test.php
  */
 class P007Test extends Base

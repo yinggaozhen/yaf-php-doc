@@ -6,16 +6,25 @@ namespace
 
     use Yaf\Application;
 
-    ini_set('yaf.library',          '');
-    ini_set('yaf.action_prefer',    '0');
-    ini_set('yaf.lowcase_path',     '0');
-    ini_set('yaf.use_spl_autoload', '0');
-    ini_set('yaf.forward_limit',    '5');
-    ini_set('yaf.name_suffix',      '1');
-    ini_set('yaf.name_separator',   '');
-    ini_set('yaf.st_compatible',    '0');
-    ini_set('yaf.environ',          'product');
-    ini_set('yaf.use_namespace',    '0');
+    /**
+     * @internal
+     * Class YAF_G_V
+     */
+    class YAF_INI_V
+    {
+        public static $ini = [];
+    }
+
+    YAF_INI_V::$ini['yaf.library']          = '';
+    YAF_INI_V::$ini['yaf.action_prefer']    = '0';
+    YAF_INI_V::$ini['yaf.lowcase_path']     = '0';
+    YAF_INI_V::$ini['yaf.use_spl_autoload'] = '0';
+    YAF_INI_V::$ini['yaf.forward_limit']    = '5';
+    YAF_INI_V::$ini['yaf.name_suffix']      = '1';
+    YAF_INI_V::$ini['yaf.name_separator']   = '';
+    YAF_INI_V::$ini['yaf.st_compatible']    = '0';
+    YAF_INI_V::$ini['yaf.environ']          = 'product';
+    YAF_INI_V::$ini['yaf.use_namespace']    = '0';
 
     /**
      * @internal
@@ -48,10 +57,18 @@ namespace
         $value = $args[1] ?? null;
 
         if (count($args) == 1) {
+            if (array_key_exists($name, YAF_INI_V::$ini)) {
+                return YAF_INI_V::$ini[$name];
+            }
+
             return YAF_G_V::$globals[$name] ?? null;
         }
 
-        YAF_G_V::$globals[$name] = $value;
+        if (array_key_exists($name, YAF_INI_V::$ini)) {
+            YAF_INI_V::$ini[$name] = $value;
+        } else {
+            YAF_G_V::$globals[$name] = $value;
+        }
     }
 
     /**
