@@ -4,3 +4,4 @@ composer\.lock
 *\.out
 *\.swp
 test
+tmp_build

@@ -397,3 +397,5 @@ class Simple implements View_Interface
         return $this->assign($name, $value);
     }
 }
+
+class Yaf_View_Simple extends Simple {}
