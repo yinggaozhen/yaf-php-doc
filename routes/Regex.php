@@ -6,7 +6,7 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
-final class Regex implements Route_Interface
+class Regex implements Route_Interface
 {
     protected $_route = null;
     protected $_default = null;
@@ -218,3 +218,5 @@ final class Regex implements Route_Interface
         return 1;
     }
 }
+
+class Yaf_Route_Regex extends Regex {}

@@ -6,7 +6,7 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
-final class Route_Static implements Route_Interface
+class Route_Static implements Route_Interface
 {
     /**
      * @return true
@@ -111,3 +111,5 @@ final class Route_Static implements Route_Interface
         return end($result);
     }
 }
+
+class Yaf_Route_Static extends Route_Static {}

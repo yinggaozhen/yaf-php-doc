@@ -4,7 +4,7 @@ namespace Yaf\Request;
 
 use Yaf\Request_Abstract;
 
-final class Simple extends Request_Abstract
+class Simple extends Request_Abstract
 {
     public function __construct(string $method = null, string $module = null, string $controller = null, string $action = null, array $params = null)
     {
@@ -144,3 +144,5 @@ final class Simple extends Request_Abstract
 
     }
 }
+
+class Yaf_Request_Simple extends Simple {}

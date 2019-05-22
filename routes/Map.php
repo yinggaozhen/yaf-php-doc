@@ -6,7 +6,7 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
-final class Map implements Route_Interface
+class Map implements Route_Interface
 {
     /**
      * @var bool
@@ -153,3 +153,5 @@ final class Map implements Route_Interface
         return null;
     }
 }
+
+class Yaf_Route_Map extends Map {}

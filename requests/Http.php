@@ -159,3 +159,5 @@ class Http extends Request_Abstract
 
     }
 }
+
+class Yaf_Request_Http extends Http {}

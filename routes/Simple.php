@@ -7,7 +7,7 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
-final class Simple implements Route_Interface
+class Simple implements Route_Interface
 {
     protected $controller;
 
@@ -125,3 +125,5 @@ final class Simple implements Route_Interface
         return 1;
     }
 }
+
+class Yaf_Route_Simple extends Simple {}

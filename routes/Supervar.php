@@ -6,7 +6,7 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
-final class Supervar implements Route_Interface
+class Supervar implements Route_Interface
 {
     protected $_var_name = null;
 
@@ -111,3 +111,5 @@ final class Supervar implements Route_Interface
         return 1;
     }
 }
+
+class Yaf_Route_Supervar extends Supervar {}

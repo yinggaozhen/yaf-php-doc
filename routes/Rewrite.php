@@ -7,7 +7,7 @@ use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 use Yaf\Router;
 
-final class Rewrite implements Route_Interface
+class Rewrite implements Route_Interface
 {
     /**
      * @var string
@@ -240,3 +240,5 @@ final class Rewrite implements Route_Interface
         return 1;
     }
 }
+
+class Yaf_Route_Rewrite extends Rewrite {}

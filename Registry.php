@@ -2,7 +2,7 @@
 
 namespace Yaf;
 
-final class Registry
+class Registry
 {
     /**
      * @var array
@@ -62,3 +62,5 @@ final class Registry
         return true;
     }
 }
+
+class Yaf_Registry extends Registry {}

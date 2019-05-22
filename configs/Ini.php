@@ -5,7 +5,7 @@ namespace Yaf\Config;
 use Yaf\Config_Abstract;
 use const YAF\ERR\TYPE_ERROR;
 
-final class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
+class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
     /**
      * Ini constructor.
@@ -331,3 +331,5 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
         }, explode(':', $key));
     }
 }
+
+class Yaf_Config_Ini extends Ini {}

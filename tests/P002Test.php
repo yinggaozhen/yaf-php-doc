@@ -1,9 +1,9 @@
 <?php
 
 use tests\Base;
-use Yaf\Application;
 use Yaf\Exception\LoadFailed\Controller;
-use Yaf\Request\Simple;
+use Yaf\Request\Yaf_Request_Simple;
+use Yaf\Yaf_Application;
 
 /**
  * Check for Yaf_Request_Simple
@@ -22,7 +22,7 @@ class P002Test extends Base
      */
     public function test()
     {
-        $request = new Simple('CLI', 'index', 'dummy', null, []);
+        $request = new Yaf_Request_Simple('CLI', 'index', 'dummy', null, []);
 
         $this->assertSame('index', $request->module);
         $this->assertSame('dummy', $request->controller);
@@ -39,7 +39,7 @@ class P002Test extends Base
 
         $catch = false;
         try {
-            $app = new Application([
+            $app = new Yaf_Application([
                 'application' => ['directory' => dirname(__FILE__)],
             ]);
             $app->getDispatcher()->dispatch($request);

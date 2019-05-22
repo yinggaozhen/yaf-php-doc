@@ -1,7 +1,7 @@
 <?php
 
 use tests\Base;
-use Yaf\Registry;
+use Yaf\Yaf_Registry;
 
 /**
  * Check for Yaf_Registry
@@ -18,18 +18,18 @@ class P004Test extends Base
     public function test()
     {
         $str = 'Ageli Platform';
-        Registry::set('name', $str);
+        Yaf_Registry::set('name', $str);
 
-        $this->assertSame('Ageli Platform', Registry::get('name'));
-        $this->assertTrue(Registry::has('name'));
+        $this->assertSame('Ageli Platform', Yaf_Registry::get('name'));
+        $this->assertTrue(Yaf_Registry::has('name'));
 
         //---------------------------------------
 
         $name = 'name';
-        Registry::del($name);
+        Yaf_Registry::del($name);
 
-        $this->assertNull(Registry::get($name));
-        $this->assertFalse(Registry::has($name));
+        $this->assertNull(Yaf_Registry::get($name));
+        $this->assertFalse(Yaf_Registry::has($name));
     }
 
     public function tearDown()

@@ -4,7 +4,7 @@ namespace Yaf\Config;
 
 use const YAF\ERR\TYPE_ERROR;
 
-final class Simple implements \Countable, \Iterator, \ArrayAccess
+class Simple implements \Countable, \Iterator, \ArrayAccess
 {
     /**
      * TODO 其实是public
@@ -221,3 +221,5 @@ final class Simple implements \Countable, \Iterator, \ArrayAccess
 	    return $ret;
     }
 }
+
+class Yaf_Config_Simple extends Simple {}
