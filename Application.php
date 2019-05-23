@@ -2,7 +2,6 @@
 
 namespace Yaf;
 
-use const INTERNAL\PHP\DEFAULT_DIR_SEPARATOR;
 use const INTERNAL\PHP\DEFAULT_SLASH;
 use const INTERNAL\PHP\FAILURE;
 use const INTERNAL\PHP\SUCCESS;
