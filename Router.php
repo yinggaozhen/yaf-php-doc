@@ -114,6 +114,9 @@ class Router
         return $this->_current;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function instance()
     {
         /** @var Router $route */
@@ -125,9 +128,9 @@ class Router
 static_route:
             $route = new Route_Static();
         } else {
-            routerInstance($route, YAF_G('default_route'));
+            $route = routerInstance(YAF_G('default_route'));
             if (!is_object($route)) {
-                \trigger_error(sprintf('Unable to initialize default route, use %s instead', Route_Static::class), E_WARNING);
+                \trigger_error(sprintf('Unable to initialize default route, use %s instead', Route_Static::class), E_USER_WARNING);
                 goto static_route;
             }
         }

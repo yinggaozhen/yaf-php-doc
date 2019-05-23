@@ -22,7 +22,8 @@
     "files": [
       "./YP.php",
       "./Yaf.php",
-      "./Exception.php"
+      "./Exception.php",
+      "./routes/Interface.php"
     ]
   },
   "scripts": {
