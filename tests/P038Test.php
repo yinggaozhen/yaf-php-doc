@@ -6,7 +6,6 @@ use Yaf\View\Simple;
 /**
  * Check for Yaf_View_Simple error message outputing
  *
- * @codeCoverageIgnore
  * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P038Test.php
  */
 class P038Test extends Base
@@ -37,11 +36,16 @@ class P038Test extends Base
 ?>
 HTML;
 
+        $exception = false;
         file_put_contents($tpl, $html);
         try {
             echo $view->render($tpl);
-        } catch (\Exception $e) {
+        } catch (Error $e) {
+            $exception = true;
+            $this->assertSame("syntax error, unexpected '}'", $e->getMessage());
         }
+
+        $this->assertTrue($exception);
     }
 
     public function tearDown()
