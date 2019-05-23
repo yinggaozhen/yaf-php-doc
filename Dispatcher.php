@@ -718,7 +718,6 @@ class Dispatcher
                     $executor = $iController;
 
                     if ($reflectionMethod->getNumberOfParameters()) {
-                        // TODO GET_PARAMS
                         $call_args = $this->_getCallParameters($request, $reflectionMethod->getParameters()) ?: [];
 
                         $result = $reflectionMethod->invokeArgs($iController, $call_args);

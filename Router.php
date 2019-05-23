@@ -13,6 +13,10 @@ class Router
 
     protected $_current;
 
+    /**
+     * Router constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->instance();
@@ -86,16 +90,15 @@ class Router
 
     /**
      * @param string $name
-     * @return bool|null
+     * @return bool|null|Route_Interface
      */
-    public function getRoute(string $name): ?bool
+    public function getRoute(string $name)
     {
         if (empty($name)) {
             return false;
         }
 
-        $route = $this->_routes[$name];
-        return is_null($route) ? $route : null;
+        return $this->_routes[$name] ?? null;
     }
 
     /**

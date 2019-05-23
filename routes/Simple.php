@@ -105,7 +105,6 @@ class Simple implements Route_Interface
         $ncontroller = $this->controller;
         $naction = $this->action;
 
-        // TODO yaf_request_query 其实就是 request::query_ex
         $module = Request_Abstract::_queryEx('GET', $nmodule);
         $controller = Request_Abstract::_queryEx('GET', $ncontroller);
         $action = Request_Abstract::_queryEx('GET', $naction);

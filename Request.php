@@ -439,7 +439,6 @@ abstract class Request_Abstract
     }
 
     /**
-     * @internal
      * @param string $type
      * @param string $name
      * @return array|mixed|null
