@@ -1,7 +1,8 @@
 <?php
 
-define('DIR_ROOT', __DIR__);
-define('YAF_TEST_APPLICATION_PATH', DIR_ROOT . '/tmp_build/application');
+
+!defined('DIR_ROOT') && define('DIR_ROOT', __DIR__);
+!defined('YAF_TEST_APPLICATION_PATH') && define('YAF_TEST_APPLICATION_PATH', DIR_ROOT . '/tmp_build/application');
 
 function shutdown($root = YAF_TEST_APPLICATION_PATH) {
 //    $dp = opendir($root);

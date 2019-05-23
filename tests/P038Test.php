@@ -14,7 +14,7 @@ class P038Test extends Base
     public function setUp()
     {
         parent::setUp();
-        $this->markTestSkipped('syntax error test, can not test');
+        $this->markTestSkipped('syntax error test');
 
         require_once __DIR__ . '/common/build.inc';
         startup();
@@ -37,14 +37,15 @@ class P038Test extends Base
    } 
 ?>
 HTML;
+
+        file_put_contents($tpl, $html);
         try {
-            file_put_contents($tpl, $html);
             echo $view->render($tpl);
         } catch (Exception $e) {
             echo 222;exit;
         }
 
-        echo 222;exit;
+        echo 33;exit;
     }
 
     public function tearDown()
