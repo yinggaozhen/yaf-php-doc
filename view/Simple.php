@@ -208,10 +208,13 @@ class Simple implements View_Interface
      * @return int
      * @throws \Exception
      */
-    private function simpleRender(string $tpl, $vars, &$result): int
+    private function simpleRender($tpl, $vars, &$result): int
     {
-        $tpl_vars = $this->_tpl_vars;
+        if (!is_string($tpl)) {
+            return 0;
+        }
 
+        $tpl_vars = $this->_tpl_vars;
         $symbol_table = $this->buildSymtable($tpl_vars, $vars);
 
         // 判断是否为绝对路径
@@ -250,15 +253,14 @@ class Simple implements View_Interface
      */
     private function renderTpl(array $symbol_table, string $_internal_tpl, ?string &$_internal_result): int
     {
-        // TODO 是否需要extract
         extract($symbol_table);
 
-        if (!file_exists($_internal_tpl)) {
-            throw new \Exception(sprintf("Failed opening template %s", $_internal_tpl), VIEW);
+        if (!realpath($_internal_tpl)) {
+            yaf_trigger_error(VIEW, 'Failed opening template %s', $_internal_tpl);
         }
 
-        if (!is_readable($_internal_tpl)) {
-            yaf_trigger_error(E_WARNING, 'Unable to fetch ob content');
+        if (!is_file($_internal_tpl) || !is_readable($_internal_tpl)) {
+            yaf_trigger_error(E_USER_WARNING, 'Unable to fetch ob content');
             return 0;
         }
 

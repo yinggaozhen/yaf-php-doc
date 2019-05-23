@@ -42,10 +42,7 @@ HTML;
         try {
             echo $view->render($tpl);
         } catch (Exception $e) {
-            echo 222;exit;
         }
-
-        echo 33;exit;
     }
 
     public function tearDown()
