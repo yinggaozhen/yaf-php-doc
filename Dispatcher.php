@@ -516,11 +516,13 @@ class Dispatcher
     }
 
     /**
+     * @param \Exception $e
      * @param Request_Abstract $request
      * @param Response_Abstract $response
-     * @throws \ReflectionException | \Exception
+     * @throws \Exception
+     * @throws \ReflectionException
      */
-    private function _dispatcherExceptionHandler(Request_Abstract $request, Response_Abstract $response)
+    private function _dispatcherExceptionHandler(\Exception $e, Request_Abstract $request, Response_Abstract $response)
     {
         if (YAF_G('in_exception')) {
             return;
@@ -537,7 +539,7 @@ class Dispatcher
 
         $controller = Dispatcher::YAF_ERROR_CONTROLLER;
         $action = Dispatcher::YAF_ERROR_ACTION;
-        $exception = new \Exception();
+        $exception = $e;
 
         $request->setControllerName($controller);
         $request->setActionName($action);
@@ -717,7 +719,7 @@ class Dispatcher
 
                     if ($reflectionMethod->getNumberOfParameters()) {
                         // TODO GET_PARAMS
-                        $call_args = $this->_getCallParameters() ?: [];
+                        $call_args = $this->_getCallParameters($request, $reflectionMethod->getParameters()) ?: [];
 
                         $result = $reflectionMethod->invokeArgs($iController, $call_args);
                     } else {
@@ -744,7 +746,7 @@ class Dispatcher
                     $controllerProperty->setValue($iAction, $iController);
 
                     if ($fptr->getNumberOfParameters()) {
-                        $this->_getCallParameters($request, $fptr, $call_args, $count);
+                        $call_args = $this->_getCallParameters($request, $fptr->getParameters());
                         $result = call_user_func([$iAction, 'execute'], ...$call_args);
                     } else {
                         $result = call_user_func([$iAction, 'execute']);
@@ -948,25 +950,26 @@ class Dispatcher
     }
 
     /**
-     * TODO 未完成，看得有点头疼
-     *
      * @param Request_Abstract $request
-     * @param \ReflectionMethod $fptr
-     * @param array|null $params
-     * @param int $count
+     * @param \ReflectionParameter[] $callParams
+     * @return array
      */
-    private function _getCallParameters(Request_Abstract $request, \ReflectionMethod $fptr, ?array &$params, int &$count)
+    private function _getCallParameters(Request_Abstract $request, $callParams = [])
     {
-        $request_args = $request->getParams();
-        $func_arg_info = $fptr->getParameters();
+        $params = [];
+        $requestParams = $request->getParams() ?: [];
 
-        foreach ($func_arg_info as $arg) {
-            if (isset($request_args[$arg->getName()])) {
-                $params[$arg->getName()] = $request_args[$arg->getName()];
+        if (empty($requestParams)) {
+            return $params;
+        }
 
-                // TODO 校验 yaf_dispatcher.php yaf_dispatcher_get_call_parameters
+        foreach ($callParams as $callParam) {
+            if (isset($requestParams[$callParam->getName()])) {
+                $params[] = $requestParams[$callParam->getName()];
             }
         }
+
+        return $params;
     }
 
     // ================================================== 内部宏 ==================================================
@@ -1008,7 +1011,7 @@ class Dispatcher
     private function _exceptionHandle(\Exception $e, Request_Abstract $request, Response_Abstract $response): void
     {
         if (YAF_G('catch_exception')) {
-            $this->_dispatcherExceptionHandler($request, $response);
+            $this->_dispatcherExceptionHandler($e, $request, $response);
         } else {
             throw $e;
         }

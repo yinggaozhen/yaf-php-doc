@@ -30,6 +30,7 @@ function startup($root = YAF_TEST_APPLICATION_PATH) {
     $dirs[] = 'models';
     $dirs[] = 'views';
     $dirs[] = 'views/index';
+    $dirs[] = 'views/error';
     $dirs[] = 'tpls';
 
     foreach($dirs as $dir){
