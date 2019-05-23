@@ -107,7 +107,7 @@ class Loader
         // TODO 设置有问题,取值为null,实际为0. from 003
         if (!YAF_G('yaf.use_spl_autoload')) {
             /** directory might be NULL since we passed a NULL */
-            if (Loader::internalAutoload($file_name, $file_name_len, $directory)) {
+            if (Loader::_internalAutoload($file_name, $file_name_len, $directory)) {
                 $lc_classname = substr($origin_classname, 0, strlen($class_name));
                 if (class_exists($lc_classname, false)) {
                     goto out;
@@ -120,7 +120,7 @@ class Loader
             goto out;
         } else {
             $lower_case_name = strtolower(substr($origin_classname, 0, strlen($class_name)));
-            if (Loader::internalAutoload($file_name, $file_name_len, $directory) && class_exists($lower_case_name, false)) {
+            if (Loader::_internalAutoload($file_name, $file_name_len, $directory) && class_exists($lower_case_name, false)) {
                 goto out;
             }
 
@@ -171,7 +171,7 @@ out:
             } else {
                 $property = new \ReflectionProperty($loader, '_library');
                 $property->setAccessible(true);
-                $library = $property->getValue();
+                $library = $property->getValue($loader);
 
                 $file = sprintf("%s%s%s", $library, DIRECTORY_SEPARATOR, $file);
             }
@@ -418,7 +418,6 @@ out:
     /**
      * 实际为private
      *
-     * @internal
      * @param string $file_name
      * @param int $name_len
      * @param string $directory
@@ -426,7 +425,7 @@ out:
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function internalAutoload(?string $file_name, ?int $name_len, ?string &$directory): int
+    public static function _internalAutoload(?string $file_name, ?int $name_len, ?string &$directory): int
     {
         $buf = '';
 
@@ -513,13 +512,15 @@ out:
      * @param int $use_path
      * @return int
      */
-    private static function loaderImport($path, int $use_path): int
+    private static function loaderImport($path, int $use_path)
     {
         if (!is_readable($path)) {
             return 0;
         }
 
         require_once $path;
+
+        return 1;
     }
 
     /**

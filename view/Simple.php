@@ -156,9 +156,9 @@ class Simple implements View_Interface
      * @param $value
      * @return $this
      */
-    public function assignRef(string $name, $value): Simple
+    public function assignRef(string $name, &$value): Simple
     {
-        $this->_tpl_vars[$name] = $value;
+        $this->_tpl_vars[$name] = &$value;
 
         return $this;
     }
@@ -214,8 +214,7 @@ class Simple implements View_Interface
             return 0;
         }
 
-        $tpl_vars = $this->_tpl_vars;
-        $symbol_table = $this->buildSymtable($tpl_vars, $vars);
+        $symbol_table = $this->buildSymtable($this->_tpl_vars, $vars);
 
         // 判断是否为绝对路径
         if (realpath($tpl) === $tpl) {
@@ -253,7 +252,7 @@ class Simple implements View_Interface
      */
     private function renderTpl(array $symbol_table, string $_internal_tpl, ?string &$_internal_result): int
     {
-        extract($symbol_table);
+        extract($symbol_table, EXTR_REFS);
 
         if (!realpath($_internal_tpl)) {
             yaf_trigger_error(VIEW, 'Failed opening template %s', $_internal_tpl);
@@ -288,7 +287,7 @@ class Simple implements View_Interface
         $scope        = $this;
 
         if ($tpl_vars && is_array($tpl_vars)) {
-            foreach ($tpl_vars as $var_name => $entry) {
+            foreach ($tpl_vars as $var_name => &$entry) {
                 /* GLOBALS protection */
                 if ($var_name === 'GLOBALS') {
                     continue;
@@ -299,13 +298,13 @@ class Simple implements View_Interface
                 }
 
                 if ($this->validVarName($var_name, strlen($var_name))) {
-                    $symbol_table[$var_name] = $entry;
+                    $symbol_table[$var_name] = &$entry;
                 }
             }
         }
 
         if (!empty($vars) && is_array($vars)) {
-            foreach ($vars as $var_name => $entry) {
+            foreach ($vars as $var_name => &$entry) {
                 /* GLOBALS protection */
                 if ($var_name === 'GLOBALS') {
                     continue;
@@ -316,7 +315,7 @@ class Simple implements View_Interface
                 }
 
                 if ($this->validVarName($var_name, strlen($var_name))) {
-                    $symbol_table[$var_name] = $entry;
+                    $symbol_table[$var_name] = &$entry;
                 }
             }
         }

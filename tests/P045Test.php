@@ -48,7 +48,7 @@ class P045Test extends Base
     {
         $config = [
             'application' => [
-                'directory' => realpath(__DIR__),
+                'directory' => __DIR__,
                 'dispatcher' => [
                     'catchException' => 0,
                     'throwException' => 0,

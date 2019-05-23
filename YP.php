@@ -42,6 +42,19 @@ namespace YP
     {
         return is_string($path) && preg_match('/^\//', $path);
     }
+
+    function getClassEntry($clazz)
+    {
+        $declaredClasses = get_declared_classes();
+
+        foreach ($declaredClasses as $class) {
+            if (!strnatcasecmp($class, $clazz)) {
+                return $class;
+            }
+        }
+
+        return null;
+    }
 }
 
 

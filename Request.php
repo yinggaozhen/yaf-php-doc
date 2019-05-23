@@ -113,11 +113,15 @@ abstract class Request_Abstract
                 return;
             }
 
-            if ($this->setParamsMulti($params)) {
+            if ($this->_setParamsMulti($params)) {
                 return $this;
             }
         } else if (count($params) == 2) {
             list($name, $value) = $params;
+
+            if (!is_string($name)) {
+                return;
+            }
 
             $this->_params[$name] = $value;
             if ($this->_setParamsSingle($name, $value)) {

@@ -546,7 +546,7 @@ class Dispatcher
         $reflectProperty->setValue($request, $exception);
 
         /** @see Request_Abstract::_setParamsSingle() */
-        if (internalCall($request, '_setParamsSingle', ['exception', $exception])) {
+        if (internalCall($request, '_setParamsSingle', 'exception', $exception)) {
             // DO NOTHING IN PHP
         } else {
             return;
@@ -676,6 +676,7 @@ class Dispatcher
 
             /** @var Controller_Abstract $ce */
             $ce = $this->_getController($app_dir, $module, $controller, $is_def_module);
+
             if (empty($ce)) {
                 return 0;
             } else {
@@ -812,14 +813,12 @@ class Dispatcher
     {
         if ($def_module) {
             $directory = sprintf("%s%s%s", $app_dir, DS, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
-            $directory_len = strlen($directory);
         } else {
             $directory = sprintf("%s%s%s%s%s%s%s",
                 $app_dir, DS, Loader::YAF_MODULE_DIRECTORY_NAME, DS, $module, DS, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
-            $directory_len = strlen($directory);
         }
 
-        if ($directory_len) {
+        if ($directory) {
             if (YAF_G('yaf.name_suffix')) {
                 $class = sprintf("%s%s%s", $controller, YAF_G('yaf.name_separator'), 'Controller');
             } else {
@@ -828,21 +827,16 @@ class Dispatcher
 
             $class_lowercase = strtolower($class);
 
-            if (!class_exists($class_lowercase, false)) {
-                // TODO $directory是否为引用
-                if (!Loader::internalAutoload($controller, strlen($controller), $directory)) {
+            if (!($ce = \YP\getClassEntry($class_lowercase))) {
+                if (!Loader::_internalAutoload($controller, strlen($controller), $directory)) {
                     yaf_trigger_error(CONTROLLER, "Failed opening controller script %s", $directory);
                     return null;
-                } else if (!class_exists($class_lowercase)) {
+                } else if (!($ce = \YP\getClassEntry($class_lowercase))) {
                     yaf_trigger_error(AUTOLOAD_FAILED, 'Could not find class %s in controller script %s', $class, $directory);
                     return 0;
-                } else {
-                    $ce = $class_lowercase;
-
-                    if (!($ce instanceof Controller_Abstract)) {
-                        yaf_trigger_error(TYPE_ERROR, "Controller must be an iniInstance of %s", Controller_Abstract::class);
-                        return 0;
-                    }
+                } else if (get_parent_class($ce) !== 'Yaf\Controller_Abstract' && get_parent_class($ce) !== 'Yaf_Controller_Abstract') {
+                    yaf_trigger_error(TYPE_ERROR, 'Controller must be an iniInstance of %s', Controller_Abstract::class);
+                    return 0;
                 }
             }
 
@@ -925,7 +919,7 @@ class Dispatcher
 
             $ce = null;
             if (!class_exists($class_lowercase)) {
-                if (!Loader::internalAutoload($action_upper, strlen($action), $directory)) {
+                if (!Loader::_internalAutoload($action_upper, strlen($action), $directory)) {
                     yaf_trigger_error(ACTION, "Failed opening action script %s: %s", $directory);
                     return null;
                 }

@@ -195,23 +195,23 @@ class Application
         $ce = null;
         $retval = 1;
 
-        $ce = Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER;
+        $ce = \YP\getClassEntry(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER);
 
         if (!class_exists($ce)) {
             if (YAF_G('bootstrap')) {
                 $bootstrapPath = YAF_G('bootstrap');
             } else {
-                $bootstrapPath = sprintf('%s%s%s.%s', YAF_G('directory'), DEFAULT_SLASH, $ce, YAF_G('ext'));
+                $bootstrapPath = sprintf('%s%s%s.%s', YAF_G('directory'), DEFAULT_SLASH, Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, YAF_G('ext'));
             }
 
             if (!Loader::import($bootstrapPath)) {
-                trigger_error("Couldn't find bootstrap file {$bootstrapPath}", E_WARNING);
+                trigger_error("Couldn't find bootstrap file {$bootstrapPath}", E_USER_WARNING);
                 $retval = 0;
-            } else if (!class_exists(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER, false)) {
-                trigger_error(sprintf("Couldn't find class %s in %s", $ce, $bootstrapPath), E_WARNING);
+            } else if (!($ce = \YP\getClassEntry(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER))) {
+                trigger_error(sprintf("Couldn't find class %s in %s", Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER, $bootstrapPath), E_USER_WARNING);
                 $retval = 0;
-            } else if (!($ce instanceof Bootstrap_Abstract)) {
-                trigger_error(sprintf("Expect a %s iniInstance, %s give", Bootstrap_Abstract::class, get_class($ce)), E_WARNING);
+            } else if (get_parent_class($ce) !== 'Yaf\Bootstrap_Abstract' && get_parent_class($ce) !== 'Yaf_Bootstrap_Abstract') {
+                trigger_error(sprintf("Expect a %s iniInstance, %s give", Bootstrap_Abstract::class, $ce), E_USER_WARNING);
             }
         }
 
@@ -432,7 +432,7 @@ class Application
                     YAF_G('local_library', rtrim($psval, DEFAULT_SLASH));
                 }
 
-                $psval = $pzval['namespace'];
+                $psval = $pzval['namespace'] ?? null;
                 if (!is_null($psval) && is_string($psval) && !empty($psval)) {
                     $src = $psval;
                     $target = str_replace([' ', ','], ['', PATH_SEPARATOR], $src);
