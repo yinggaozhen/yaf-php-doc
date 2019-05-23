@@ -100,8 +100,6 @@ class Dispatcher
     }
 
     /**
-     * TODO 默认值需要再check一下
-     *
      * @param Request_Abstract $request
      * @return Response_Abstract|bool
      * @throws \Exception
@@ -708,7 +706,7 @@ class Dispatcher
                 $func_name = sprintf('%s%s', strtolower($action), 'action');
 
                 try {
-                    $reflectionMethod = new \ReflectionMethod($ce, $func_name);
+                    $reflectionMethod = new \ReflectionMethod($iController, $func_name);
                 } catch (\ReflectionException $e) {
                     $reflectionMethod = null;
                 }
@@ -718,16 +716,11 @@ class Dispatcher
 
                     if ($reflectionMethod->getNumberOfParameters()) {
                         // TODO GET_PARAMS
-                        $call_args = $this->_getCallParameters();
+                        $call_args = $this->_getCallParameters() ?: [];
 
-                        $method_name = $func_name;
-                        $result = call_user_func([$iController, $method_name], $call_args);
+                        $result = $reflectionMethod->invokeArgs($iController, $call_args);
                     } else {
-                        call_user_func($func_name);
-                    }
-
-                    if (!isset($result)) {
-                        return 0;
+                        $result = $reflectionMethod->invoke($iController);
                     }
 
                     if ($result === false) {
@@ -780,7 +773,7 @@ class Dispatcher
                     $instantly_flush = $this->_instantly_flush;
                     if ($auto_render) {
                         if ($instantly_flush === false) {
-                            $result = call_user_func([$executor, 'render'], $action);
+                            $result = internalCall($executor, 'render', $action);
 
                             if (!isset($result) || $result === false) {
                                 return 0;
@@ -790,7 +783,7 @@ class Dispatcher
                                 $response->setBody((string) $result, 'YAF_RESPONSE_APPEND');
                             }
                         } else {
-                            $result = call_user_func([$executor, 'display'], $action);
+                            $result = internalCall($executor, 'display', $action);
 
                             if (!isset($result) || $result === false) {
                                 return 0;
@@ -818,43 +811,42 @@ class Dispatcher
     private function _getController(string $app_dir, string $module, string $controller, int $def_module)
     {
         if ($def_module) {
-            $directory = sprintf("%s%s%s", $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
+            $directory = sprintf("%s%s%s", $app_dir, DS, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
             $directory_len = strlen($directory);
         } else {
             $directory = sprintf("%s%s%s%s%s%s%s",
-                $app_dir, DIRECTORY_SEPARATOR, Loader::YAF_MODULE_DIRECTORY_NAME, DIRECTORY_SEPARATOR, $module, DIRECTORY_SEPARATOR, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
+                $app_dir, DS, Loader::YAF_MODULE_DIRECTORY_NAME, DS, $module, DS, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
             $directory_len = strlen($directory);
         }
 
-        $class = '';
         if ($directory_len) {
             if (YAF_G('yaf.name_suffix')) {
                 $class = sprintf("%s%s%s", $controller, YAF_G('yaf.name_separator'), 'Controller');
             } else {
                 $class = sprintf("%s%s%s", 'Controller', YAF_G('yaf.name_separator'), $controller);
             }
-        }
 
-        $class_lowercase = strtolower($class);
+            $class_lowercase = strtolower($class);
 
-        if (!class_exists($class_lowercase, false)) {
-            // TODO $directory是否为引用
-            if (!Loader::internalAutoload($controller, strlen($controller), $directory)) {
-                yaf_trigger_error(CONTROLLER, "Failed opening controller script %s", $directory);
-                return null;
-            } else if (!class_exists($class_lowercase)) {
-                yaf_trigger_error(AUTOLOAD_FAILED, 'Could not find class %s in controller script %s', $class, $directory);
-                return 0;
-            } else {
-                $ce = $class_lowercase;
-
-                if (!($ce instanceof Controller_Abstract)) {
-                    yaf_trigger_error(TYPE_ERROR, "Controller must be an iniInstance of %s", Controller_Abstract::class);
+            if (!class_exists($class_lowercase, false)) {
+                // TODO $directory是否为引用
+                if (!Loader::internalAutoload($controller, strlen($controller), $directory)) {
+                    yaf_trigger_error(CONTROLLER, "Failed opening controller script %s", $directory);
+                    return null;
+                } else if (!class_exists($class_lowercase)) {
+                    yaf_trigger_error(AUTOLOAD_FAILED, 'Could not find class %s in controller script %s', $class, $directory);
                     return 0;
+                } else {
+                    $ce = $class_lowercase;
+
+                    if (!($ce instanceof Controller_Abstract)) {
+                        yaf_trigger_error(TYPE_ERROR, "Controller must be an iniInstance of %s", Controller_Abstract::class);
+                        return 0;
+                    }
                 }
             }
 
-            return $ce;
+            return $class;
         }
 
         return null;

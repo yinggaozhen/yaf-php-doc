@@ -402,6 +402,11 @@ abstract class Request_Abstract
 
     // ================================================== 内部方法 ==================================================
 
+    public function _setDispatched($flag)
+    {
+        $this->_dispatched = (bool) $flag;
+    }
+
     /**
      * @param Request_Abstract $request
      * @param array $values

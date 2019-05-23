@@ -67,7 +67,7 @@ abstract class Controller_Abstract
      * @param array|null $var_array
      * @return string|bool
      */
-    protected function render(string $action, array $var_array = null)
+    protected function render(string $action, $var_array = [])
     {
         $output = $this->_render($action, $var_array);
 
@@ -79,7 +79,7 @@ abstract class Controller_Abstract
      * @param array|null $var_array
      * @return bool
      */
-    protected function display(string $action, array $var_array = null): bool
+    protected function display(string $action, $var_array = []): bool
     {
         return (bool) $this->_display($action, $var_array);
     }
@@ -206,18 +206,18 @@ abstract class Controller_Abstract
     {
         $request = $this->_request;
 
-        if (empty($this->_request) || $this->_request instanceof Request_Abstract) {
+        if (empty($this->_request) || !($this->_request instanceof Request_Abstract)) {
             return false;
         }
 
         switch (func_num_args()) {
             case 1:
-                if (is_string($module)) {
-                    trigger_error("Expect a string action name", E_WARNING);
+                if (!is_string($module)) {
+                    trigger_error('Expect a string action name', E_USER_WARNING);
                     return false;
                 }
 
-                $this->actions = $module;
+                $request->setActionName($module);
                 break;
 
             case 2:
@@ -248,7 +248,7 @@ abstract class Controller_Abstract
 
             case 4:
                 if (!is_array($args)) {
-                    trigger_error('Parameters must be an array', E_WARNING);
+                    trigger_error('Parameters must be an array', E_USER_WARNING);
                     return false;
                 }
 
@@ -259,7 +259,7 @@ abstract class Controller_Abstract
                 break;
         }
 
-        $request->setDispatched();
+        $request->_setDispatched(0);
 
         return true;
     }
@@ -283,7 +283,7 @@ abstract class Controller_Abstract
      * @param array $var_array
      * @return string
      */
-    private function _render(string $action_name, array $var_array): string
+    private function _render(string $action_name, $var_array): string
     {
         $view = $this->_view;
         $name = $this->_name;
@@ -312,7 +312,7 @@ abstract class Controller_Abstract
      * @param array $var_array
      * @return int
      */
-    private function _display(string $action_name, array $var_array): int
+    private function _display(string $action_name, $var_array): int
     {
         $view = $this->_view;
         $name = $this->_name;

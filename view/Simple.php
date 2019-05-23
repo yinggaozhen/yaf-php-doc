@@ -20,12 +20,12 @@ class Simple implements View_Interface
      * @param array|null $options
      * @throws \Exception
      */
-    final public function __construct(?string $tpl_dir, ?array $options = null)
+    final public function __construct($tpl_dir, ?array $options = null)
     {
         $this->_tpl_vars = [];
 
-        if (!empty($tpl_dir)) {
-            if (realpath($tpl_dir) == $tpl_dir) {
+        if (!empty($tpl_dir) && is_string($tpl_dir)) {
+            if (\YP\isAbsolutePath($tpl_dir)) {
                 $this->_tpl_dir = $tpl_dir;
             } else {
                 yaf_trigger_error(TYPE_ERROR, 'Expects an absolute path for templates directory');

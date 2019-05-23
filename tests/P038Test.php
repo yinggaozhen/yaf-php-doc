@@ -14,7 +14,6 @@ class P038Test extends Base
     public function setUp()
     {
         parent::setUp();
-        $this->markTestSkipped('syntax error test');
 
         require_once __DIR__ . '/common/build.inc';
         startup();
@@ -41,7 +40,7 @@ HTML;
         file_put_contents($tpl, $html);
         try {
             echo $view->render($tpl);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
     }
 

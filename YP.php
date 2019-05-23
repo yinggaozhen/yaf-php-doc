@@ -9,7 +9,7 @@ namespace YP
      * @return mixed
      * @throws \ReflectionException
      */
-    function internalCall($object, string $method, $params = [])
+    function internalCall($object, string $method, ...$params)
     {
         $reflectionMethod = new \ReflectionMethod($object, $method);
         $reflectionMethod->setAccessible(true);
@@ -30,6 +30,17 @@ namespace YP
         $reflectionProperty->setAccessible(true);
 
         return $reflectionProperty->getValue($object);
+    }
+
+    /**
+     * 判断是否为绝对路径
+     *
+     * @param string $path
+     * @return bool
+     */
+    function isAbsolutePath($path)
+    {
+        return is_string($path) && preg_match('/^\//', $path);
     }
 }
 
