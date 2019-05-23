@@ -140,12 +140,15 @@ class Simple implements View_Interface
      * @return bool
      * @throws \Exception
      */
-    public function eval(string $tpl_content, array $vars = null): ?bool
+    public function eval(string $tpl_content, array $vars = null)
     {
-        // TODO 这里execTpl解读还没彻底理解
+        $result_value = '';
+
         if (!$this->simpleEval($tpl_content, $vars, $result_value)) {
             return false;
         }
+
+        return $result_value;
     }
 
     /**
@@ -320,8 +323,6 @@ class Simple implements View_Interface
     }
 
     /**
-     * TODO
-     *
      * @param string $tpl
      * @param array|null $vars
      * @param $result
@@ -337,8 +338,13 @@ class Simple implements View_Interface
         $symbol_table = $this->buildSymtable($tpl_vars, $vars);
 
         if (strlen($tpl)) {
-            $phtml = sprintf("?>%s", $tpl);
-            // TODO zend_compile_string
+            $__phtml = sprintf("?>%s", $tpl);
+
+            extract($symbol_table);
+            ob_start();
+            eval($__phtml);
+            $result = ob_get_contents();
+            ob_end_clean();
         }
 
         return 1;
