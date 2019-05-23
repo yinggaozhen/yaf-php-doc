@@ -403,14 +403,14 @@ abstract class Request_Abstract
     // ================================================== 内部方法 ==================================================
 
     /**
-     * @internal
+     * @param Request_Abstract $request
      * @param array $values
      * @return int
      */
-    public function _setParamsMulti($values): int
+    public static function _setParamsMulti(Request_Abstract $request, $values): int
     {
         if ($values && is_array($values)) {
-            $this->_params = $values;
+            $request->_params = $values;
 
             return 1;
         }

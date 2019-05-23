@@ -344,7 +344,6 @@ class Application
     /**
      * 内部方法,外部不可调用
      *
-     * @internal
      * @param string $name
      * @return int
      */

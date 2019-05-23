@@ -106,7 +106,7 @@ class Supervar implements Route_Interface
             return 0;
         }
 
-        $pathinfoRouteMethod = new \ReflectionMethod(Route_Static::class, '_pathinfoRoute');
+        $pathinfoRouteMethod = new \ReflectionMethod(Route_Static::class, '_pathInfoRoute');
         $pathinfoRouteMethod->invoke(null, $request, $uri);
         return 1;
     }

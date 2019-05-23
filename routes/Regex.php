@@ -143,7 +143,7 @@ class Regex implements Route_Interface
                 }
             }
 
-            $request->_setParamsMulti($args);
+            Request_Abstract::_setParamsMulti($request, $args);
         }
 
         return 1;

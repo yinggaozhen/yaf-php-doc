@@ -21,7 +21,7 @@ class P008Test extends Base
      */
     public function test()
     {
-        // TODO 依赖于 route_static::_pathinfoRoute
+        // TODO 依赖于 route_static::_pathInfoRoute
 //        $router = new Router();
 //
 //        $route  = new Simple('m', 'c', 'a');

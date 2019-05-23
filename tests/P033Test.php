@@ -6,6 +6,7 @@ use Yaf\Controller_Abstract;
 use Yaf\Dispatcher;
 use Yaf\Exception;
 use Yaf\Request\Http;
+use Yaf\View\Simple;
 
 class ControllerController extends Controller_Abstract
 {
