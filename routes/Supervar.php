@@ -111,5 +111,3 @@ class Supervar implements Route_Interface
         return 1;
     }
 }
-
-class Yaf_Route_Supervar extends Supervar {}

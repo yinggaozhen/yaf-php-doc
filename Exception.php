@@ -21,9 +21,9 @@ namespace Yaf
     }
 }
 
+
 namespace Yaf\Exception
 {
-
     use \Yaf\Exception;
 
     class StartupError extends Exception
@@ -95,13 +95,13 @@ namespace Yaf\Exception\Internal
         return $exceptions[$code] = $exception;
     }
 
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\STARTUP_FAILED, StartupError::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\ROUTE_FAILED, RouterFailed::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\DISPATCH_FAILED, DispatchFailed::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\AUTOLOAD_FAILED, LoadFailed::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\NOTFOUND\MODULE, LoadFailed\Module::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\NOTFOUND\CONTROLLER, LoadFailed\Controller::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\NOTFOUND\ACTION, LoadFailed\Action::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\NOTFOUND\VIEW, LoadFailed\View::class);
-    \Yaf\Exception\Internal\yaf_buildin_exceptions(\Yaf\ERR\TYPE_ERROR, TypeError::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\STARTUP_FAILED, StartupError::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\ROUTE_FAILED, RouterFailed::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\DISPATCH_FAILED, DispatchFailed::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\AUTOLOAD_FAILED, LoadFailed::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\NOTFOUND\MODULE, LoadFailed\Module::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\NOTFOUND\CONTROLLER, LoadFailed\Controller::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\NOTFOUND\ACTION, LoadFailed\Action::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\NOTFOUND\VIEW, LoadFailed\View::class);
+    \Yaf\Exception\Internal\yaf_buildin_exceptions(\YAF\ERR\TYPE_ERROR, TypeError::class);
 }

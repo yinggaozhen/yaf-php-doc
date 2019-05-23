@@ -552,5 +552,3 @@ out:
     }
 
 }
-
-class Yaf_Loader extends Loader {}

@@ -153,5 +153,3 @@ class Map implements Route_Interface
         return null;
     }
 }
-
-class Yaf_Route_Map extends Map {}

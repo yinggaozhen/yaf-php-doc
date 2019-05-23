@@ -225,5 +225,3 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
 	    return $ret;
     }
 }
-
-class Yaf_Config_Simple extends Simple {}

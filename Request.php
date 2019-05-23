@@ -327,7 +327,7 @@ abstract class Request_Abstract
      * @param string $request_uri
      * @return int
      */
-    protected function _setBaseUri(string $base_uri, string $request_uri): int
+    protected function _setBaseUri(?string $base_uri, ?string $request_uri): int
     {
         if (is_null($base_uri)) {
             $script_filename = $_SERVER['SCRIPT_FILENAME'];

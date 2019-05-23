@@ -3,7 +3,6 @@
 namespace Yaf;
 
 use const INTERNAL\PHP\DEFAULT_SLASH;
-use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use const YAF\ERR\AUTOLOAD_FAILED;
 use const YAF\ERR\DISPATCH_FAILED;
 use const YAF\ERR\NOTFOUND\ACTION;
@@ -16,8 +15,7 @@ use function Yaf\Exception\Internal\yaf_buildin_exceptions;
 use Yaf\View\Simple;
 use function YP\internalCall;
 
-
-final class Dispatcher
+class Dispatcher
 {
     /**
      * @var Dispatcher
@@ -656,7 +654,7 @@ final class Dispatcher
         $request->setDispatched();
         if (!$app_dir) {
             $error_message = sprintf("%s requires %s(which set the application.directory) to be initialized first", get_class($this), Application::class);
-            throw new \Exception($error_message, STARTUP_FAILED);
+            yaf_trigger_error(STARTUP_FAILED, $error_message);
         } else {
             $is_def_module = 0;
 
@@ -665,13 +663,13 @@ final class Dispatcher
             $dmodule    = $this->_default_module;
 
             if (!is_string($module) || empty($module)) {
-                throw new \Exception("Unexcepted a empty module name");
+                yaf_trigger_error(DISPATCH_FAILED, 'Unexcepted a empty module name');
             } else if (!Application::isModuleName($module)) {
-                throw new \Exception(sprintf("There is no module %s", $module), MODULE);
+                yaf_trigger_error(MODULE, 'There is no module %s', $module);
             }
 
             if (!is_string($controller) || empty($controller)) {
-                throw new \Exception("Unexcepted a empty controller name", DISPATCH_FAILED);
+                yaf_trigger_error(DISPATCH_FAILED, 'Unexcepted a empty controller name');
             }
 
             if ($dmodule == $module) {

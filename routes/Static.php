@@ -111,5 +111,3 @@ class Route_Static implements Route_Interface
         return end($result);
     }
 }
-
-class Yaf_Route_Static extends Route_Static {}

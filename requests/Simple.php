@@ -144,5 +144,3 @@ class Simple extends Request_Abstract
 
     }
 }
-
-class Yaf_Request_Simple extends Simple {}

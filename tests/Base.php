@@ -4,8 +4,6 @@ namespace tests;
 
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__DIR__) . '/Yaf.php';
-
 /**
  * Class BasePTest
  * @package tests
@@ -29,8 +27,6 @@ class Base extends TestCase
      */
     public function proxyGetProperty($object, string $property)
     {
-        $reflectionProperty = new \ReflectionProperty($object, $property);
-        $reflectionProperty->setAccessible(true);
-        return $reflectionProperty->getValue($object);
+        return \YP\internalPropertyGet($object, $property);
     }
 }

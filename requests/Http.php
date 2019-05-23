@@ -10,7 +10,7 @@ class Http extends Request_Abstract
 
     const SCHEME_HTTPS = 'https';
 
-    public function __construct(?string $request_uri, ?string $base_uri)
+    public function __construct(?string $request_uri = null, ?string $base_uri = null)
     {
         $method = $_SERVER['REQUEST_METHOD'] ?? '';
 
@@ -159,5 +159,3 @@ class Http extends Request_Abstract
 
     }
 }
-
-class Yaf_Request_Http extends Http {}

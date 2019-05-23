@@ -238,7 +238,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
             }
 
             if ($section_name && is_string($section_name)) {
-                $section = $configs[$section_name] ?? null;
+                $section = $configs[$section_name] ;
 
                 if (is_null($section)) {
                     yaf_trigger_error(E_ERROR, "There is no section '%s' in '%s'", $section_name, $ini_file);
@@ -331,5 +331,3 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
         }, explode(':', $key));
     }
 }
-
-class Yaf_Config_Ini extends Ini {}

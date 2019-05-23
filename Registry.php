@@ -62,5 +62,3 @@ class Registry
         return true;
     }
 }
-
-class Yaf_Registry extends Registry {}

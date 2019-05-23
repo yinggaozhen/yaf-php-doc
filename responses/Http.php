@@ -127,5 +127,3 @@ class Http extends Response_Abstract
         return 1;
     }
 }
-
-class Yaf_Response_Http extends Http {}

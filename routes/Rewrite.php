@@ -240,5 +240,3 @@ class Rewrite implements Route_Interface
         return 1;
     }
 }
-
-class Yaf_Route_Rewrite extends Rewrite {}

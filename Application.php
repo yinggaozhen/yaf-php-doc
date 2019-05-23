@@ -366,7 +366,7 @@ class Application
                 continue;
             }
 
-            if ($module == $name) {
+            if (strnatcasecmp($module, $name) === 0) {
                 return 1;
             }
         }
@@ -515,5 +515,3 @@ class Application
         return SUCCESS;
     }
 }
-
-class Yaf_Application extends Application {}
