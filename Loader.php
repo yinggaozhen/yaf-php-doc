@@ -232,13 +232,13 @@ out:
      * @param null|string $class_name
      * @return bool|int
      */
-    public function isLocalName(?string $class_name): bool
+    public function isLocalName($class_name): bool
     {
         if (empty($class_name) || !is_string($class_name)) {
             return false;
         }
 
-        return (bool) $this->isLocalNamespace($class_name, strlen($class_name));
+        return (bool) $this->isLocalNamespace($class_name);
     }
 
     /**
@@ -437,7 +437,7 @@ out:
                 yaf_trigger_error(E_WARNING, '%s need to be initialize first', Loader::class);
                 return 0;
             } else {
-                if (self::isLocalNamespace($file_name, $name_len)) {
+                if (self::isLocalNamespace($file_name)) {
                     $property = new \ReflectionProperty($loader, '_library');
                     $property->setAccessible(true);
                     $library_dir = $property->getValue($loader);
@@ -473,10 +473,9 @@ out:
 
     /**
      * @param string $class_name
-     * @param int $len
      * @return int
      */
-    private static function isLocalNamespace(string $class_name, int $len): int
+    private static function isLocalNamespace(string $class_name): int
     {
         if (!YAF_G('local_namespaces')) {
             return 0;
@@ -493,6 +492,8 @@ out:
         } else if (($pos = strpos($class_name, '\\')) !== false) {
             $prefix = substr($class_name, 0, $pos);
             $class = substr($class_name, $pos + 1);
+        } else {
+            $prefix = $class_name;
         }
 
         if ($prefix == '') {

@@ -4,7 +4,6 @@ session_start();
 define('TEST_DIR', __DIR__);
 define('DS', DIRECTORY_SEPARATOR);
 
-require_once dirname(__DIR__) . '/YP.php';
 require_once dirname(__DIR__) . '/Yaf.php';
 
 // 加载框架基础文件
