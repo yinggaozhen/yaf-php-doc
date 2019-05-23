@@ -145,7 +145,7 @@ class Application
         $running = $this->_running;
 
         if ($running === true) {
-            yaf_trigger_error(STARTUP_FAILED, "An application iniInstance already run");
+            yaf_trigger_error(STARTUP_FAILED, 'An application iniInstance already run');
             return true;
         }
 
@@ -195,21 +195,23 @@ class Application
         $ce = null;
         $retval = 1;
 
-        if (!class_exists(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER, false)) {
+        $ce = Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER;
+
+        if (!class_exists($ce)) {
             if (YAF_G('bootstrap')) {
                 $bootstrapPath = YAF_G('bootstrap');
             } else {
-                $bootstrapPath = sprintf('%s%s%s.%s', YAF_G('directory'), DEFAULT_SLASH, Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, YAF_G('ext'));
+                $bootstrapPath = sprintf('%s%s%s.%s', YAF_G('directory'), DEFAULT_SLASH, $ce, YAF_G('ext'));
             }
 
             if (!Loader::import($bootstrapPath)) {
                 trigger_error("Couldn't find bootstrap file {$bootstrapPath}", E_WARNING);
                 $retval = 0;
             } else if (!class_exists(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER, false)) {
-                trigger_error(sprintf("Couldn't find class %s in %s", Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP, $bootstrapPath), E_WARNING);
+                trigger_error(sprintf("Couldn't find class %s in %s", $ce, $bootstrapPath), E_WARNING);
                 $retval = 0;
-            } else if (!Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP_LOWER instanceof Bootstrap_Abstract) {
-                trigger_error(sprintf("Expect a %s iniInstance, %s give", Bootstrap_Abstract::class, get_class(Bootstrap_Abstract::YAF_DEFAULT_BOOTSTRAP)), E_WARNING);
+            } else if (!($ce instanceof Bootstrap_Abstract)) {
+                trigger_error(sprintf("Expect a %s iniInstance, %s give", Bootstrap_Abstract::class, get_class($ce)), E_WARNING);
             }
         }
 
@@ -228,14 +230,11 @@ class Application
                     continue;
                 }
 
-                try {
-                    $method->invoke($bootstrap, $dispatcher);
-                } catch (\Exception $e) {
-                    return false;
-                }
-
+                $method->setAccessible(true);
+                $method->invoke($bootstrap, $dispatcher);
             }
         }
+
         return $this;
     }
 

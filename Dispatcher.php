@@ -285,7 +285,7 @@ class Dispatcher
      * @return Dispatcher | boolean
      * @throws \Exception
      */
-    public function setErrorHandler($callback, int $error_type = null)
+    public function setErrorHandler($callback, int $error_type = E_ALL)
     {
         try {
             set_error_handler($callback, $error_type);
