@@ -140,7 +140,7 @@ class Application
     /**
      * @throws \Exception
      */
-    public function run(): ?bool
+    public function run()
     {
         $running = $this->_running;
 
@@ -155,7 +155,7 @@ class Application
             return false;
         }
 
-        return null;
+        return $returnVal;
     }
 
     /**
