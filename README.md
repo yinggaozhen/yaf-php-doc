@@ -45,7 +45,7 @@
 <!-- TODO 上传composer -->
 
 ```bash
-> composer install YafPHP
+> git clone https://github.com/yinggaozhen/yaf-php.git
 ```
 
 ## 1.3 快速使用
