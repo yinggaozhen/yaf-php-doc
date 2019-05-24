@@ -25,7 +25,8 @@
     + [1.1 简介](#11-简介)
     + [1.2 安装](#12-安装)
     + [1.3 快速使用](#13-快速使用)
-        - [1.3.1 phpstorm引入](#131-在phpstorm引入)
+        - [1.3.1 PhpStorm引入](#131-在phpstorm引入)
+        - [1.3.2 NetBeans引入](#132-在netbeans引入)
 + [2 相关链接](#2-相关链接)
 + [3 待解决问题](#3待解决问题)
 
@@ -49,10 +50,22 @@
 
 ## 1.3 快速使用
 
-### 1.3.1 在phpstorm引入
+### 1.3.1 在PhpStorm引入
+
+两种实现方法
 
 ~~~
-打开phpstorm -> 右击`External Libraries` -> 点击`Configure PHP Include Path` -> 加入`Yaf-PHP` -> click apply -> done
+左侧导航栏 `External Libraries` -> `Configure PHP Include Path` -> 添加`Yaf-PHP`文件路径 -> `apply`
+~~~
+
+~~~
+菜单 `File` -> `Setting` -> `PHP` -> 添加`Yaf-PHP`文件路径 -> `apply`
+~~~
+
+### 1.3.2 在NetBeans引入
+
+~~~
+右击你的项目 -> `Properties` -> `PHP Include Path` -> `Add Folder..` -> 添加`Yaf-PHP`文件路径 -> `open`
 ~~~
 
 # 2 相关链接
