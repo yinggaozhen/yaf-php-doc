@@ -1,4 +1,9 @@
-# Yaf-php
+
+<p align="center">
+    <img src="./docs/logo.png" width="400" alt="YAF-PHP">    
+</p>
+
+[![build status](http://git.beibei.com.cn/node/airjs/badges/master/build.svg)](http://git.beibei.com.cn/node/airjs/commits/master)
 
 <!--
 + [关于Yaf](#关于yaf)
