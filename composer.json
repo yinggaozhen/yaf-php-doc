@@ -2,6 +2,7 @@
   "name": "yinggaozhen/yaf-php",
   "description": "Yaf PHP version",
   "type": "yaf-php",
+  "version": "0.1.0-dev.1",
   "minimum-stability": "dev",
   "homepage": "https://github.com/yinggaozhen/yaf-php",
   "require" : {

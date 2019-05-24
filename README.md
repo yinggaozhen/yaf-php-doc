@@ -3,7 +3,9 @@
     <img src="./docs/logo.png" width="400" alt="YAF-PHP">    
 </p>
 
-[![build status](http://git.beibei.com.cn/node/airjs/badges/master/build.svg)](http://git.beibei.com.cn/node/airjs/commits/master)
+[![test case]](https://img.shields.io/static/v1.svg?label=TestCase&message=50/97&color=yellowgreen)
+[![yaf version]](https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet)
+[![yaf-php version]](https://img.shields.io/static/v1.svg?label=YafPHP%20version&message=0.1.0-dev.1&color=important)
 
 <!--
 + [关于Yaf](#关于yaf)
