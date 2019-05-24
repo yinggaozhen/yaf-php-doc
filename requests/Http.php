@@ -10,8 +10,18 @@ class Http extends Request_Abstract
 
     const SCHEME_HTTPS = 'https';
 
-    public function __construct(?string $request_uri = null, ?string $base_uri = null)
+    /**
+     * Http constructor.
+     * @param null|string $request_uri
+     * @param null|string $base_uri
+     * @throws \TypeError
+     */
+    public function __construct($request_uri = null, $base_uri = null)
     {
+        if (($argc = func_num_args()) > 2) {
+            throw new \TypeError(__METHOD__ . " expects at most 2 parameters, {$argc} given");
+        }
+
         $method = $_SERVER['REQUEST_METHOD'] ?? '';
 
         if ($method) {
@@ -65,9 +75,9 @@ class Http extends Request_Abstract
     /**
      * @param string     $name
      * @param null|mixed $default
-     * @return null|string
+     * @return mixed
      */
-    public function getQuery(string $name, $default = null): ?string
+    public function getQuery(string $name, $default = null)
     {
         return isset($_GET[$name]) ? $_GET[$name] : $default;
     }
@@ -75,9 +85,9 @@ class Http extends Request_Abstract
     /**
      * @param string     $name
      * @param null|mixed $default
-     * @return null|string
+     * @return mixed
      */
-    public function getRequest(string $name, $default = null): ?string
+    public function getRequest(string $name, $default = null)
     {
         return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
     }
@@ -85,9 +95,9 @@ class Http extends Request_Abstract
     /**
      * @param string     $name
      * @param null|mixed $default
-     * @return null|string
+     * @return mixed
      */
-    public function getPost(string $name, $default = null): ?string
+    public function getPost(string $name, $default = null)
     {
         return isset($_POST[$name]) ? $_POST[$name] : $default;
     }
@@ -95,9 +105,9 @@ class Http extends Request_Abstract
     /**
      * @param string     $name
      * @param null|mixed $default
-     * @return null|string
+     * @return mixed
      */
-    public function getCookie(string $name, $default = null): ?string
+    public function getCookie(string $name, $default = null)
     {
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
     }
@@ -105,9 +115,9 @@ class Http extends Request_Abstract
     /**
      * @param string     $name
      * @param null|mixed $default
-     * @return null|string
+     * @return mixed
      */
-    public function getFiles(string $name, $default = null): ?string
+    public function getFiles(string $name, $default = null)
     {
         return isset($_FILES[$name]) ? $_FILES[$name] : $default;
     }
@@ -124,7 +134,7 @@ class Http extends Request_Abstract
      */
     public function get(string $name, $default = null)
     {
-        $value = $this->_params[$name];
+        $value = $this->_params[$name] ?? null;
 
         if ($value) {
             return $value;
@@ -132,7 +142,7 @@ class Http extends Request_Abstract
             $methods = ['_POST', '_GET', '_COOKIE', '_SERVER'];
 
             foreach ($methods as $method) {
-                $pzval = $$method[$name];
+                $pzval = $$method[$name] ?? null;
 
                 if (isset($pzval)) {
                     return $pzval;
@@ -145,7 +155,7 @@ class Http extends Request_Abstract
 
     public function isXmlHttpRequest(): bool
     {
-        $header = $_SERVER['HTTP_X_REQUESTED_WITH'];
+        $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
 
         if ($header && strncasecmp("XMLHttpRequest", $header, strlen($header))) {
             return true;
