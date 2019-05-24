@@ -160,12 +160,12 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      */
     public function offsetSet($offset, $value)
     {
-        $this->set();
+        $this->set($offset, $value);
     }
 
     public function offsetUnset($offset): bool
     {
-        trigger_error(E_WARNING, "Yaf_Config_Ini is readonly");
+        trigger_error('Yaf_Config_Ini is readonly', E_USER_WARNING);
         return false;
     }
 

@@ -41,7 +41,7 @@ class Loader
             }
 
             if (strncmp($class_name, self::YAF_LOADER_RESERVERD, self::YAF_LOADER_LEN_RESERVERD) == 0) {
-                trigger_error(sprintf("You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD), E_WARNING);
+                trigger_error(sprintf("You should not use '%s' as class name prefix", self::YAF_LOADER_RESERVERD), E_USER_WARNING);
             }
 
             if (self::isCategory($class_name, self::YAF_LOADER_MODEL, self::YAF_LOADER_LEN_MODEL)) {
