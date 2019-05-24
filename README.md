@@ -20,27 +20,25 @@
 <br>
 
 # 目录
-_ _ _
 
-+ [1 关于Yaf-PHP](#关于Yaf-PHP)
-    + [1.1 简介](#1-1.简介)
-    + [1.2 安装](#1-2.安装)
-    + [1.3 快速使用](#1-3快速使用)
-        - [1.3.1 phpstorm引入](#phpstorm引入)
-+ [2 相关链接](#2相关链接)
++ [1 关于Yaf-PHP](#1-关于yaf-php)
+    + [1.1 简介](#11-简介)
+    + [1.2 安装](#12-安装)
+    + [1.3 快速使用](#13-快速使用)
+        - [1.3.1 phpstorm引入](#131-在phpstorm引入)
++ [2 相关链接](#2-相关链接)
 + [3 待解决问题](#3待解决问题)
 
 # 1. 关于Yaf-PHP
 
 ## 1.1 简介
 
-Yaf-PHP采用原生PHP对Yaf源码进行了逻辑重写，最大程度还原其相关实现逻辑.
+```Yaf-PHP```采用原生PHP对Yaf源码进行了逻辑重写，最大程度还原其相关实现逻辑.
 
 由于采用了原生PHP重写，可达到抹平阅读能力，降低阅读成本的目的．在平常开发时，也可以作为IDE Helper进行引入，加快开发效率.
 
 :heart::heart::heart:另外，欢迎各位同学的star和fork~~:heart::heart::heart:
 
-_ _ _
 
 ## 1.2 安装
 <!-- TODO 上传composer -->
@@ -49,8 +47,6 @@ _ _ _
 > composer install YafPHP
 ```
 
-_ _ _
-
 ## 1.3 快速使用
 
 ### 1.3.1 在phpstorm引入
@@ -58,13 +54,12 @@ _ _ _
 ~~~
 打开phpstorm -> 右击`External Libraries` -> 点击`Configure PHP Include Path` -> 加入`Yaf-PHP` -> click apply -> done
 ~~~
-_ _ _
 
 # 2 相关链接
 
-- [Yaf官方文档](#http://www.laruence.com/manual/)
-- [Yaf源码](#https://github.com/laruence/yaf) 
-- [Yaf Doc](#https://github.com/elad-yosifon/php-yaf-doc)
+- [Yaf官方文档](http://www.laruence.com/manual/)
+- [Yaf源码](https://github.com/laruence/yaf) 
+- [Yaf Doc](https://github.com/elad-yosifon/php-yaf-doc)
 
 # 3.待解决问题
 
