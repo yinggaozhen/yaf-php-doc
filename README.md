@@ -7,6 +7,8 @@
 [![yaf version](https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet)](https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet)
 [![version](https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev.1&color=important)](https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev.1&color=important)
 
+[![version](https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green)](https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green)
+
 <!--
 + [关于Yaf](#关于yaf)
     + [什么是Yaf?](#什么是Yaf?)
