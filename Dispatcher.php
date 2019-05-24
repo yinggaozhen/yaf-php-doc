@@ -253,7 +253,7 @@ class Dispatcher
      */
     public function returnResponse($auto_response = true)
     {
-        $argc = func_get_args();
+        $argc = func_num_args();
 
         if ($argc) {
             $this->_return_response = $auto_response;
@@ -267,15 +267,15 @@ class Dispatcher
      * @param bool $flag
      * @return $this|int
      */
-    public function flushInstantly(bool $flag)
+    public function flushInstantly(bool $flag = false)
     {
-        $argc = func_get_args();
+        $argc = func_num_args();
 
         if ($argc) {
             $this->_instantly_flush = $flag;
             return $this;
         } else {
-            return $this->_instantly_flush === true ? 1 : 0;
+            return boolval($this->_instantly_flush === true ? 1 : 0);
         }
     }
 
@@ -303,7 +303,7 @@ class Dispatcher
      */
     public function autoRender(bool $flag = false)
     {
-        $argc = func_get_args();
+        $argc = func_num_args();
 
         if ($argc) {
             $this->_auto_render = $flag ? true : false;
@@ -319,7 +319,7 @@ class Dispatcher
      */
     public function throwException(bool $flag = false)
     {
-        $argc = func_get_args();
+        $argc = func_num_args();
 
         if ($argc) {
             YAF_G('throw_exception', $flag ? 1 : 0);
@@ -335,7 +335,7 @@ class Dispatcher
      */
     public function catchException(bool $flag = false)
     {
-        $argc = func_get_args();
+        $argc = func_num_args();
 
         if ($argc) {
             YAF_G('catch_exception', $flag ? 1 : 0);
