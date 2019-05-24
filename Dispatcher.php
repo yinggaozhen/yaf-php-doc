@@ -309,7 +309,7 @@ class Dispatcher
             $this->_auto_render = $flag ? true : false;
             return $this;
         } else {
-            return $this->_auto_render === true ? 1 : 0;
+            return boolval($this->_auto_render === true ? 1 : 0);
         }
     }
 
