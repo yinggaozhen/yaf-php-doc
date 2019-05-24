@@ -6,7 +6,6 @@
 [![test case](https://img.shields.io/static/v1.svg?label=TestCase&message=50/97&color=yellowgreen)](https://img.shields.io/static/v1.svg?label=TestCase&message=50/97&color=yellowgreen)
 [![yaf version](https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet)](https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet)
 [![version](https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev.1&color=important)](https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev.1&color=important)
-
 [![version](https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green)](https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green)
 
 <!--
