@@ -24,11 +24,11 @@ class P050Test extends Base
      */
     public function test()
     {
-        $config = array(
-            'application' => array(
+        $config = [
+            'application' => [
                 'directory' => YAF_TEST_APPLICATION_PATH,
-            ),
-        );
+            ],
+        ];
 
         file_put_contents(YAF_TEST_APPLICATION_PATH . '/Bootstrap.php', file_get_contents(__DIR__ . '/common/050Test_1.inc'));
         file_put_contents(YAF_TEST_APPLICATION_PATH . '/controllers/Index.php', file_get_contents(__DIR__ . '/common/050Test_2.inc'));

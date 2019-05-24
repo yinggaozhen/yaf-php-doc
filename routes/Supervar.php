@@ -29,8 +29,12 @@ class Supervar implements Route_Interface
      * @return bool
      * @throws \ReflectionException
      */
-    public function route(Request_Abstract $request): bool
+    public function route($request)
     {
+        if (!($request instanceof Request_Abstract)) {
+            return;
+        }
+
         return (bool) $this->_route($request);
     }
 

@@ -33,8 +33,12 @@ class Map implements Route_Interface
      * @param Request_Abstract $request
      * @return bool
      */
-    public function route(Request_Abstract $request): bool
+    public function route($request)
     {
+        if (!($request instanceof Request_Abstract)) {
+            return;
+        }
+
         return (bool) $this->_route($request);
     }
 

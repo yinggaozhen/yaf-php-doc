@@ -51,10 +51,10 @@ class Rewrite implements Route_Interface
      * @param null|Request_Abstract $request
      * @return bool
      */
-    public function route(?Request_Abstract $request): bool
+    public function route($request): bool
     {
         if (!$request || !is_object($request) || !($request instanceof Request_Abstract)) {
-            trigger_error("Expect a %s iniInstance", get_class($request));
+            trigger_error(sprintf("Expect a %s iniInstance", get_class($request)), E_WARNING);
             return false;
         }
 

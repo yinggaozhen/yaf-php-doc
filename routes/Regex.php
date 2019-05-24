@@ -50,7 +50,7 @@ class Regex implements Route_Interface
     public function route($request): bool
     {
         if (empty($request) || !is_object($request) || !($request instanceof Request_Abstract)) {
-            trigger_error(sprintf('"Expects a %s instance"', Request_Abstract::class), E_USER_WARNING);
+            trigger_error(sprintf('Expects a %s instance', Request_Abstract::class), E_WARNING);
             return false;
         }
 

@@ -18,8 +18,12 @@ class Route_Static implements Route_Interface
         return true;
     }
 
-    public function route(Request_Abstract $request)
+    public function route($request)
     {
+        if (!($request instanceof Request_Abstract)) {
+            return;
+        }
+
         return (bool)$this->_route($request);
     }
 
