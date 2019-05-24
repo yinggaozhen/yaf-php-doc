@@ -6,7 +6,15 @@ use Yaf\Request_Abstract;
 
 class Simple extends Request_Abstract
 {
-    public function __construct(string $method = null, string $module = null, string $controller = null, string $action = null, array $params = null)
+    /**
+     * Simple constructor.
+     * @param string|null $method
+     * @param string|null $module
+     * @param string|null $controller
+     * @param string|null $action
+     * @param array|null $params
+     */
+    public function __construct($method = null, $module = null, $controller = null, $action = null, array $params = null)
     {
         $this->instance($module, $controller, $action, $method, $params);
     }
@@ -136,7 +144,7 @@ class Simple extends Request_Abstract
 
             $this->_routed = 1;
         } else {
-            $query = $_GET[self::YAF_REQUEST_SERVER_URI];
+            $query = $_GET[self::YAF_REQUEST_SERVER_URI] ?? null;
             $this->_uri = $query ?: '';
         }
 

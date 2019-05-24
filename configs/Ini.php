@@ -268,7 +268,13 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     private function iniParse(string $ini_file)
     {
         $result = [];
-        $parse_array = parse_ini_file($ini_file, true, INI_SCANNER_TYPED);
+        try {
+            $parse_array = parse_ini_file($ini_file, true, INI_SCANNER_TYPED);
+        } catch (\Exception $e) {
+            yaf_trigger_error(E_ERROR, "Argument is not a valid ini file '%s'", $ini_file);
+            return null;
+        }
+
 
         // 基础配置解析
         foreach ($parse_array as $key => $iniInfo) {
