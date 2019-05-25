@@ -70,20 +70,16 @@ class Application
             throw new \Exception("Only one application can be initialized", STARTUP_FAILED);
         }
 
-        try {
-            /** @var Config_Abstract $zconfig */
-            $zconfig = null;
+        /** @var Config_Abstract $zconfig */
+        $zconfig = null;
 
-            $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
-            $instanceFunc->setAccessible(true);
-            if (!$section || !is_string($section) || empty($section)) {
-                $zsection = YAF_G('yaf.environ');
-                $zconfig = $instanceFunc->invoke(null, $config, $zsection);
-            } else {
-                $zconfig = $instanceFunc->invoke(null, $config, $section);
-            }
-        } catch (\Exception $e) {
-            throw new \Exception("Initialization of application config failed", STARTUP_FAILED);
+        $instanceFunc = new \ReflectionMethod(Config_Abstract::class, 'instance');
+        $instanceFunc->setAccessible(true);
+        if (!$section || !is_string($section) || empty($section)) {
+            $zsection = YAF_G('yaf.environ');
+            $zconfig = $instanceFunc->invoke(null, $config, $zsection);
+        } else {
+            $zconfig = $instanceFunc->invoke(null, $config, $section);
         }
 
         if (!is_object($zconfig) || self::parseOption($zconfig->_config) === FAILURE) {
