@@ -33,13 +33,13 @@ class Simple implements View_Interface
      *
      * @param string $tpl_dir
      * @param array|null $options
-     * @throws \Exception
+     * @throws \Exception | \Yaf\Exception\TypeError
      */
-    final public function __construct($tpl_dir, ?array $options = null)
+    final public function __construct($tpl_dir, $options = null)
     {
         $this->_tpl_vars = [];
 
-        if (!empty($tpl_dir) && is_string($tpl_dir)) {
+        if (is_string($tpl_dir)) {
             if (\YP\isAbsolutePath($tpl_dir)) {
                 $this->_tpl_dir = $tpl_dir;
             } else {
@@ -129,7 +129,7 @@ class Simple implements View_Interface
      *
      * @return string
      */
-    function getScriptPath(): string
+    function getScriptPath()
     {
         $tpl_dir = $this->_tpl_dir;
 
