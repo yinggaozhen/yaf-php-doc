@@ -803,7 +803,7 @@ class Dispatcher
                         return 1;
                     }
 
-                } else if ($ce = $this->_getAction($app_dir, $iController, $module, $is_def_module, $action) && is_callable([$ce, 'execute'])) {
+                 } else if (($ce = $this->_getAction($app_dir, $iController, $module, $is_def_module, $action)) && is_callable([$ce, 'execute'])) {
                     $fptr = new \ReflectionMethod($ce, 'execute');
 
                     /** @var Action_Abstract $iAction */
@@ -822,10 +822,6 @@ class Dispatcher
                         $result = call_user_func([$iAction, 'execute'], ...$call_args);
                     } else {
                         $result = call_user_func([$iAction, 'execute']);
-                    }
-
-                    if (!isset($result)) {
-                        return 0;
                     }
 
                     if ($result === false) {
@@ -935,7 +931,7 @@ class Dispatcher
         $actions_map = $controller->actions;
 
         if (is_array($actions_map)) {
-            $action_upper = strtoupper($action);
+            $action_upper = ucfirst($action);
 
             if (YAF_G('yaf.name_suffix')) {
                 $class = sprintf("%s%s%s", $action_upper, YAF_G('yaf.name_separator'), 'Action');
@@ -943,9 +939,12 @@ class Dispatcher
                 $class = sprintf("%s%s%s", 'Action', YAF_G('yaf.name_separator'), $action_upper);
             }
 
-            $class_lowercase = strtolower($class);
+            // TODO 这里还是需要strtolower
+            // $class_lowercase = strtolower($class);
+            $class_lowercase = $class;
+
             if (class_exists($class_lowercase)) {
-                if ($class_lowercase instanceof Action_Abstract) {
+                if (get_parent_class($class_lowercase) == 'Yaf\Action_Abstract' || get_parent_class($class_lowercase) == 'Yaf_Action_Abstract') {
                     return $class_lowercase;
                 } else {
                     yaf_trigger_error(TYPE_ERROR, "Action %s must extends from %s", $class);
@@ -953,7 +952,7 @@ class Dispatcher
                 }
             }
 
-            $paction = $actions_map[$action];
+            $paction = $actions_map[$action] ?? null;
             if (!is_null($paction)) {
 
                 $action_path = sprintf('%s%s%s', $app_dir, DEFAULT_SLASH, $paction);

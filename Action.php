@@ -5,7 +5,7 @@ namespace Yaf;
 /**
  * @link https://www.php.net/manual/en/class.yaf-action-abstract.php
  */
-abstract class Action_Abstract
+abstract class Action_Abstract extends Controller_Abstract
 {
     /**
      * @var \Yaf\Controller_Abstract
