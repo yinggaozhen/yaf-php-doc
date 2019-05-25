@@ -939,8 +939,6 @@ class Dispatcher
                 $class = sprintf("%s%s%s", 'Action', YAF_G('yaf.name_separator'), $action_upper);
             }
 
-            // TODO 这里还是需要strtolower
-            // $class_lowercase = strtolower($class);
             $class_lowercase = $class;
 
             if (class_exists($class_lowercase)) {
