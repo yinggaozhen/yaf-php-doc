@@ -6,6 +6,9 @@ use const INTERNAL\PHP\DEFAULT_SLASH;
 use Yaf\Response\Http;
 use Yaf\View\Simple;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-controller-abstract.php
+ */
 abstract class Controller_Abstract
 {
     /**
@@ -40,6 +43,16 @@ abstract class Controller_Abstract
      */
     protected $_view;
 
+    /**
+     * Controller_Abstract constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.construct.php
+     *
+     * @param Request_Abstract $request
+     * @param Response_Abstract $response
+     * @param View_Interface $view
+     * @param array|null $invokeArgs
+     */
     final public function __construct(Request_Abstract $request, Response_Abstract $response, View_Interface $view, array $invokeArgs = null)
     {
         if ($invokeArgs) {
@@ -58,16 +71,33 @@ abstract class Controller_Abstract
         }
     }
 
+    /**
+     * @node :
+     *  对外其实没有暴露这个函数
+     *  由于构造函数是final，所以部分工呢鞥无法通过重写构造函数来实现，但是可以实现`init`方法来实现
+     *
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.init.php
+     */
+    public function init()
+    {
+
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.clone.php
+     */
     final private function __clone()
     {
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.render.php
+     *
      * @param string     $action
      * @param array|null $var_array
      * @return string|bool
      */
-    protected function render(string $action, $var_array = [])
+    protected function render($action, $var_array = [])
     {
         $output = $this->_render($action, $var_array);
 
@@ -75,32 +105,40 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.display.php
+     *
      * @param string $action
      * @param array|null $var_array
      * @return bool
      */
-    protected function display(string $action, $var_array = []): bool
+    protected function display(string $action, $var_array = [])
     {
         return (bool) $this->_display($action, $var_array);
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getrequest.php
+     *
      * @return Request_Abstract
      */
-    public function getRequest(): Request_Abstract
+    public function getRequest()
     {
         return $this->_request;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getresponse.php
+     *
      * @return Response_Abstract
      */
-    public function getResponse(): Response_Abstract
+    public function getResponse()
     {
         return $this->_response;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.initview.php
+     *
      * @return $this
      */
     public function initView()
@@ -109,10 +147,12 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getinvokearg.php
+     *
      * @param null|string $name
      * @return null|string
      */
-    public function getInvokeArg(?string $name): ?string
+    public function getInvokeArg($name)
     {
         if ($name) {
             $args = $this->_invoke_args;
@@ -121,7 +161,7 @@ abstract class Controller_Abstract
                 return null;
             }
 
-            if (array_key_exists($args, $name)) {
+            if (array_key_exists($name, $args)) {
                 return $args[$name];
             }
         }
@@ -130,6 +170,8 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getmodulename.php
+     *
      * @return mixed
      */
     public function getModuleName()
@@ -138,26 +180,32 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getview.php
+     *
      * @return View_Interface
      */
-    public function getView(): View_Interface
+    public function getView()
     {
         return $this->_view;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getinvokeargs.php
+     *
      * @return array
      */
-    public function getInvokeArgs(): array
+    public function getInvokeArgs()
     {
         return $this->_invoke_args;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.setviewpath.php
+     *
      * @param string $path
      * @return bool
      */
-    public function setViewpath(string $path): bool
+    public function setViewpath($path)
     {
         if (!is_string($path)) {
             return false;
@@ -174,6 +222,8 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.getviewpath.php
+     *
      * @return mixed|null|string
      */
     public function getViewpath()
@@ -196,13 +246,15 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.forward.php
+     *
      * @param string $module
      * @param string|array $controller
      * @param string|array $action
      * @param array $args
      * @return bool
      */
-    public function forward(string $module, $controller = '', $action = '', array $args = null): bool
+    public function forward($module, $controller = '', $action = '', array $args = null)
     {
         $request = $this->_request;
 
@@ -265,10 +317,12 @@ abstract class Controller_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-controller-abstract.redirect.php
+     *
      * @param string $location
      * @return bool
      */
-    public function redirect(string $location): bool
+    public function redirect($location)
     {
         /** @var Http $response */
         $response = $this->_response;
@@ -278,12 +332,14 @@ abstract class Controller_Abstract
         return true;
     }
 
+    // ================================================== 内部方法 ==================================================
+
     /**
      * @param string $action_name
      * @param array $var_array
      * @return string
      */
-    private function _render(string $action_name, $var_array): string
+    private function _render($action_name, $var_array)
     {
         $view = $this->_view;
         $name = $this->_name;

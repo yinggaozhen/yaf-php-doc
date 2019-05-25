@@ -6,6 +6,9 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-map.php
+ */
 class Map implements Route_Interface
 {
     /**
@@ -17,6 +20,9 @@ class Map implements Route_Interface
 
     /**
      * Map constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-route-map.construct.php
+     *
      * @param bool $controller_prefer
      * @param string $delimer
      */
@@ -30,6 +36,8 @@ class Map implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-map.route.php
+     *
      * @param Request_Abstract $request
      * @return bool
      */
@@ -43,6 +51,8 @@ class Map implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-map.assemble.php
+     *
      * @param array $info
      * @param array|null $query
      * @return null|string
@@ -54,6 +64,8 @@ class Map implements Route_Interface
 
         return !is_null($str) ? $str : null;
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param Request_Abstract $request

@@ -6,16 +6,31 @@ use const YAF\ERR\NOTFOUND\VIEW;
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\View_Interface;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-view-simple.php
+ */
 class Simple implements View_Interface
 {
+    /**
+     * @var array
+     */
     protected $_tpl_vars;
 
+    /**
+     * @var string
+     */
     protected $_tpl_dir;
 
+    /**
+     * @var array|null
+     */
     protected $_options;
 
     /**
      * Simple constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-view-simple.construct.php
+     *
      * @param string $tpl_dir
      * @param array|null $options
      * @throws \Exception
@@ -38,8 +53,10 @@ class Simple implements View_Interface
     }
 
     /**
-     * @param $name
-     * @param null $value
+     * @link https://www.php.net/manual/en/yaf-view-simple.assign.php
+     *
+     * @param string $name
+     * @param mixed $value
      * @return $this|bool
      */
     function assign($name, $value = null)
@@ -62,8 +79,10 @@ class Simple implements View_Interface
     }
 
     /**
-     * @param $tpl
-     * @param null $tpl_vars
+     * @link https://www.php.net/manual/en/yaf-view-simple.display.php
+     *
+     * @param string $tpl
+     * @param array $tpl_vars
      * @throws \Exception
      */
     function display($tpl, $tpl_vars = null): void
@@ -73,6 +92,8 @@ class Simple implements View_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.render.php
+     *
      * @param string $tpl
      * @param array $tpl_vars
      * @return string $return_value
@@ -87,10 +108,12 @@ class Simple implements View_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.setscriptpath.php
+     *
      * @param string $template_dir
      * @return $this|bool
      */
-    function setScriptPath(string $template_dir)
+    function setScriptPath($template_dir)
     {
         if (is_string($template_dir) && realpath($template_dir) == $template_dir) {
             $this->_tpl_dir = $template_dir;
@@ -102,6 +125,8 @@ class Simple implements View_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.getscriptpath.php
+     *
      * @return string
      */
     function getScriptPath(): string
@@ -116,10 +141,12 @@ class Simple implements View_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.get.php
+     *
      * @param string|null $name
      * @return array|mixed|null
      */
-    public function get(?string $name = null)
+    public function get($name = null)
     {
         if (!is_null($this->_tpl_vars) && is_array($this->_tpl_vars)) {
             if ($name) {
@@ -135,6 +162,8 @@ class Simple implements View_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.eval.php
+     *
      * @param string $tpl_content
      * @param array|null $vars
      * @return bool
@@ -152,8 +181,10 @@ class Simple implements View_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.assignref.php
+     *
      * @param string $name
-     * @param $value
+     * @param mixed $value
      * @return $this
      */
     public function assignRef(string $name, &$value): Simple
@@ -163,6 +194,11 @@ class Simple implements View_Interface
         return $this;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-view-simple.clear.php
+     *
+     * @param string|null $name
+     */
     public function clear(string $name = null): void
     {
         if (empty($name)) {
@@ -171,6 +207,8 @@ class Simple implements View_Interface
             unset($this->_tpl_vars[$name]);
         }
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param $value

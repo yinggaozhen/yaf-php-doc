@@ -7,6 +7,9 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-simple.php
+ */
 class Simple implements Route_Interface
 {
     protected $controller;
@@ -16,6 +19,8 @@ class Simple implements Route_Interface
     protected $action;
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-simple.construct.php
+     *
      * @param string $module
      * @param string $controller
      * @param string $action
@@ -35,6 +40,8 @@ class Simple implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-simple.route.php
+     *
      * @param Request_Abstract $request
      * @return bool
      */
@@ -44,6 +51,8 @@ class Simple implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-simple.assemble.php
+     *
      * @param array $info
      * @param array|null $query
      * @return null|string
@@ -55,6 +64,8 @@ class Simple implements Route_Interface
 
         return $str;
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param array $info

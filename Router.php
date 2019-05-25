@@ -4,6 +4,9 @@ namespace Yaf;
 
 use Yaf\Route\Route_Static;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-router.php
+ */
 class Router
 {
     /**
@@ -11,10 +14,16 @@ class Router
      */
     protected $_routes;
 
+    /**
+     * @var string
+     */
     protected $_current;
 
     /**
      * Router constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-router.construct.php
+     *
      * @throws \Exception
      */
     public function __construct()
@@ -23,11 +32,13 @@ class Router
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-router.addroute.php
+     *
      * @param string $name
      * @param Route_Interface $route
      * @return $this|bool
      */
-    public function addRoute(string $name, $route)
+    public function addRoute($name, $route)
     {
         if (empty($name)) {
             return false;
@@ -44,6 +55,8 @@ class Router
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-router.addconfig.php
+     *
      * @param array|Config_Abstract $config
      * @return $this|bool
      * @throws \Exception
@@ -67,6 +80,8 @@ class Router
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-router.route.php
+     *
      * @param Request_Abstract $request
      * @return bool
      */
@@ -89,10 +104,12 @@ class Router
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-router.getroute.php
+     *
      * @param string $name
      * @return bool|null|Route_Interface
      */
-    public function getRoute(string $name)
+    public function getRoute($name)
     {
         if (empty($name)) {
             return false;
@@ -102,6 +119,8 @@ class Router
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-router.getroutes.php
+     *
      * @return array
      */
     public function getRoutes()
@@ -110,11 +129,33 @@ class Router
     }
 
     /**
-     * @return mixed
+     * @link https://www.php.net/manual/en/yaf-router.getcurrentroute.php
+     *
+     * @return string
      */
     public function getCurrentRoute()
     {
         return $this->_current;
+    }
+
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * @param string $uri
+     * @param $params
+     */
+    public static function _parseParameters($uri, &$params)
+    {
+        $params = [];
+        $key = strtok($uri, Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+
+        while ($key !== false) {
+            if (strlen($key)) {
+                $value = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+                $params[$key] = $value && strlen($value) ? $value : null;
+            }
+            $key = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+        }
     }
 
     /**
@@ -128,7 +169,7 @@ class Router
         $routes = [];
 
         if (!YAF_G('default_route')) {
-static_route:
+            static_route:
             $route = new Route_Static();
         } else {
             $route = routerInstance(YAF_G('default_route'));
@@ -147,7 +188,7 @@ static_route:
      * @return int
      * @throws \Exception
      */
-    private function _addConfig($configs): int
+    private function _addConfig($configs)
     {
         if (empty($configs) || !is_array($configs)) {
             return 0;
@@ -175,26 +216,6 @@ static_route:
             }
 
             return 1;
-        }
-    }
-
-    // ================================================== 内部方法 ==================================================
-
-    /**
-     * @param string $uri
-     * @param $params
-     */
-    public static function _parseParameters(string $uri, &$params)
-    {
-        $params = [];
-        $key = strtok($uri, Route_Interface::YAF_ROUTER_URL_DELIMIETER);
-
-        while ($key !== false) {
-            if (strlen($key)) {
-                $value = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
-                $params[$key] = $value && strlen($value) ? $value : null;
-            }
-            $key = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
         }
     }
 }

@@ -85,8 +85,12 @@ abstract class Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getServer(string $name, $default = null)
+    public function getServer(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_SERVER;
+        }
+
         return isset($_SERVER[$name]) ? $_SERVER[$name] : $default;
     }
 
@@ -95,8 +99,12 @@ abstract class Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getEnv(string $name, $default = null)
+    public function getEnv(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_ENV;
+        }
+
         return isset($_ENV[$name]) ? $_ENV[$name] : $default;
     }
 

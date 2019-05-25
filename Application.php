@@ -9,6 +9,9 @@ use const YAF\ERR\STARTUP_FAILED;
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request\Http;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-application.php
+ */
 class Application
 {
     /**
@@ -27,7 +30,7 @@ class Application
     protected $dispatcher = null;
 
     /**
-     * @var null|*
+     * @var array
      */
     protected $_modules = null;
 
@@ -53,9 +56,12 @@ class Application
 
     /**
      * Application constructor.
-     * @param $config
+     *
+     * @link https://www.php.net/manual/en/yaf-application.construct.php
+     *
+     * @param mixed $config
      * @param string|null $section
-     * @throws \Exception
+     * @throws \Exception | \ReflectionException | \TypeError
      */
     public function __construct($config, string $section = null)
     {
@@ -130,14 +136,18 @@ class Application
     }
 
     /**
-     * @return null|Application
+     * @link https://www.php.net/manual/en/yaf-application.app.php
+     *
+     * @return Application
      */
-    public static function app(): ?Application
+    public static function app()
     {
         return self::$_app;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.run.php
+     *
      * @throws \Exception
      */
     public function run()
@@ -159,6 +169,8 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.execute.php
+     *
      * @param callable $func
      * @param array $args
      * @return bool|mixed
@@ -174,9 +186,11 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.environ.php
+     *
      * @return string
      */
-    public function environ(): string
+    public function environ()
     {
         $env = $this->_environ;
 
@@ -186,8 +200,9 @@ class Application
     }
 
     /**
-     * @throws \Exception
-     * @throws \ReflectionException
+     * @link https://www.php.net/manual/en/yaf-application.bootstrap.php
+     *
+     * @throws \Exception | \ReflectionException
      * @return $this|bool
      */
     public function bootstrap()
@@ -239,9 +254,11 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.getconfig.php
+     *
      * @return Config_Abstract
      */
-    public function getConfig(): ?Config_Abstract
+    public function getConfig()
     {
         /** @var Config_Abstract $config */
         $config = $this->config;
@@ -250,15 +267,19 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.getdispatcher.php
+     *
      * @return Dispatcher
      */
-    public function getDispatcher(): Dispatcher
+    public function getDispatcher()
     {
         return $this->dispatcher;
     }
 
     /**
-     * @return null|*
+     * @link https://www.php.net/manual/en/yaf-application.getmodules.php
+     *
+     * @return array
      */
     public function getModules()
     {
@@ -266,6 +287,8 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.setappdirectory.php
+     *
      * @param string $directory
      * @return $this|bool
      */
@@ -281,14 +304,18 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.getappdirectory.php
+     *
      * @return string
      */
-    public function getAppDirectory(): string
+    public function getAppDirectory()
     {
         return YAF_G('directory');
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.getlasterrorno.php
+     *
      * @return int
      */
     public function getLastErrorNo(): int
@@ -300,6 +327,8 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.getlasterrormsg.php
+     *
      * @return string
      */
     public function getLastErrorMsg(): string
@@ -311,6 +340,8 @@ class Application
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-application.clearlasterror.php
+     *
      * @return $this
      */
     public function clearLastError(): Application
@@ -321,18 +352,30 @@ class Application
         return $this;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-application.destruct.php
+     */
     public function __destruct()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-application.clone.php
+     */
     private function __clone()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-application.sleep.php
+     */
     private function __sleep()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-application.wakeup.php
+     */
     private function __wakeup()
     {
     }

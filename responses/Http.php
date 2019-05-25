@@ -13,9 +13,17 @@ class Http extends Response_Abstract
 
     protected $_response_code = 0;
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-response-abstract.setheader.php
+     *
+     * @param string $name
+     * @param string $value
+     * @param bool $replace
+     * @param int $response_code
+     * @return bool
+     */
     public function setHeader(string $name, string $value, bool $replace = true, int $response_code = 0): bool
     {
-        // TODO 这里源代码可能会存在BUG,如果想要将response_code重置为0,是办不到的
         if ($response_code) {
             $this->_response_code = $response_code;
         }
@@ -24,6 +32,8 @@ class Http extends Response_Abstract
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-response-abstract.setallheaders.php
+     *
      * @param array|null $headers
      * @return bool|null
      */
@@ -37,7 +47,7 @@ class Http extends Response_Abstract
     }
 
     /**
-     * TODO 源码注释有问题
+     * @link http://www.php.net/manual/en/yaf-response-abstract.getheader.php
      *
      * @param null $name
      * @return array|mixed|null
@@ -56,6 +66,8 @@ class Http extends Response_Abstract
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-response-abstract.clearheaders.php
+     *
      * @return $this
      */
     public function clearHeaders()
@@ -66,7 +78,7 @@ class Http extends Response_Abstract
     }
 
     /**
-     * 返回结果http code只能为都是302,这里是个缺陷
+     * @link http://www.php.net/manual/en/yaf-response-abstract.setredirect.php
      *
      * @param string $url
      * @return bool
@@ -81,6 +93,8 @@ class Http extends Response_Abstract
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-response-abstract.response.php
+     *
      * @inheritdoc
      * @return bool
      */
@@ -100,6 +114,8 @@ class Http extends Response_Abstract
 
        return true;
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param string $name

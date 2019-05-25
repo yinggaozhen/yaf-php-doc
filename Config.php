@@ -6,6 +6,9 @@ use Yaf\Config\Ini;
 use Yaf\Config\Simple;
 use const YAF\ERR\TYPE_ERROR;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-config-abstract.php
+ */
 abstract class Config_Abstract
 {
     /**
@@ -20,9 +23,37 @@ abstract class Config_Abstract
      */
     public $_readonly = true;
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-config-abstract.get.php
+     *
+     * @return mixed
+     */
     abstract function get();
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-config-abstract.set.php
+     *
+     * @param string $name
+     * @param mixed $value
+     * @return mixed
+     */
     abstract function set($name, $value);
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-config-abstract.readonly.php
+     *
+     * @return mixed
+     */
+    abstract function readonly();
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-config-abstract.toarray.php
+     *
+     * @return array
+     */
+    abstract function toArray();
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param string|array $arg1

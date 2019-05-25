@@ -6,6 +6,9 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-regex.php
+ */
 class Regex implements Route_Interface
 {
     protected $_route = null;
@@ -16,6 +19,9 @@ class Regex implements Route_Interface
 
     /**
      * Regex constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-route-regex.construct.php
+     *
      * @param string $match
      * @param array $route
      * @param array $map
@@ -44,6 +50,8 @@ class Regex implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-regex.route.php
+     *
      * @param Request_Abstract $request
      * @return bool
      */
@@ -58,6 +66,8 @@ class Regex implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-regex.assemble.php
+     *
      * @param array $info
      * @param array|null $query
      * @return null|string
@@ -73,6 +83,8 @@ class Regex implements Route_Interface
 
         return null;
     }
+
+    // ================================================== 内部方法 ==================================================
 
     private function _instance($route, $def, $map, $verify, $reverse)
     {

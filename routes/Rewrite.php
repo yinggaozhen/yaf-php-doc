@@ -7,6 +7,9 @@ use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 use Yaf\Router;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-rewrite.php
+ */
 class Rewrite implements Route_Interface
 {
     /**
@@ -20,6 +23,9 @@ class Rewrite implements Route_Interface
 
     /**
      * Rewrite constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-route-rewrite.construct.php
+     *
      * @param string $match
      * @param array $route
      * @param array|null $verify
@@ -48,6 +54,8 @@ class Rewrite implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-rewrite.route.php
+     *
      * @param null|Request_Abstract $request
      * @return bool
      */
@@ -62,6 +70,8 @@ class Rewrite implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-rewrite.assemble.php
+     *
      * @param array $info
      * @param array|null $query
      * @return null|string

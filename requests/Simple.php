@@ -4,10 +4,14 @@ namespace Yaf\Request;
 
 use Yaf\Request_Abstract;
 
+/**
+ * @link http://www.php.net/manual/en/class.yaf-request-simple.php
+ */
 class Simple extends Request_Abstract
 {
     /**
-     * Simple constructor.
+     * @link http://www.php.net/manual/en/yaf-request-simple.construct.php
+     *
      * @param string|null $method
      * @param string|null $module
      * @param string|null $controller
@@ -20,56 +24,88 @@ class Simple extends Request_Abstract
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.getquery.php
+     *
      * @param string $name
      * @param mixed $default
      * @return null|string
      */
-    public function getQuery(string $name, $default = null)
+    public function getQuery(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_GET;
+        }
+
         return isset($_GET[$name]) ? $_GET[$name] : $default;
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.getrequest.php
+     *
      * @param string $name
      * @param null|mixed $default
      * @return null|string
      */
-    public function getRequest(string $name, $default = null): ?string
+    public function getRequest(string $name = null, $default = null): ?string
     {
+        if (null === $name) {
+            return $_REQUEST;
+        }
+
         return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.getpost.php
+     *
      * @param string $name
      * @param null|mixed $default
      * @return null|string
      */
-    public function getPost(string $name, $default = null): ?string
+    public function getPost(string $name = null, $default = null): ?string
     {
+        if (null === $name) {
+            return $_POST;
+        }
+
         return isset($_POST[$name]) ? $_POST[$name] : $default;
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.getcookie.php
+     *
      * @param string $name
      * @param null|mixed $default
      * @return null|string
      */
-    public function getCookie(string $name, $default = null)
+    public function getCookie(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_COOKIE;
+        }
+
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.getfiles.php
+     *
      * @param string $name
      * @param null|mixed $default
      * @return null|string
      */
-    public function getFiles(string $name, $default = null): ?string
+    public function getFiles(string $name = null, $default = null): ?string
     {
+        if (null === $name) {
+            return $_FILES;
+        }
+
         return isset($_FILES[$name]) ? $_FILES[$name] : $default;
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.get.php
+     *
      * @param string $name
      * @param null|mixed $default
      * @return mixed|null
@@ -95,6 +131,11 @@ class Simple extends Request_Abstract
         return $default;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.isxmlhttprequest.php
+     *
+     * @return bool
+     */
     public function isXmlHttpRequest(): bool
     {
         $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
@@ -105,6 +146,8 @@ class Simple extends Request_Abstract
 
         return false;
     }
+
+    // ================================================== 内部方法 ==================================================
 
     private function instance($module, $controller, $action, $method, $params)
     {

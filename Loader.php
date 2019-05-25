@@ -3,26 +3,43 @@
 namespace Yaf;
 
 /**
- * Class Loader
- * @package Yaf
+ * @link https://www.php.net/manual/en/class.yaf-loader.php
  */
 class Loader
 {
+    /**
+     * @var string
+     */
     protected $_library;
+
+    /**
+     * @var string
+     */
     protected $_global_library;
+
+    /**
+     * @var \Yaf\Loader
+     */
     protected static $_instance;
 
+    /**
+     * Loader constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-loader.construct.php
+     */
     private function __construct()
     {
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.autoload.php
+     *
      * @param string $class_name
      * @return bool
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public function autoload(string $class_name): bool
+    public function autoload($class_name)
     {
         $file_name     = '';
         $file_name_len = 0;
@@ -133,13 +150,15 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.getinstance.php
+     *
      * @param string $library
      * @param string $global_library
      * @return Loader|false
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function getInstance(?string $library = null, ?string $global_library = null)
+    public static function getInstance($library = null, $global_library = null)
     {
         $loader = self::_instance($library, $global_library);
 
@@ -151,12 +170,14 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.import.php
+     *
      * @param string $file
      * @return bool
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function import(string $file): bool
+    public static function import($file)
     {
         if (empty($file)) {
             return false;
@@ -188,6 +209,8 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.registerlocalnamespace.php
+     *
      * @param string|array $namespaces
      * @return $this|bool
      * @throws \Exception
@@ -210,17 +233,21 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.getlocalnamespace.php
+     *
      * @return null|string
      */
-    public function getLocalNamespace(): ?string
+    public function getLocalNamespace()
     {
         return YAF_G('local_namespaces') ?? null;
     }
 
     /**
-     * @return true
+     * @link https://www.php.net/manual/en/yaf-loader.clearlocalnamespace.php
+     *
+     * @return bool
      */
-    public function clearLocalNamespace(): bool
+    public function clearLocalNamespace()
     {
         // 源代码这里是用宏直接设置成null,这里做了一点小调整
         YAF_G('local_namespaces', 'NULL');
@@ -229,10 +256,12 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.islocalname.php
+     *
      * @param null|string $class_name
      * @return bool|int
      */
-    public function isLocalName($class_name): bool
+    public function isLocalName($class_name)
     {
         if (empty($class_name) || !is_string($class_name)) {
             return false;
@@ -242,11 +271,13 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.setlibrarypath.php
+     *
      * @param string $library
      * @param bool $global
      * @return $this
      */
-    public function setLibraryPath(string $library, bool $global = false): Loader
+    public function setLibraryPath($library, $global = false)
     {
         if (!$global) {
             $this->_library = $library;
@@ -258,10 +289,12 @@ out:
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-loader.getlibrarypath.php
+     *
      * @param bool $global
-     * @return mixed
+     * @return string
      */
-    public function getLibraryPath(bool $global = false): string
+    public function getLibraryPath($global = false)
     {
         if (!$global) {
             $library = $this->_library;
@@ -272,14 +305,23 @@ out:
         return $library;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-loader.clone.php
+     */
     private function __clone()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-loader.sleep.php
+     */
     private function __sleep()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-loader.wakeup.php
+     */
     private function __wakeup()
     {
     }
@@ -318,7 +360,7 @@ out:
      * @param int $category_len
      * @return int
      */
-    private static function isCategory(string $class_name, string $category, int $category_len): int
+    private static function isCategory($class_name, $category, $category_len)
     {
         $class_name_len = strlen($class_name);
         $separator_len  = YAF_G('name_separator_len');
@@ -348,7 +390,7 @@ out:
      * @return mixed
      * @throws \Exception
      */
-    private static function _instance(?string $library_path, ?string $global_path)
+    private static function _instance($library_path, $global_path)
     {
         $instance = self::$_instance;
 
@@ -399,7 +441,7 @@ out:
      * @return int
      * @throws \Exception
      */
-    private static function loaderRegister(Loader $loader): int
+    private static function loaderRegister(Loader $loader)
     {
         $method = 'autoload';
         $autoload = [$loader, $method];
@@ -425,7 +467,7 @@ out:
      * @throws \Exception
      * @throws \ReflectionException
      */
-    public static function _internalAutoload(?string $file_name, ?int $name_len, ?string &$directory): int
+    public static function _internalAutoload($file_name, $name_len, &$directory)
     {
         $buf = '';
 
@@ -474,7 +516,7 @@ out:
      * @param string $class_name
      * @return int
      */
-    private static function isLocalNamespace(string $class_name): int
+    private static function isLocalNamespace($class_name)
     {
         if (!YAF_G('local_namespaces')) {
             return 0;
@@ -512,7 +554,7 @@ out:
      * @param int $use_path
      * @return int
      */
-    private static function loaderImport($path, int $use_path)
+    private static function loaderImport($path, $use_path)
     {
         if (!is_readable($path)) {
             return 0;
@@ -527,7 +569,7 @@ out:
      * @param string $prefix
      * @return int
      */
-    private static function registerNamespaceSingle($prefix): int
+    private static function registerNamespaceSingle($prefix)
     {
         if (YAF_G('local_namespaces')) {
             YAF_G('local_namespaces', YAF_G('local_namespaces') . PATH_SEPARATOR . $prefix);
@@ -542,7 +584,7 @@ out:
      * @param string[] $prefixes
      * @return int
      */
-    private static function namespaceMulti(array $prefixes): int
+    private static function namespaceMulti(array $prefixes)
     {
         foreach ($prefixes as $prefix) {
             if (is_string($prefix)) {

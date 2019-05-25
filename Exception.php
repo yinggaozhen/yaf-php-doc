@@ -2,7 +2,10 @@
 
 namespace Yaf
 {
-    class Exception extends \RuntimeException
+    /**
+     * @link https://www.php.net/manual/en/class.yaf-exception.php
+     */
+    class Exception extends \Exception
     {
         /**
          * @var int

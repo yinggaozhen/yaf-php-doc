@@ -6,8 +6,14 @@ use ArrayAccess;
 use Countable;
 use Iterator;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-session.php
+ */
 final class Session implements Iterator, ArrayAccess, Countable
 {
+    /**
+     * @var $this
+     */
     protected static $_instance = null;
 
     /**
@@ -20,15 +26,25 @@ final class Session implements Iterator, ArrayAccess, Countable
      */
     protected $_started = false;
 
+    /**
+     * Session constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-session.construct.php
+     */
     private function __construct()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.clone.php
+     */
     private function __clone()
     {
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-session.getinstance.php
+     *
      * @return null|Session
      * @throws \Exception
      */
@@ -52,6 +68,8 @@ final class Session implements Iterator, ArrayAccess, Countable
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-session.start.php
+     *
      * @return $this
      */
     public function start()
@@ -74,7 +92,9 @@ final class Session implements Iterator, ArrayAccess, Countable
     }
 
     /**
-     * @param string|null $name
+     * @link https://www.php.net/manual/en/yaf-session.get.php
+     *
+     * @param string|int|null $name
      * @return array|mixed|null
      */
     public function get(string $name = null)
@@ -89,11 +109,13 @@ final class Session implements Iterator, ArrayAccess, Countable
     }
 
     /**
-     * @param string $name
-     * @param $value
+     * @link https://www.php.net/manual/en/yaf-session.set.php
+     *
+     * @param string|int $name
+     * @param mixed $value
      * @return $this
      */
-    public function set(string $name, $value)
+    public function set($name, $value)
     {
         $this->_session[$name] = $value;
 
@@ -101,7 +123,9 @@ final class Session implements Iterator, ArrayAccess, Countable
     }
 
     /**
-     * @param $name
+     * @link https://www.php.net/manual/en/yaf-session.del.php
+     *
+     * @param string|int $name
      * @return $this
      */
     public function del($name)
@@ -111,31 +135,45 @@ final class Session implements Iterator, ArrayAccess, Countable
         return $this;
     }
 
-    public function clear(): void
+    public function clear()
     {
         $this->_session = [];
     }
 
     /**
-     * @param string $name
+     * @link https://www.php.net/manual/en/yaf-session.has.php
+     *
+     * @param string|int $name
      * @return bool
      */
-    public function has(string $name): bool
+    public function has($name)
     {
         return array_key_exists($name, $this->_session);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.current.php
+     *
+     * @return mixed
+     */
     public function current()
     {
         return current($this->_session);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.next.php
+     *
+     * @return mixed
+     */
     public function next()
     {
         return next($this->_session);
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-session.key.php
+     *
      * @return int|string
      */
     public function key()
@@ -143,39 +181,77 @@ final class Session implements Iterator, ArrayAccess, Countable
         return key($this->_session);
     }
 
-    public function valid(): bool
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.valid.php
+     *
+     * @return bool
+     */
+    public function valid()
     {
         $key = key($this->_session);
 
        return isset($key);
     }
 
-    public function rewind(): void
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.rewind.php
+     */
+    public function rewind()
     {
         reset($this->_session);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.offsetexists.php
+     *
+     * @param string|int $offset
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return $this->has($offset);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.offsetget.php
+     *
+     * @param string|int $offset
+     * @return array|mixed|null
+     */
     public function offsetGet($offset)
     {
         return $this->get($offset);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.offsetset.php
+     *
+     * @param string|int $offset
+     * @param mixed $value
+     * @return Session
+     */
     public function offsetSet($offset, $value)
     {
         return $this->set($offset, $value);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.offsetunset.php
+     *
+     * @param string|int $offset
+     * @return Session
+     */
     public function offsetUnset($offset)
     {
         return $this->del($offset);
     }
 
-    public function count(): int
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.count.php
+     *
+     * @return int
+     */
+    public function count()
     {
         if (empty($this->_session)) {
             return 0;
@@ -184,6 +260,12 @@ final class Session implements Iterator, ArrayAccess, Countable
         return count($this->_session);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.get.php
+     *
+     * @param string|int $name
+     * @return array|mixed|null
+     */
     public function __get($name)
     {
         return $this->get($name);
@@ -194,20 +276,37 @@ final class Session implements Iterator, ArrayAccess, Countable
         return $this->set($name, $value);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.isset.php
+     * @param string $name
+     * @return bool
+     */
     public function __isset($name)
     {
         return $this->has($name);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.unset.php
+     *
+     * @param string|int $name
+     * @return Session
+     */
     public function __unset($name)
     {
         return $this->del($name);
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.sleep.php
+     */
     private function __sleep()
     {
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-session.wakeup.php
+     */
     private function __wakeup()
     {
     }

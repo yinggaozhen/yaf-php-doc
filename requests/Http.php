@@ -4,6 +4,9 @@ namespace Yaf\Request;
 
 use Yaf\Request_Abstract;
 
+/**
+ * @link http://www.php.net/manual/en/class.yaf-request-http.php
+ */
 class Http extends Request_Abstract
 {
     const SCHEME_HTTP = 'http';
@@ -11,7 +14,8 @@ class Http extends Request_Abstract
     const SCHEME_HTTPS = 'https';
 
     /**
-     * Http constructor.
+     * @link http://www.php.net/manual/en/yaf-request-http.construct.php
+     *
      * @param null|string $request_uri
      * @param null|string $base_uri
      * @throws \TypeError
@@ -73,52 +77,81 @@ class Http extends Request_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-request-http.getquery.php
+     *
      * @param string     $name
      * @param null|mixed $default
      * @return mixed
      */
-    public function getQuery(string $name, $default = null)
+    public function getQuery(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_GET;
+        }
+
         return isset($_GET[$name]) ? $_GET[$name] : $default;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-request-http.getrequest.php
+     *
      * @param string     $name
      * @param null|mixed $default
      * @return mixed
      */
-    public function getRequest(string $name, $default = null)
+    public function getRequest(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_REQUEST;
+        }
+
         return isset($_REQUEST[$name]) ? $_REQUEST[$name] : $default;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-request-http.getpost.php
      * @param string     $name
      * @param null|mixed $default
      * @return mixed
      */
-    public function getPost(string $name, $default = null)
+    public function getPost(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_POST;
+        }
+
         return isset($_POST[$name]) ? $_POST[$name] : $default;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-request-http.getcookie.php
+     *
      * @param string     $name
      * @param null|mixed $default
      * @return mixed
      */
-    public function getCookie(string $name, $default = null)
+    public function getCookie(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_COOKIE;
+        }
+
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-request-http.getfiles.php
+     *
      * @param string     $name
      * @param null|mixed $default
      * @return mixed
      */
-    public function getFiles(string $name, $default = null)
+    public function getFiles(string $name = null, $default = null)
     {
+        if (null === $name) {
+            return $_FILES;
+        }
+
         return isset($_FILES[$name]) ? $_FILES[$name] : $default;
     }
 
@@ -128,6 +161,8 @@ class Http extends Request_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-request-http.get.php
+     *
      * @param string     $name
      * @param null|mixed $default
      * @return mixed|null
@@ -153,6 +188,11 @@ class Http extends Request_Abstract
         return $default;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-request-http.isxmlhttprequest.php
+     *
+     * @return bool
+     */
     public function isXmlHttpRequest(): bool
     {
         $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;

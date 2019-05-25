@@ -8,9 +8,14 @@ use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 use Yaf\Router;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-static.php
+ */
 class Route_Static implements Route_Interface
 {
     /**
+     * @link https://www.php.net/manual/en/yaf-route-static.match.php
+     *
      * @return true
      */
     public function match(): bool
@@ -18,6 +23,12 @@ class Route_Static implements Route_Interface
         return true;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-route-static.route.php
+     *
+     * @param Request_Abstract $request
+     * @return bool
+     */
     public function route($request)
     {
         if (!($request instanceof Request_Abstract)) {
@@ -28,6 +39,8 @@ class Route_Static implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-static.assemble.php
+     *
      * @param array $info
      * @param array|null $query
      * @return bool|null|string
@@ -39,6 +52,8 @@ class Route_Static implements Route_Interface
 
         return $str ?? false;
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param array $info

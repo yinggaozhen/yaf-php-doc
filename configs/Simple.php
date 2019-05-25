@@ -37,6 +37,8 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.get.php
+     *
      * @param string|null $name
      * @return $this|bool|mixed|null
      * @throws \Exception
@@ -66,6 +68,8 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
     }
 
     /**
+     * @@link http://www.php.net/manual/en/yaf-config-simple.set.php
+     *
      * @inheritdoc
      * @param $name
      * @param $value
@@ -83,12 +87,19 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
         return false;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.readonly.php
+     *
+     * @return bool
+     */
     public function readonly(): bool
     {
         return (bool) $this->_readonly;
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.current.php
+     *
      * @return bool|mixed
      * @throws \Exception
      */
@@ -107,32 +118,58 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
         return $pzval;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.next.php
+     *
+     * @return mixed
+     */
     public function next()
     {
         return next($this->_config);
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.key.php
+     *
+     * @return int|mixed|null|string
+     */
     public function key()
     {
         return key($this->_config);
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.valid.php
+     *
+     * @return bool
+     */
     public function valid()
     {
         return !is_null(key($this->_config));
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.rewind.php
+     */
     public function rewind()
     {
         reset($this->_config);
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.offsetexists.php
+     *
+     * @param mixed $offset
+     * @return bool|mixed
+     */
     public function offsetExists($offset)
     {
         return $this[$offset];
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.offsetget.php
+     *
      * @param mixed $offset
      * @return bool|mixed|null|Simple
      * @throws \Exception
@@ -142,11 +179,24 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
         return $this->get($offset);
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.offsetset.php
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     * @return bool
+     */
     public function offsetSet($offset, $value)
     {
         return $this->set($offset, $value);
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.offsetunset.php
+     *
+     * @param mixed $name
+     * @return bool
+     */
     public function offsetUnset($name): bool
     {
         if (!$this->_readonly) {
@@ -161,11 +211,21 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
         return false;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.count.php
+     *
+     * @return int
+     */
     public function count(): int
     {
         return count(array_keys($this->_config));
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.toarray.php
+     *
+     * @return array
+     */
     public function toArray()
     {
         return $this->_config;
@@ -182,6 +242,13 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
         return array_key_exists($name, $this->_config);
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.set.php
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return bool
+     */
     public function __set($key, $value)
     {
         return $this->set($key, $value);
@@ -196,6 +263,8 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
     {
         return $this->get($key);
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param $values

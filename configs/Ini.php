@@ -37,6 +37,8 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-ini.set.php
+     *
      * @inheritdoc
      * @return bool
      */
@@ -48,6 +50,8 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-ini.get.php
+     *
      * @inheritdoc
      * @param string|null $name
      * @return $this|mixed|null|Ini
@@ -94,6 +98,8 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-ini.readonly.php
+     *
      * @return bool
      */
     public function readonly()
@@ -101,12 +107,19 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
         return true;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-ini.count.php
+     *
+     * @return int
+     */
     public function count(): int
     {
         return count(array_keys($this->_config));
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-config-ini.current.php
+     *
      * @return bool|mixed|null|Ini
      * @throws \Exception
      */
@@ -200,6 +213,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 
     /**
      * @see \Yaf\Config\Ini::get()
+     * @link http://www.php.net/manual/en/yaf-config-ini.get.php
      *
      * @param string $name
      * @return mixed|null|Ini
@@ -212,6 +226,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 
     /**
      * @see \Yaf\Config\Ini::set()
+     * @link http://www.php.net/manual/en/yaf-config-ini.set.php
      *
      * @param string $name
      * @param mixed $value
@@ -221,6 +236,8 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     {
         return $this->set($name, $value);
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param null|string|array $filename

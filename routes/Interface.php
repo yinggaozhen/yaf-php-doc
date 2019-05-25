@@ -93,7 +93,6 @@ function routerInstance($config)
 
         $pzval = $config['controllerPrefer'] ?? null;
 		if (isset($pzval)) {
-		    // TODO check
             $controllerPrefer = (bool) $pzval;
         }
 

@@ -6,18 +6,23 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-supervar.php
+ */
 class Supervar implements Route_Interface
 {
     protected $_var_name = null;
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-supervar.construct.php
+     *
      * @param string $var
      * @throws \Exception
      */
     public function __construct($var)
     {
         if (!is_string($var) || empty($var)) {
-            yaf_trigger_error(TYPE_ERROR, "Expects a valid string super var name");
+            yaf_trigger_error(TYPE_ERROR, 'Expects a valid string super var name');
             return false;
         }
 
@@ -25,6 +30,8 @@ class Supervar implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-supervar.route.php
+     *
      * @param Request_Abstract $request
      * @return bool
      * @throws \ReflectionException
@@ -39,6 +46,8 @@ class Supervar implements Route_Interface
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-route-supervar.assemble.php
+     *
      * @param array $info
      * @param array|null $query
      * @return null|string
@@ -50,6 +59,8 @@ class Supervar implements Route_Interface
 
         return is_null($str) ? $str : strval($str);
     }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param array $info

@@ -15,6 +15,9 @@ use function Yaf\Exception\Internal\yaf_buildin_exceptions;
 use Yaf\View\Simple;
 use function YP\internalCall;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-dispatcher.php
+ */
 class Dispatcher
 {
     /**
@@ -72,6 +75,13 @@ class Dispatcher
      */
     protected $_default_action;
 
+    /**
+     * Dispatcher constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-dispatcher.construct.php
+     *
+     * @throws \Exception
+     */
     private function __construct()
     {
         $this->_plugins = [];
@@ -84,9 +94,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.getinstance.php
+     *
      * @return Dispatcher
+     * @throws \Exception
      */
-    public static function getInstance(): Dispatcher
+    public static function getInstance()
     {
         $instance = self::$_instance;
 
@@ -100,11 +113,13 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.dispatch.php
+     *
      * @param Request_Abstract $request
      * @return Response_Abstract|bool
      * @throws \Exception
      */
-    public function dispatch(Request_Abstract $request = null): Response_Abstract
+    public function dispatch(Request_Abstract $request = null)
     {
         $this->_request = $request;
         /** @var Response_Abstract $rResponse */
@@ -118,9 +133,11 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.enableview.php
+     *
      * @return Dispatcher
      */
-    public function enableView(): Dispatcher
+    public function enableView()
     {
         $this->_auto_render = true;
 
@@ -128,9 +145,11 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.disableview.php
+     *
      * @return Dispatcher
      */
-    public function disableView(): Dispatcher
+    public function disableView()
     {
         $this->_auto_render = false;
 
@@ -138,12 +157,14 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.initview.php
+     *
      * @param string $templates_dir
      * @param array|null $options
      * @return null|Simple|View_Interface
      * @throws \Exception
      */
-    public function initView(string $templates_dir, array $options = null): ?View_Interface
+    public function initView($templates_dir, array $options = null)
     {
         $view = $this->_initView($templates_dir, $options);
 
@@ -151,6 +172,8 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.setview.php
+     *
      * @param View_Interface $view
      * @return $this|bool
      */
@@ -166,6 +189,8 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.setrequest.php
+     *
      * @param Request_Abstract $request
      * @return $this|bool
      * @throws \Exception
@@ -181,32 +206,41 @@ class Dispatcher
         return $this;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.getapplication.php
+     */
     public function getApplication()
     {
         // TODO PHP_MN(yaf_application_app)(INTERNAL_FUNCTION_PARAM_PASSTHRU);什么意思
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.getrouter.php
+     *
      * @return Router
      */
-    public function getRouter(): Router
+    public function getRouter()
     {
         return $this->_router;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.getrequest.php
+     *
      * @return Request_Abstract
      */
-    public function getRequest(): Request_Abstract
+    public function getRequest()
     {
         return $this->_request;
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.setdefaultmodule.php
+     *
      * @param string $module
      * @return $this|bool
      */
-    public function setDefaultModule(string $module)
+    public function setDefaultModule($module)
     {
         if (is_string($module) && !empty($module) && Application::isModuleName($module)) {
             $this->_default_module = ucfirst(strtolower($module));
@@ -218,10 +252,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.setdefaultcontroller.php
+     *
      * @param string $controller
      * @return $this|bool
      */
-    public function setDefaultController(string $controller)
+    public function setDefaultController($controller)
     {
         if (is_string($controller) && !empty($controller)) {
             $this->_default_controller = strtoupper($controller);
@@ -233,10 +269,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.setdefaultaction.php
+     *
      * @param string $action
      * @return $this|bool
      */
-    public function setDefaultAction(string $action)
+    public function setDefaultAction($action)
     {
         if (is_string($action) && !empty($action)) {
             $this->_default_action = $action;
@@ -248,6 +286,8 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.returnresponse.php
+     *
      * @param bool $auto_response
      * @return $this|int
      */
@@ -264,10 +304,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.flushinstantly.php
+     *
      * @param bool $flag
      * @return $this|int
      */
-    public function flushInstantly(bool $flag = false)
+    public function flushInstantly($flag = false)
     {
         $argc = func_num_args();
 
@@ -280,12 +322,14 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.seterrorhandler.php
+     *
      * @param callable $callback
      * @param int $error_type
      * @return Dispatcher | boolean
      * @throws \Exception
      */
-    public function setErrorHandler($callback, int $error_type = E_ALL)
+    public function setErrorHandler($callback, $error_type = E_ALL)
     {
         try {
             set_error_handler($callback, $error_type);
@@ -298,10 +342,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.autorender.php
+     *
      * @param bool $flag
      * @return $this|int
      */
-    public function autoRender(bool $flag = false)
+    public function autoRender($flag = false)
     {
         $argc = func_num_args();
 
@@ -314,10 +360,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.throwexception.php
+     *
      * @param bool $flag
      * @return $this|bool
      */
-    public function throwException(bool $flag = false)
+    public function throwException($flag = false)
     {
         $argc = func_num_args();
 
@@ -330,10 +378,12 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.catchexception.php
+     *
      * @param bool $flag
      * @return $this|bool
      */
-    public function catchException(bool $flag = false)
+    public function catchException($flag = false)
     {
         $argc = func_num_args();
 
@@ -346,6 +396,8 @@ class Dispatcher
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.registerplugin.php
+     *
      * @param Plugin_Abstract $plugin
      * @return $this|bool
      * @throws \Exception
@@ -360,6 +412,27 @@ class Dispatcher
         $this->_plugins[] = $plugin;
 
         return $this;
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.clone.php
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.sleep.php
+     */
+    private function __sleep()
+    {
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-dispatcher.wakeup.php
+     */
+    private function __wakeup()
+    {
     }
 
     // ================================================== 内部常量 ==================================================
@@ -384,7 +457,7 @@ class Dispatcher
      * @return null|Response_Abstract
      * @throws \Exception
      */
-    public function _dispatch(?Response_Abstract &$response): ?Response_Abstract
+    public function _dispatch(?Response_Abstract &$response)
     {
         $nesting = YAF_G('yaf.forward_limit');
 
@@ -498,7 +571,7 @@ class Dispatcher
      * @return Simple|View_Interface
      * @throws \Exception
      */
-    private function _initView(?string $tpl_dir, ?array $options): ?View_Interface
+    private function _initView($tpl_dir, $options)
     {
         $view = $this->_view;
 
@@ -577,7 +650,7 @@ class Dispatcher
      * @return int
      * @throws \Exception
      */
-    private function _route(Request_Abstract $request): int
+    private function _route(Request_Abstract $request)
     {
         $router = $this->getRouter();
 
@@ -603,7 +676,7 @@ class Dispatcher
     /**
      * @param Request_Abstract $request
      */
-    private function _fixDefault(Request_Abstract $request): void
+    private function _fixDefault(Request_Abstract $request)
     {
         $module     = $request->getModuleName();
         $action     = $request->getActionName();
@@ -647,7 +720,7 @@ class Dispatcher
      * @return int
      * @throws \Exception
      */
-    private function _handle(Request_Abstract $request, Response_Abstract $response, View_Interface $view): int
+    private function _handle(Request_Abstract $request, Response_Abstract $response, View_Interface $view)
     {
         $app_dir = YAF_G('directory');
 
@@ -810,7 +883,7 @@ class Dispatcher
      * @throws \Exception
      * @throws \ReflectionException
      */
-    private function _getController(string $app_dir, string $module, string $controller, int $def_module)
+    private function _getController($app_dir, $module, $controller, $def_module)
     {
         if ($def_module) {
             $directory = sprintf("%s%s%s", $app_dir, DS, Loader::YAF_CONTROLLER_DIRECTORY_NAME);
@@ -857,7 +930,7 @@ class Dispatcher
      * @throws \Exception
      * @throws \ReflectionException
      */
-    private function _getAction(string $app_dir, Controller_Abstract $controller, string $module, int $def_module, string $action): ?string
+    private function _getAction($app_dir, Controller_Abstract $controller, $module, $def_module, $action)
     {
         $actions_map = $controller->actions;
 
@@ -982,7 +1055,7 @@ class Dispatcher
      * @param Request_Abstract $request
      * @param Response_Abstract $response
      */
-    private function _pluginHandle(array $plugins, string $hook, Request_Abstract $request, Response_Abstract $response): void
+    private function _pluginHandle(array $plugins, $hook, Request_Abstract $request, Response_Abstract $response)
     {
         if (!is_null($plugins)) {
             foreach ($plugins as $plugin) {
@@ -1007,24 +1080,12 @@ class Dispatcher
      * @throws \Exception
      * @throws \ReflectionException
      */
-    private function _exceptionHandle(\Exception $e, Request_Abstract $request, Response_Abstract $response): void
+    private function _exceptionHandle(\Exception $e, Request_Abstract $request, Response_Abstract $response)
     {
         if (YAF_G('catch_exception')) {
             $this->_dispatcherExceptionHandler($e, $request, $response);
         } else {
             throw $e;
         }
-    }
-
-    private function __clone()
-    {
-    }
-
-    private function __sleep()
-    {
-    }
-
-    private function __wakeup()
-    {
     }
 }

@@ -5,6 +5,9 @@ namespace Yaf;
 use Yaf\Response\Cli;
 use Yaf\Response\Http;
 
+/**
+ * @link https://www.php.net/manual/en/class.yaf-response-abstract.php
+ */
 abstract class Response_Abstract
 {
     const DEFAULT_BODY = 'content';
@@ -19,6 +22,9 @@ abstract class Response_Abstract
      */
     protected $_body;
 
+    /**
+     * @var bool
+     */
     protected $_sendheader = false;
 
     /**
@@ -27,6 +33,11 @@ abstract class Response_Abstract
      */
     private static $instance;
 
+    /**
+     * Response_Abstract constructor.
+     *
+     * @link https://www.php.net/manual/en/yaf-response-abstract.construct.php
+     */
     public function __construct()
     {
         $this->_header = [];
@@ -34,11 +45,13 @@ abstract class Response_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.setbody.php
+     *
      * @param string $body
      * @param string|null $name
      * @return $this|bool
      */
-    public function setBody(string $body, string $name = null)
+    public function setBody($body, $name = null)
     {
         if ($this->alterBody($name, $body, 'YAF_RESPONSE_REPLACE')) {
             return $this;
@@ -48,11 +61,13 @@ abstract class Response_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.appendbody.php
+     *
      * @param string $body
      * @param string|null $name
      * @return $this|bool
      */
-    public function appendBody(?string $body, ?string $name = null)
+    public function appendBody($body, $name = null)
     {
         if ($this->alterBody($name, $body, 'YAF_RESPONSE_APPEND')) {
             return $this;
@@ -62,11 +77,13 @@ abstract class Response_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.prependbody.php
+     *
      * @param string $body
      * @param string|null $name
      * @return $this|bool
      */
-    public function prependBody(string $body, string $name = null)
+    public function prependBody($body, $name = null)
     {
         if ($this->alterBody($name, $body, 'YAF_RESPONSE_PREPEND')) {
             return $this;
@@ -76,10 +93,12 @@ abstract class Response_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.clearbody.php
+     *
      * @param string|null $name
      * @return int
      */
-    public function clearBody(string $name = null)
+    public function clearBody($name = null)
     {
         if ($name) {
             unset($this->_body[$name]);
@@ -91,6 +110,8 @@ abstract class Response_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.getbody.php
+     *
      * @param string|null $name
      * @return string
      */
@@ -106,9 +127,11 @@ abstract class Response_Abstract
     }
 
     /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.response.php
+     *
      * @return bool
      */
-    public function response(): bool
+    public function response()
     {
         foreach ($this->_body as $body) {
             if (!is_string($body)) {
@@ -120,6 +143,33 @@ abstract class Response_Abstract
 
         return true;
     }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.destruct.php
+     */
+    public function __destruct()
+    {
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.clone.php
+     */
+    private function __clone()
+    {
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-response-abstract.tostring.php
+     */
+    public function __toString()
+    {
+        $zbody = $this->_body;
+        $return_value = implode('', $zbody);
+
+        return $return_value;
+    }
+
+    // ================================================== 内部方法 ==================================================
 
     /**
      * @param string        $name
@@ -156,22 +206,6 @@ abstract class Response_Abstract
         }
 
         return 1;
-    }
-
-    public function __destruct()
-    {
-    }
-
-    private function __clone()
-    {
-    }
-
-    public function __toString()
-    {
-        $zbody = $this->_body;
-        $return_value = implode('', $zbody);
-
-        return $return_value;
     }
 
     /**
