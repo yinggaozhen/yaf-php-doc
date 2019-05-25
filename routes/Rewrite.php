@@ -62,7 +62,7 @@ class Rewrite implements Route_Interface
     public function route($request): bool
     {
         if (!$request || !is_object($request) || !($request instanceof Request_Abstract)) {
-            trigger_error(sprintf("Expect a %s iniInstance", get_class($request)), E_WARNING);
+            trigger_error(sprintf('Expect a %s iniInstance', get_class($request)), E_USER_WARNING);
             return false;
         }
 
@@ -161,8 +161,8 @@ class Rewrite implements Route_Interface
                 if ($module[0] != ':') {
                     $request->setModuleName($module);
                 } else {
-                    $m = $args[substr($module, 1)];
-                    if (isset($m) != NULL && is_string($m)) {
+                    $m = $args[substr($module, 1)] ?? null;
+                    if (isset($m) && is_string($m)) {
                         $request->setModuleName($m);
                     }
                 }
@@ -173,8 +173,8 @@ class Rewrite implements Route_Interface
                 if ($controller[0] != ':') {
                     $request->setControllerName($controller);
                 } else {
-                    $c = $args[substr($controller, 1)];
-                    if (isset($c) != NULL && is_string($c)) {
+                    $c = $args[substr($controller, 1)] ?? null;
+                    if (isset($c) && is_string($c)) {
                         $request->setControllerName($c);
                     }
                 }
@@ -185,8 +185,8 @@ class Rewrite implements Route_Interface
                 if ($action[0] != ':') {
                     $request->setActionName($action);
                 } else {
-                    $a = $args[substr($action, 1)];
-                    if (isset($a) != NULL && is_string($a)) {
+                    $a = $args[substr($action, 1)] ?? null;
+                    if (isset($a) && is_string($a)) {
                         $request->setActionName($a);
                     }
                 }

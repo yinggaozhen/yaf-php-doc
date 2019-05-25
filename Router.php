@@ -94,10 +94,9 @@ class Router
 
             if (true === $result) {
                 $this->_current = $key;
+                $request->setRouted();
+                return true;
             }
-            $request->setRouted();
-
-            return true;
         }
 
         return false;
