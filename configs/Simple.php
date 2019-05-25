@@ -5,26 +5,26 @@ namespace Yaf\Config;
 use Yaf\Config_Abstract;
 use const YAF\ERR\TYPE_ERROR;
 
+/**
+ * @link http://www.php.net/manual/en/class.yaf-config-simple.php
+ */
 class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
     /**
-     * TODO 其实是public
-     *
      * @var bool
      */
     public $_readonly = false;
 
     /**
-     * TODO 其实是protected
-     *
      * @var array
      */
     public $_config = [];
 
     /**
-     * Simple constructor.
-     * @param $values
-     * @param null $readonly
+     * @link http://www.php.net/manual/en/yaf-config-simple.construct.php
+     *
+     * @param array $values
+     * @param bool  $readonly
      * @throws \Exception
      */
     public function __construct($values, $readonly = null)
@@ -171,6 +171,12 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
         return $this->_config;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-simple.isset.php
+     *
+     * @param string $name
+     * @return bool
+     */
     public function __isset($name): bool
     {
         return array_key_exists($name, $this->_config);

@@ -5,14 +5,26 @@ namespace Yaf\Config;
 use Yaf\Config_Abstract;
 use const YAF\ERR\TYPE_ERROR;
 
+/**
+ * \Yaf\Config\Ini
+ * 能使开发人员能够以熟悉的ini格式存储配置数据，并使用嵌套的对象属性语法在应用程序中读取这些数据。
+ * ini格式专门用于提供配置数据键层次结构和配置数据部分之间继承的能力。
+ *
+ * - 其中字符（“.”）作为分隔键，支持配置数据层次结构。
+ * - 而字符（“：”）作为继承/扩展符号，方法是 <子节点名>:<父节点名>
+ *
+ * @link http://www.php.net/manual/en/class.yaf-config-ini.php
+ */
 class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
     /**
      * Ini constructor.
      *
+     * @link http://www.php.net/manual/en/yaf-config-ini.construct.php
+     *
      * @param string|array $filename 文件名称或者参数值
-     * @param string $section
-     * @throws \Exception
+     * @param string       $section  所要选取的ini部分
+     * @throws \Yaf\Exception\TypeError | \Exception
      */
     public function __construct($filename, $section = null)
     {
@@ -27,7 +39,6 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     /**
      * @inheritdoc
      * @return bool
-     * @throws \Exception
      */
     public function set($name, $value): bool
     {
@@ -176,13 +187,21 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
         return $properties;
     }
 
+    /**
+     * @link http://www.php.net/manual/en/yaf-config-ini.isset.php
+     *
+     * @param string $name
+     * @return bool
+     */
     public function __isset(string $name): bool
     {
         return (bool) array_key_exists($name, $this->_config);
     }
 
     /**
-     * @param $name
+     * @see \Yaf\Config\Ini::get()
+     *
+     * @param string $name
      * @return mixed|null|Ini
      * @throws \Exception
      */
@@ -192,14 +211,15 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @see \Yaf\Config\Ini::set()
+     *
+     * @param string $name
+     * @param mixed $value
      * @return bool
-     * @throws \Exception
      */
     public function __set($name, $value)
     {
-        return $this->set();
+        return $this->set($name, $value);
     }
 
     /**
@@ -265,6 +285,11 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
         return $this->iniInstance($pzval, null, true);
     }
 
+    /**
+     * @param string $ini_file
+     * @return array|null
+     * @throws \Exception
+     */
     private function iniParse(string $ini_file)
     {
         $result = [];

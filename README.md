@@ -10,8 +10,8 @@
     <a href="https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet">
         <img src="https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet" alt="Yaf version">
     </a>
-    <a href="https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev.1&color=important">
-        <img src="https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev.1&color=important" alt="version">
+    <a href="https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev&color=important">
+        <img src="https://img.shields.io/static/v1.svg?label=version&message=0.1.0-dev&color=important" alt="version">
     </a>
     <a href="https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green">
         <img src="https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green" alt="LICENSE">

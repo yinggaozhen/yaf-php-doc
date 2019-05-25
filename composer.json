@@ -2,7 +2,7 @@
   "name": "yinggaozhen/yaf-php",
   "description": "Yaf PHP version",
   "type": "yaf-php",
-  "version": "0.1.0-dev.1",
+  "version": "0.1.0-dev",
   "minimum-stability": "dev",
   "homepage": "https://github.com/yinggaozhen/yaf-php",
   "require" : {
@@ -24,7 +24,8 @@
       "./YP.php",
       "./Yaf.php",
       "./Exception.php",
-      "./routes/Interface.php"
+      "./routes/Interface.php",
+      "./exception/*"
     ]
   },
   "scripts": {

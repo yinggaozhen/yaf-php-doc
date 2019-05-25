@@ -21,52 +21,6 @@ namespace Yaf
     }
 }
 
-
-namespace Yaf\Exception
-{
-    use \Yaf\Exception;
-
-    class StartupError extends Exception
-    {
-    }
-
-    class RouterFailed extends Exception
-    {
-    }
-
-    class DispatchFailed extends Exception
-    {
-    }
-
-    class LoadFailed extends Exception
-    {
-    }
-
-    class TypeError extends Exception
-    {
-    }
-}
-
-namespace Yaf\Exception\LoadFailed
-{
-
-    use \Yaf\Exception;
-
-    class Module extends Exception
-    {
-    }
-
-    class Controller extends Exception
-    {
-    }
-    class Action extends Exception
-    {
-    }
-    class View extends Exception
-    {
-    }
-}
-
 // ================================================== 内部方法 ==================================================
 
 /**
