@@ -255,7 +255,7 @@ class Simple implements View_Interface
         $symbol_table = $this->buildSymtable($this->_tpl_vars, $vars);
 
         // 判断是否为绝对路径
-        if (realpath($tpl) === $tpl) {
+        if (\YP\isAbsolutePath($tpl) === $tpl) {
             if ($this->renderTpl($symbol_table, $tpl, $result) == 0) {
                 return 0;
             }

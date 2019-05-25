@@ -278,6 +278,7 @@ final class Session implements Iterator, ArrayAccess, Countable
 
     /**
      * @link https://www.php.net/manual/en/yaf-session.isset.php
+     *
      * @param string $name
      * @return bool
      */

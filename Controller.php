@@ -346,7 +346,7 @@ abstract class Controller_Abstract
 
         $view_ext = YAF_G('view_ext');
         $self_name = str_replace('_', DEFAULT_SLASH, strtolower($name));
-        $action_name = str_replace('_', DEFAULT_SLASH, $action_name);
+        $action_name = strtolower(str_replace('_', DEFAULT_SLASH, $action_name));
 
         $path = sprintf("%s%s%s.%s", $self_name, DEFAULT_SLASH, $action_name, $view_ext);
 

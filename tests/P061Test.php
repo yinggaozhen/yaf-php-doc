@@ -4,11 +4,11 @@ use tests\Base;
 use Yaf\Application;
 
 /**
- * Check for working with other autoloaders
+ * Bug empty template file interrupts forward chain
  *
- * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P060Test.php
+ * @run ./vendor/bin/phpunit --bootstrap ./tests/bootstrap.php ./tests/P061Test.php
  */
-class P060Test extends Base
+class P061Test extends Base
 {
     public function setUp()
     {
@@ -20,7 +20,6 @@ class P060Test extends Base
 
     /**
      * @throws Exception
-     * @throws ReflectionException
      * @throws TypeError
      */
     public function test()
@@ -31,13 +30,14 @@ class P060Test extends Base
             ],
         ];
 
-        file_put_contents(YAF_TEST_APPLICATION_PATH . '/Bootstrap.php', file_get_contents(__DIR__ . '/common/060Test_1.inc'));
-        file_put_contents(YAF_TEST_APPLICATION_PATH . '/controllers/Index.php', file_get_contents(__DIR__ . '/common/060Test_2.inc'));
-        file_put_contents(YAF_TEST_APPLICATION_PATH . "/views/index/index.phtml", "<?php echo get_class(\$obj);?>");
+        file_put_contents(YAF_TEST_APPLICATION_PATH . '/controllers/Index.php', file_get_contents(__DIR__ . '/common/061Test_1.inc'));
+        file_put_contents(YAF_TEST_APPLICATION_PATH . '/controllers/Dummy.php', file_get_contents(__DIR__ . '/common/061Test_2.inc'));
+        file_put_contents(YAF_TEST_APPLICATION_PATH . '/views/index/index.phtml', '');
+        file_put_contents(YAF_TEST_APPLICATION_PATH . '/views/index/dummy.phtml', 'Dummy');
 
         ob_start();
         $app = new Application($config);
-        $response = $app->bootstrap()->run();
+        $response = $app->run();
         $actual = ob_get_contents();
         ob_end_clean();
 
