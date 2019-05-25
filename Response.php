@@ -118,7 +118,7 @@ abstract class Response_Abstract
     public function getBody(string $name = null)
     {
         if (empty($name)) {
-            $body = $this->_body;
+            $body = $this->_body[self::DEFAULT_BODY];
         } else {
             $body = $this->_body[$name];
         }
