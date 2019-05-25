@@ -4,8 +4,8 @@
 </p>
 
 <p align="center">
-    <a href="https://img.shields.io/static/v1.svg?label=TestCase&message=60/97&color=yellowgreen">
-        <img src="https://img.shields.io/static/v1.svg?label=TestCase&message=60/97&color=yellowgreen" alt="Test Case">
+    <a href="https://img.shields.io/static/v1.svg?label=TestCase&message=72/97&color=green">
+        <img src="https://img.shields.io/static/v1.svg?label=TestCase&message=72/97&color=green" alt="Test Case">
     </a>
     <a href="https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet">
         <img src="https://img.shields.io/static/v1.svg?label=Yaf%20version&message=3.0.8-dev&color=blueviolet" alt="Yaf version">
