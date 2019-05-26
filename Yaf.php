@@ -145,3 +145,63 @@ namespace YAF\ERR\NOTFOUND
     const ACTION           = 517;
     const VIEW             = 518;
 }
+
+/**
+ * Yaf-PHP Internal Namespace
+ */
+namespace YP
+{
+    /**
+     * @param $object
+     * @param string $method
+     * @param array $params
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    function internalCall($object, $method, ...$params)
+    {
+        $reflectionMethod = new \ReflectionMethod($object, $method);
+        $reflectionMethod->setAccessible(true);
+
+        return $reflectionMethod->invokeArgs($object, $params);
+    }
+
+
+    /**
+     * @param $object
+     * @param string $property
+     * @return mixed
+     * @throws \ReflectionException
+     */
+    function internalPropertyGet($object, $property)
+    {
+        $reflectionProperty = new \ReflectionProperty($object, $property);
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty->getValue($object);
+    }
+
+    /**
+     * 判断是否为绝对路径
+     *
+     * @param string $path
+     * @return bool
+     */
+    function isAbsolutePath($path)
+    {
+        return is_string($path) && preg_match('/^\//', $path);
+    }
+
+    function getClassEntry($clazz)
+    {
+        $declaredClasses = get_declared_classes();
+
+        foreach ($declaredClasses as $class) {
+            if (!strnatcasecmp($class, $clazz)) {
+                return $class;
+            }
+        }
+
+        return null;
+    }
+}
