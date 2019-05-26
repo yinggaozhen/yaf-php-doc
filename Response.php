@@ -115,7 +115,7 @@ abstract class Response_Abstract
      * @param string|null $name
      * @return string
      */
-    public function getBody(string $name = null)
+    public function getBody($name = null)
     {
         if (empty($name)) {
             $body = $this->_body[self::DEFAULT_BODY];
@@ -177,7 +177,7 @@ abstract class Response_Abstract
      * @param string        $response_type 其实是int
      * @return int
      */
-    private function alterBody(?string $name, ?string $body, string $response_type): int
+    private function alterBody($name, $body, $response_type)
     {
         if (strlen($body) === 0) {
             return 1;

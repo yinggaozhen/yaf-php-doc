@@ -85,7 +85,7 @@ class Simple implements View_Interface
      * @param array $tpl_vars
      * @throws \Exception
      */
-    function display($tpl, $tpl_vars = null): void
+    function display($tpl, $tpl_vars = null)
     {
         $null = null;
         $this->simpleRender($tpl, $tpl_vars, $null);
@@ -169,7 +169,7 @@ class Simple implements View_Interface
      * @return bool
      * @throws \Exception
      */
-    public function eval(string $tpl_content, array $vars = null)
+    public function eval($tpl_content, array $vars = null)
     {
         $result_value = '';
 
@@ -187,7 +187,7 @@ class Simple implements View_Interface
      * @param mixed $value
      * @return $this
      */
-    public function assignRef(string $name, &$value): Simple
+    public function assignRef($name, &$value)
     {
         $this->_tpl_vars[$name] = &$value;
 
@@ -199,7 +199,7 @@ class Simple implements View_Interface
      *
      * @param string|null $name
      */
-    public function clear(string $name = null): void
+    public function clear($name = null)
     {
         if (empty($name)) {
             $this->_tpl_vars = [];
@@ -214,7 +214,7 @@ class Simple implements View_Interface
      * @param $value
      * @return int
      */
-    private function assignMulti($value): int
+    private function assignMulti($value)
     {
         if (is_array($value)) {
             $this->_tpl_vars = $value;
@@ -229,7 +229,7 @@ class Simple implements View_Interface
      * @param $value
      * @return int
      */
-    private function assignSingle(string $name, $value): int
+    private function assignSingle($name, $value)
     {
         try {
             $this->_tpl_vars[$name] = $value;
@@ -246,7 +246,7 @@ class Simple implements View_Interface
      * @return int
      * @throws \Exception
      */
-    private function simpleRender($tpl, $vars, &$result): int
+    private function simpleRender($tpl, $vars, &$result)
     {
         if (!is_string($tpl)) {
             return 0;
@@ -288,7 +288,7 @@ class Simple implements View_Interface
      * @return int
      * @throws \Exception
      */
-    private function renderTpl(array $symbol_table, string $_internal_tpl, ?string &$_internal_result): int
+    private function renderTpl(array $symbol_table, $_internal_tpl, &$_internal_result)
     {
         extract($symbol_table, EXTR_REFS);
 
@@ -319,7 +319,7 @@ class Simple implements View_Interface
      * @param $vars
      * @return array
      */
-    private function buildSymtable($tpl_vars, $vars): ?array
+    private function buildSymtable($tpl_vars, $vars)
     {
         $symbol_table = [];
         $scope        = $this;
@@ -367,7 +367,7 @@ class Simple implements View_Interface
      * @param $result
      * @return int
      */
-    private function simpleEval(string $tpl, ?array $vars, &$result): int
+    private function simpleEval($tpl, $vars, &$result)
     {
         if (!is_string($tpl)) {
             return 0;
@@ -394,7 +394,7 @@ class Simple implements View_Interface
      * @param int $var_name_len
      * @return int
      */
-    private static function validVarName(string $var_name, int $var_name_len): int
+    private static function validVarName($var_name, $var_name_len)
     {
         if (empty($var_name)) {
             return 0;
@@ -429,7 +429,7 @@ class Simple implements View_Interface
 	    return 1;
     }
 
-    public function __isset(string $name): bool
+    public function __isset($name)
     {
         return array_key_exists($name, $this->_tpl_vars);
     }

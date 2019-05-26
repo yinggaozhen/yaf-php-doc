@@ -42,7 +42,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @inheritdoc
      * @return bool
      */
-    public function set($name, $value): bool
+    public function set($name, $value)
     {
         \trigger_error('Yaf_Config_Ini is readonly', E_USER_WARNING);
 
@@ -57,7 +57,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @return $this|mixed|null|Ini
      * @throws \Exception
      */
-    public function get(string $name = null)
+    public function get($name = null)
     {
         $pzval = null;
 
@@ -112,7 +112,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      *
      * @return int
      */
-    public function count(): int
+    public function count()
     {
         return count(array_keys($this->_config));
     }
@@ -187,7 +187,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
         $this->set($offset, $value);
     }
 
-    public function offsetUnset($offset): bool
+    public function offsetUnset($offset)
     {
         trigger_error('Yaf_Config_Ini is readonly', E_USER_WARNING);
         return false;
@@ -206,7 +206,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @param string $name
      * @return bool
      */
-    public function __isset(string $name): bool
+    public function __isset($name)
     {
         return (bool) array_key_exists($name, $this->_config);
     }
@@ -246,7 +246,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @return null|Ini
      * @throws \Exception
      */
-    private function iniInstance($filename, ?string $section_name, bool $create = false): ?Ini
+    private function iniInstance($filename, $section_name, $create = false)
     {
         if ($create) {
             return new Ini($filename, $section_name);
@@ -307,7 +307,7 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @return array|null
      * @throws \Exception
      */
-    private function iniParse(string $ini_file)
+    private function iniParse($ini_file)
     {
         $result = [];
         try {
@@ -354,7 +354,13 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
         return $result;
     }
 
-    private function generateRecvParsePath(&$result, string $path, $value): array
+    /**
+     * @param $result
+     * @param string $path
+     * @param $value
+     * @return mixed
+     */
+    private function generateRecvParsePath(&$result, $path, $value)
     {
         $current = &$result;
 

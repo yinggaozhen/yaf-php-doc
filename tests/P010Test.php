@@ -100,7 +100,7 @@ class P010Test extends Base
         $this->assertSame(0, count($sick));
     }
 
-    public function simpleData(): array
+    public function simpleData()
     {
         $baseData = [
             'application' => [

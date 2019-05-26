@@ -9,7 +9,7 @@ namespace YP
      * @return mixed
      * @throws \ReflectionException
      */
-    function internalCall($object, string $method, ...$params)
+    function internalCall($object, $method, ...$params)
     {
         $reflectionMethod = new \ReflectionMethod($object, $method);
         $reflectionMethod->setAccessible(true);
@@ -24,7 +24,7 @@ namespace YP
      * @return mixed
      * @throws \ReflectionException
      */
-    function internalPropertyGet($object, string $property)
+    function internalPropertyGet($object, $property)
     {
         $reflectionProperty = new \ReflectionProperty($object, $property);
         $reflectionProperty->setAccessible(true);

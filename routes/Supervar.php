@@ -53,7 +53,7 @@ class Supervar implements Route_Interface
      * @return null|string
      * @throws \Exception
      */
-    public function assemble(array $info, array $query = null): ?string
+    public function assemble(array $info, array $query = null)
     {
         $str = $this->_assemble($info, $query);
 
@@ -68,7 +68,7 @@ class Supervar implements Route_Interface
      * @return null|string
      * @throws \Exception
      */
-    private function _assemble(array $info, array $query): ?string
+    private function _assemble(array $info, array $query)
     {
         $uri = '';
         $pname = $this->_var_name;
@@ -112,7 +112,7 @@ class Supervar implements Route_Interface
      * @return int
      * @throws \ReflectionException
      */
-    private function _route(Request_Abstract $request): int
+    private function _route(Request_Abstract $request)
     {
         $varname = $this->_var_name;
         $uri = Request_Abstract::_queryEx('GET', $varname);

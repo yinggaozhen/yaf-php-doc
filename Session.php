@@ -97,7 +97,7 @@ final class Session implements Iterator, ArrayAccess, Countable
      * @param string|int|null $name
      * @return array|mixed|null
      */
-    public function get(string $name = null)
+    public function get($name = null)
     {
         $session = $this->_session;
 

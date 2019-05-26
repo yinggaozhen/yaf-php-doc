@@ -81,7 +81,7 @@ class P013Test extends Base
         ], $this->proxyGetProperty($rewrite, '_verify'));
     }
 
-    public function simpleData(): array
+    public function simpleData()
     {
         $baseData = [
             'application' => [

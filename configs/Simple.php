@@ -43,7 +43,7 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
      * @return $this|bool|mixed|null
      * @throws \Exception
      */
-    public function get(string $name = null)
+    public function get($name = null)
     {
         if (!$name) {
             return $this;
@@ -92,7 +92,7 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
      *
      * @return bool
      */
-    public function readonly(): bool
+    public function readonly()
     {
         return (bool) $this->_readonly;
     }
@@ -197,7 +197,7 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
      * @param mixed $name
      * @return bool
      */
-    public function offsetUnset($name): bool
+    public function offsetUnset($name)
     {
         if (!$this->_readonly) {
             if (!is_array($this->_config)) {
@@ -216,7 +216,7 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
      *
      * @return int
      */
-    public function count(): int
+    public function count()
     {
         return count(array_keys($this->_config));
     }
@@ -237,7 +237,7 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
      * @param string $name
      * @return bool
      */
-    public function __isset($name): bool
+    public function __isset($name)
     {
         return array_key_exists($name, $this->_config);
     }
@@ -272,7 +272,7 @@ class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAcc
      * @return null|Simple
      * @throws \Exception
      */
-    private function simpleInstance($values, ?bool $readonly): ?Simple
+    private function simpleInstance($values, ?bool $readonly)
     {
         switch (gettype($values)) {
             case 'array':

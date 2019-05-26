@@ -83,7 +83,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getQuery(string $name = null, $default = null)
+    public function getQuery($name = null, $default = null)
     {
         if (null === $name) {
             return $_GET;
@@ -99,7 +99,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getRequest(string $name = null, $default = null)
+    public function getRequest($name = null, $default = null)
     {
         if (null === $name) {
             return $_REQUEST;
@@ -114,7 +114,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getPost(string $name = null, $default = null)
+    public function getPost($name = null, $default = null)
     {
         if (null === $name) {
             return $_POST;
@@ -130,7 +130,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getCookie(string $name = null, $default = null)
+    public function getCookie($name = null, $default = null)
     {
         if (null === $name) {
             return $_COOKIE;
@@ -146,7 +146,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return mixed
      */
-    public function getFiles(string $name = null, $default = null)
+    public function getFiles($name = null, $default = null)
     {
         if (null === $name) {
             return $_FILES;
@@ -167,7 +167,7 @@ class Http extends Request_Abstract
      * @param null|mixed $default
      * @return mixed|null
      */
-    public function get(string $name, $default = null)
+    public function get($name, $default = null)
     {
         $value = $this->_params[$name] ?? null;
 
@@ -193,7 +193,7 @@ class Http extends Request_Abstract
      *
      * @return bool
      */
-    public function isXmlHttpRequest(): bool
+    public function isXmlHttpRequest()
     {
         $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
 

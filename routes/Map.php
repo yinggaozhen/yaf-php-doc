@@ -26,7 +26,7 @@ class Map implements Route_Interface
      * @param bool $controller_prefer
      * @param string $delimer
      */
-    public function __construct(bool $controller_prefer = false, string $delimer = '#!')
+    public function __construct($controller_prefer = false, $delimer = '#!')
     {
         $this->_ctl_router = $controller_prefer;
 
@@ -58,7 +58,7 @@ class Map implements Route_Interface
      * @return null|string
      * @throws \Exception
      */
-    public function assemble(array $info, array $query = null): ?string
+    public function assemble(array $info, array $query = null)
     {
         $str = $this->_assemble($info, $query);
 
@@ -71,7 +71,7 @@ class Map implements Route_Interface
      * @param Request_Abstract $request
      * @return int
      */
-    private function _route(Request_Abstract $request): int
+    private function _route(Request_Abstract $request)
     {
         $uri = $request->getRequestUri();
         $base_uri = $request->getBaseUri();
@@ -100,7 +100,7 @@ class Map implements Route_Interface
      * @return string
      * @throws \Exception
      */
-    private function _assemble(array $info, array $query): ?string
+    private function _assemble(array $info, array $query)
     {
         $uri = '';
         $has_delim = false;

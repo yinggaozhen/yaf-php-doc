@@ -85,7 +85,7 @@ class Router
      * @param Request_Abstract $request
      * @return bool
      */
-    public function route(Request_Abstract $request): bool
+    public function route(Request_Abstract $request)
     {
         $routes = array_reverse($this->_routes);
 

@@ -59,7 +59,7 @@ abstract class Request_Abstract
 
     protected const YAF_REQUEST_SERVER_URI = 'request_uri=';
 
-    public function isXmlHttpRequest(): bool
+    public function isXmlHttpRequest()
     {
         return false;
     }
@@ -67,7 +67,7 @@ abstract class Request_Abstract
     /**
      * @return int
      */
-    public function isDispatched(): int
+    public function isDispatched()
     {
         return $this->_dispatched === true ? 1 : 0;
     }
@@ -75,7 +75,7 @@ abstract class Request_Abstract
     /**
      * @return int
      */
-    public function isRouted(): int
+    public function isRouted()
     {
         return $this->_routed === true ? 1 : 0;
     }
@@ -143,7 +143,7 @@ abstract class Request_Abstract
     /**
      * @return array|null
      */
-    public function getParams(): ?array
+    public function getParams()
     {
         return $this->_params;
     }
@@ -158,7 +158,7 @@ abstract class Request_Abstract
         return isset($this->_params[$name]) ? $this->_params[$name] : $default;
     }
 
-    public function getException(): \Exception
+    public function getException()
     {
         $exception = $this->_exception;
 
@@ -321,7 +321,7 @@ abstract class Request_Abstract
     /**
      * @return string
      */
-    public function getBaseUri(): ?string
+    public function getBaseUri()
     {
         return $this->_base_uri;
     }
@@ -329,7 +329,7 @@ abstract class Request_Abstract
     /**
      * @return string
      */
-    public function getRequestUri(): string
+    public function getRequestUri()
     {
         return $this->_uri;
     }
@@ -339,7 +339,7 @@ abstract class Request_Abstract
      * @param string $request_uri
      * @return int
      */
-    protected function _setBaseUri(?string $base_uri, ?string $request_uri): int
+    protected function _setBaseUri(?string $base_uri, ?string $request_uri)
     {
         if (is_null($base_uri)) {
             $script_filename = $_SERVER['SCRIPT_FILENAME'];
@@ -424,7 +424,7 @@ abstract class Request_Abstract
      * @param array $values
      * @return int
      */
-    public static function _setParamsMulti(Request_Abstract $request, $values): int
+    public static function _setParamsMulti(Request_Abstract $request, $values)
     {
         if ($values && is_array($values)) {
             $request->_params = $values;
@@ -440,7 +440,7 @@ abstract class Request_Abstract
      * @param $value
      * @return int
      */
-    private function _setParamsSingle(string $key, $value): int
+    private function _setParamsSingle(string $key, $value)
     {
         $this->_params[$key] = $value;
         return 1;
@@ -451,7 +451,7 @@ abstract class Request_Abstract
      * @param string $name
      * @return array|mixed|null
      */
-    public static function _queryEx(string $type, string $name): ?string
+    public static function _queryEx(string $type, string $name)
     {
         $carrier = [];
 

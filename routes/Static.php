@@ -18,7 +18,7 @@ class Route_Static implements Route_Interface
      *
      * @return true
      */
-    public function match(): bool
+    public function match()
     {
         return true;
     }
@@ -61,7 +61,7 @@ class Route_Static implements Route_Interface
      * @return null|string
      * @throws \Exception
      */
-    private function _assemble(array $info, array $query = null): ?string
+    private function _assemble(array $info, array $query = null)
     {
         $str = '';
 
@@ -93,7 +93,7 @@ class Route_Static implements Route_Interface
         return null;
     }
 
-    private function _route(Request_Abstract $request): int
+    private function _route(Request_Abstract $request)
     {
         $zuri = $request->getRequestUri();
         $baseUri = $request->getBaseUri();
@@ -108,7 +108,12 @@ class Route_Static implements Route_Interface
         return 1;
     }
 
-    private function _pathInfoRoute(Request_Abstract $request, string $req_uri)
+    /**
+     * @param Request_Abstract $request
+     * @param string $req_uri
+     * @return bool
+     */
+    private function _pathInfoRoute(Request_Abstract $request, $req_uri)
     {
         $module = $controller = $action = $rest = null;
 
@@ -184,7 +189,7 @@ class Route_Static implements Route_Interface
      * @param null|string $string
      * @return null|string
      */
-    private function stripSlashs(?string $string): ?string
+    private function stripSlashs($string)
     {
         $result = preg_split('/( |\/)/', $string);
 

@@ -30,7 +30,7 @@ class P018Test extends Base
         $this->assertSame($base, $configReflection->getValue($config));
     }
 
-    public function simpleData(): array
+    public function simpleData()
     {
         $baseData = [
             'application' => [

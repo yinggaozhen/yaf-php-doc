@@ -55,7 +55,7 @@ class Regex implements Route_Interface
      * @param Request_Abstract $request
      * @return bool
      */
-    public function route($request): bool
+    public function route($request)
     {
         if (empty($request) || !is_object($request) || !($request instanceof Request_Abstract)) {
             trigger_error(sprintf('Expects a %s instance', Request_Abstract::class), E_WARNING);
@@ -103,7 +103,7 @@ class Regex implements Route_Interface
      * @param Request_Abstract $request
      * @return int
      */
-    private function _regexRoute(Request_Abstract $request): int
+    private function _regexRoute(Request_Abstract $request)
     {
         $zuri = $request->getRequestUri();
         $baseUri = $request->getBaseUri();
@@ -205,7 +205,7 @@ class Regex implements Route_Interface
      * @param $result
      * @return int
      */
-    private function _regexMatch($uri, &$result): int
+    private function _regexMatch($uri, &$result)
     {
         if (strlen($uri) === 0) {
             return 0;

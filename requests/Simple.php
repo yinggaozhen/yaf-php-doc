@@ -30,7 +30,7 @@ class Simple extends Request_Abstract
      * @param mixed $default
      * @return null|string
      */
-    public function getQuery(string $name = null, $default = null)
+    public function getQuery($name = null, $default = null)
     {
         if (null === $name) {
             return $_GET;
@@ -46,7 +46,7 @@ class Simple extends Request_Abstract
      * @param null|mixed $default
      * @return null|string
      */
-    public function getRequest(string $name = null, $default = null): ?string
+    public function getRequest($name = null, $default = null)
     {
         if (null === $name) {
             return $_REQUEST;
@@ -62,7 +62,7 @@ class Simple extends Request_Abstract
      * @param null|mixed $default
      * @return null|string
      */
-    public function getPost(string $name = null, $default = null): ?string
+    public function getPost($name = null, $default = null)
     {
         if (null === $name) {
             return $_POST;
@@ -72,29 +72,13 @@ class Simple extends Request_Abstract
     }
 
     /**
-     * @link http://www.php.net/manual/en/yaf-request-simple.getcookie.php
-     *
-     * @param string $name
-     * @param null|mixed $default
-     * @return null|string
-     */
-    public function getCookie(string $name = null, $default = null)
-    {
-        if (null === $name) {
-            return $_COOKIE;
-        }
-
-        return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
-    }
-
-    /**
      * @link http://www.php.net/manual/en/yaf-request-simple.getfiles.php
      *
      * @param string $name
      * @param null|mixed $default
      * @return null|string
      */
-    public function getFiles(string $name = null, $default = null): ?string
+    public function getFiles($name = null, $default = null)
     {
         if (null === $name) {
             return $_FILES;
@@ -104,13 +88,29 @@ class Simple extends Request_Abstract
     }
 
     /**
+     * @link http://www.php.net/manual/en/yaf-request-simple.getcookie.php
+     *
+     * @param string $name
+     * @param null|mixed $default
+     * @return null|string
+     */
+    public function getCookie($name = null, $default = null)
+    {
+        if (null === $name) {
+            return $_COOKIE;
+        }
+
+        return isset($_COOKIE[$name]) ? $_COOKIE[$name] : $default;
+    }
+
+    /**
      * @link http://www.php.net/manual/en/yaf-request-simple.get.php
      *
      * @param string $name
      * @param null|mixed $default
      * @return mixed|null
      */
-    public function get(string $name, $default = null)
+    public function get($name, $default = null)
     {
         $value = $this->_params[$name] ?? null;
 
@@ -136,7 +136,7 @@ class Simple extends Request_Abstract
      *
      * @return bool
      */
-    public function isXmlHttpRequest(): bool
+    public function isXmlHttpRequest()
     {
         $header = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? null;
 

@@ -22,7 +22,7 @@ class Http extends Response_Abstract
      * @param int $response_code
      * @return bool
      */
-    public function setHeader(string $name, string $value, bool $replace = true, int $response_code = 0): bool
+    public function setHeader($name, $value, $replace = true, $response_code = 0)
     {
         if ($response_code) {
             $this->_response_code = $response_code;
@@ -37,7 +37,7 @@ class Http extends Response_Abstract
      * @param array|null $headers
      * @return bool|null
      */
-    public function setAllHeaders(?array $headers): ?bool
+    public function setAllHeaders($headers)
     {
         foreach ($headers as $name => $header) {
             $this->alertHeader($name, $header, true);
@@ -83,7 +83,7 @@ class Http extends Response_Abstract
      * @param string $url
      * @return bool
      */
-    public function setRedirect(string $url): bool
+    public function setRedirect($url)
     {
         if (strlen($url)) {
             return false;
@@ -98,7 +98,7 @@ class Http extends Response_Abstract
      * @inheritdoc
      * @return bool
      */
-    public function response(): bool
+    public function response()
     {
        $response_code = $this->_response_code;
        http_response_code($response_code);
@@ -123,7 +123,7 @@ class Http extends Response_Abstract
      * @param int $replace
      * @return int
      */
-    private function alertHeader(string $name, string $value, int $replace): int
+    private function alertHeader($name, $value, $replace)
     {
         if (empty($name)) {
             return 1;

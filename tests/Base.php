@@ -25,7 +25,7 @@ class Base extends TestCase
      * @return mixed
      * @throws \ReflectionException
      */
-    public function proxyGetProperty($object, string $property)
+    public function proxyGetProperty($object, $property)
     {
         return \YP\internalPropertyGet($object, $property);
     }

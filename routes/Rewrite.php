@@ -31,7 +31,7 @@ class Rewrite implements Route_Interface
      * @param array|null $verify
      * @throws \Exception
      */
-    public function __construct(string $match, array $route, array $verify = null)
+    public function __construct($match, array $route, array $verify = null)
     {
         if (!is_string($match) || empty($match)) {
             yaf_trigger_error(TYPE_ERROR, "Expects a valid string match as the first parameter");
@@ -59,7 +59,7 @@ class Rewrite implements Route_Interface
      * @param null|Request_Abstract $request
      * @return bool
      */
-    public function route($request): bool
+    public function route($request)
     {
         if (!$request || !is_object($request) || !($request instanceof Request_Abstract)) {
             trigger_error(sprintf('Expect a %s iniInstance', get_class($request)), E_USER_WARNING);
@@ -76,7 +76,7 @@ class Rewrite implements Route_Interface
      * @param array|null $query
      * @return null|string
      */
-    public function assemble(array $info, array $query = null): ?string
+    public function assemble(array $info, array $query = null)
     {
         if ($str = $this->_assemble($info, $query)) {
             return $str;
@@ -92,7 +92,7 @@ class Rewrite implements Route_Interface
      * @param array|null $query
      * @return null|string
      */
-    private function _assemble(array $info, ?array $query): ?string
+    private function _assemble(array $info, ?array $query)
     {
         $query_str = $wildcard = '';
 
@@ -139,7 +139,7 @@ class Rewrite implements Route_Interface
         return $uri . $query_str;
     }
 
-    private function _rewriteRoute(Request_Abstract $request): int
+    private function _rewriteRoute(Request_Abstract $request)
     {
         $zuri = $request->getRequestUri();
         $baseUri = $request->getBaseUri();
@@ -198,7 +198,12 @@ class Rewrite implements Route_Interface
         return 1;
     }
 
-    private function _rewriteMatch(string $uri, &$result): int
+    /**
+     * @param string $uri
+     * @param $result
+     * @return int
+     */
+    private function _rewriteMatch($uri, &$result)
     {
         $pattern = '';
 

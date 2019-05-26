@@ -41,7 +41,12 @@ namespace Yaf\Exception\Internal
     use Yaf\Exception\StartupError;
     use Yaf\Exception\TypeError;
 
-    function yaf_buildin_exceptions(int $code, string $exception = null): string
+    /**
+     * @param int $code
+     * @param string|null $exception
+     * @return mixed|string
+     */
+    function yaf_buildin_exceptions($code, $exception = null)
     {
         static $exceptions = [];
 

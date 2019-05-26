@@ -111,7 +111,7 @@ abstract class Controller_Abstract
      * @param array|null $var_array
      * @return bool
      */
-    protected function display(string $action, $var_array = [])
+    protected function display($action, $var_array = [])
     {
         return (bool) $this->_display($action, $var_array);
     }
@@ -368,7 +368,7 @@ abstract class Controller_Abstract
      * @param array $var_array
      * @return int
      */
-    private function _display(string $action_name, $var_array): int
+    private function _display($action_name, $var_array)
     {
         $view = $this->_view;
         $name = $this->_name;

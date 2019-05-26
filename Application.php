@@ -63,7 +63,7 @@ class Application
      * @param string|null $section
      * @throws \Exception | \ReflectionException | \TypeError
      */
-    public function __construct($config, string $section = null)
+    public function __construct($config, $section = null)
     {
         $app = self::$_app;
         if (!is_null($app)) {
@@ -288,7 +288,7 @@ class Application
      * @param string $directory
      * @return $this|bool
      */
-    public function setAppDirectory(string $directory)
+    public function setAppDirectory($directory)
     {
         if (empty($directory) || realpath($directory) !== $directory) {
             return false;
@@ -314,7 +314,7 @@ class Application
      *
      * @return int
      */
-    public function getLastErrorNo(): int
+    public function getLastErrorNo()
     {
         $errcode = $this->_err_no;
         assert(is_long($errcode));
@@ -327,7 +327,7 @@ class Application
      *
      * @return string
      */
-    public function getLastErrorMsg(): string
+    public function getLastErrorMsg()
     {
         $errmsg = $this->_err_msg;
         assert(is_string($errmsg));
@@ -340,7 +340,7 @@ class Application
      *
      * @return $this
      */
-    public function clearLastError(): Application
+    public function clearLastError()
     {
         $this->_err_no = 0;
         $this->_err_msg = '';
@@ -384,7 +384,7 @@ class Application
      * @param string $name
      * @return int
      */
-    public static function isModuleName($name): int
+    public static function isModuleName($name)
     {
         $app = self::$_app;
 
@@ -417,7 +417,7 @@ class Application
      * @param string $name
      * @return int
      */
-    public static function isModuleNameStr($name): int
+    public static function isModuleNameStr($name)
     {
         $ret = self::isModuleName($name);
 
@@ -429,7 +429,7 @@ class Application
      * @return int
      * @throws \Exception
      */
-    public static function parseOption($options): int
+    public static function parseOption($options)
     {
         $app = null;
         if (is_null($app = $options['application'])) {

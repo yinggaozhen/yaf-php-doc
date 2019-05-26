@@ -26,7 +26,7 @@ class Simple implements Route_Interface
      * @param string $action
      * @throws \Exception
      */
-    public function __construct(string $module, string $controller, string $action)
+    public function __construct($module, $controller, $action)
     {
         if (!is_string($module) || !is_string($controller) || !is_string($action)) {
             yaf_trigger_error(TYPE_ERROR, "Expect 3 string parameters");
@@ -45,7 +45,7 @@ class Simple implements Route_Interface
      * @param Request_Abstract $request
      * @return bool
      */
-    public function route(Request_Abstract $request): bool
+    public function route(Request_Abstract $request)
     {
         return (bool) $this->_route($request);
     }
@@ -58,7 +58,7 @@ class Simple implements Route_Interface
      * @return null|string
      * @throws \Exception
      */
-    public function assemble(array $info, array $query = null): ?string
+    public function assemble(array $info, array $query = null)
     {
         $str = $this->_assemble($info, $query);
 
@@ -110,7 +110,7 @@ class Simple implements Route_Interface
         return null;
     }
 
-    private function _route(Request_Abstract $request): int
+    private function _route(Request_Abstract $request)
     {
         $nmodule = $this->module;
         $ncontroller = $this->controller;
