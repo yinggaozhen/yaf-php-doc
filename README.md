@@ -27,6 +27,7 @@
     + [1.3 快速使用](#13-快速使用)
         - [1.3.1 PhpStorm引入](#131-在phpstorm引入)
         - [1.3.2 NetBeans引入](#132-在netbeans引入)
+    + [1.4 最终效果图](#14-最终效果图)
 + [2 相关链接](#2-相关链接)
 + [3 待解决问题](#3待解决问题)
 
@@ -67,6 +68,16 @@
 ~~~
 右击你的项目 -> `Properties` -> `PHP Include Path` -> `Add Folder..` -> 添加`Yaf-PHP`文件路径 -> `open`
 ~~~
+
+## 1.4 最终效果图
+
+<p align="center">
+    <img src="./docs/yaf_php_tip.gif" width="400" alt="IDE识别">    
+</p>
+
+<p align="center">
+    <img src="./docs/yaf_php_auto.gif" width="400" alt="IDE自动补齐">    
+</p>
 
 # 2 相关链接
 
