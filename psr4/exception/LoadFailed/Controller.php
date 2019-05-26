@@ -9,5 +9,4 @@ use Yaf\Exception\LoadFailed;
  */
 class Controller extends LoadFailed
 {
-
 }

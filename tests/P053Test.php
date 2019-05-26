@@ -30,6 +30,7 @@ class P053Test extends Base
     /**
      * @throws Exception
      * @throws ReflectionException
+     * @throws TypeError
      */
     public function test()
     {

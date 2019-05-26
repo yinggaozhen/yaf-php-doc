@@ -9,5 +9,4 @@ use Yaf\Exception;
  */
 class DispatchFailed extends Exception
 {
-
 }

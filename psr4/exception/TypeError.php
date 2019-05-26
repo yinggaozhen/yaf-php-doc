@@ -1,6 +1,6 @@
 <?php
 
-namespace Yaf\Exception ;
+namespace Yaf\Exception;
 
 use Yaf\Exception;
 
@@ -9,5 +9,4 @@ use Yaf\Exception;
  */
 class TypeError extends Exception
 {
-
 }

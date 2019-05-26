@@ -1,13 +1,15 @@
 <?php
 
-namespace Yaf;
-
-use Yaf\Route\Route_Static;
+use Yaf\Config_Abstract;
+use Yaf\Request_Abstract;
+use Yaf\Route_Interface;
+use Yaf\Route_Static;
+use Yaf\Router;
 
 /**
  * @link https://www.php.net/manual/en/class.yaf-router.php
  */
-class Router
+class Yaf_Router
 {
     /**
      * @var Route_Interface[]

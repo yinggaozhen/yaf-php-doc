@@ -4,7 +4,7 @@ use tests\Base;
 use Yaf\Config\Ini;
 use Yaf\Route\Regex;
 use Yaf\Route\Rewrite;
-use Yaf\Route\Route_Static;
+use Yaf\Route_Static;
 use Yaf\Route\Simple;
 use Yaf\Route\Supervar;
 use Yaf\Router;

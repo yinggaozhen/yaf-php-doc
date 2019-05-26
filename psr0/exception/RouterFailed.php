@@ -1,13 +1,10 @@
 <?php
 
-namespace Yaf\Exception;
-
 use Yaf\Exception;
 
 /**
  * @link http://www.php.net/manual/en/class.yaf-exception-routefaild.php
  */
-class RouterFailed extends Exception
+class Yaf_Exception_RouterFailed extends Exception
 {
-
 }

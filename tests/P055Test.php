@@ -18,6 +18,7 @@ class P055Test extends Base
 
     /**
      * @throws Exception
+     * @throws TypeError
      */
     public function test()
     {

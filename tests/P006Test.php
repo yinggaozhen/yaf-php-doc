@@ -2,7 +2,7 @@
 
 use tests\Base;
 use Yaf\Request\Http;
-use Yaf\Route\Route_Static;
+use Yaf\Route_Static;
 
 /**
  * Check for Yaf_Route_Static
@@ -16,6 +16,9 @@ class P006Test extends Base
         parent::setUp();
     }
 
+    /**
+     * @throws TypeError
+     */
     public function test()
     {
         $request_uri = '/prefix/controller/action/name/laruence/age/28';

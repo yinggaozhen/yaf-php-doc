@@ -39,7 +39,7 @@ Yaf\Router Object
 (
     [_routes:protected] => Array
         (
-            [_default] => Yaf\Route\Route_Static Object
+            [_default] => Yaf\Route_Static Object
                 (
                 )
 
@@ -77,7 +77,7 @@ EXPECT;
         $expect = <<<EXPECT
 Array
 (
-    [_default] => Yaf\Route\Route_Static Object
+    [_default] => Yaf\Route_Static Object
         (
         )
 

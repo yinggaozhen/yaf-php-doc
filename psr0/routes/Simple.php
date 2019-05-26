@@ -1,0 +1,135 @@
+<?php
+
+use Yaf\Application;
+use const YAF\ERR\TYPE_ERROR;
+use Yaf\Request_Abstract;
+use Yaf\Route_Interface;
+
+/**
+ * @link https://www.php.net/manual/en/class.yaf-route-simple.php
+ */
+final class Yaf_Route_Simple implements Route_Interface
+{
+    protected $controller;
+
+    protected $module;
+
+    protected $action;
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-route-simple.construct.php
+     *
+     * @param string $module
+     * @param string $controller
+     * @param string $action
+     * @throws \Exception
+     */
+    public function __construct($module, $controller, $action)
+    {
+        if (!is_string($module) || !is_string($controller) || !is_string($action)) {
+            yaf_trigger_error(TYPE_ERROR, "Expect 3 string parameters");
+
+            return false;
+        }
+
+        $this->module = $module;
+        $this->controller = $controller;
+        $this->action = $action;
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-route-simple.route.php
+     *
+     * @param Request_Abstract $request
+     * @return bool
+     */
+    public function route(Request_Abstract $request)
+    {
+        return (bool) $this->_route($request);
+    }
+
+    /**
+     * @link https://www.php.net/manual/en/yaf-route-simple.assemble.php
+     *
+     * @param array $info
+     * @param array|null $query
+     * @return null|string
+     * @throws \Exception
+     */
+    public function assemble(array $info, array $query = null)
+    {
+        $str = $this->_assemble($info, $query);
+
+        return $str;
+    }
+
+    // ================================================== 内部方法 ==================================================
+
+    /**
+     * @param array $info
+     * @param array $query
+     * @return null|string
+     * @throws \Exception
+     */
+    private function _assemble(array $info, array $query): ?string
+    {
+        $uri = '?';
+
+        $nmodule = $this->module;
+        $ncontroller = $this->controller;
+        $naction = $this->action;
+
+        do {
+            if (!is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT])) {
+                $uri .= $nmodule . '=' . $zv . '&';
+            }
+
+            if (is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT])) {
+                yaf_trigger_error(TYPE_ERROR, "You need to specify the controller by ':c'");
+                break;
+            }
+
+            $uri .= $ncontroller . '=' . $zv . '&';
+
+            if (is_null($zv = $info[self::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT])) {
+                yaf_trigger_error(TYPE_ERROR, "You need to specify the action by ':a'");
+                break;
+            }
+
+            $uri .= $naction . '=' . $zv;
+
+            if (!empty($query) && is_array($query)) {
+                $uri .= http_build_query($query);
+            }
+
+            return $uri;
+        } while (0);
+
+        return null;
+    }
+
+    private function _route(Request_Abstract $request)
+    {
+        $nmodule = $this->module;
+        $ncontroller = $this->controller;
+        $naction = $this->action;
+
+        $module = Request_Abstract::_queryEx('GET', $nmodule);
+        $controller = Request_Abstract::_queryEx('GET', $ncontroller);
+        $action = Request_Abstract::_queryEx('GET', $naction);
+
+        if ($module && is_string($module) && Application::isModuleName($module)) {
+            $request->setModuleName($module);
+        }
+
+        if ($controller) {
+            $request->setControllerName($controller);
+        }
+
+        if ($action) {
+            $request->setActionName($action);
+        }
+
+        return 1;
+    }
+}
