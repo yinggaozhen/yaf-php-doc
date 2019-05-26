@@ -72,11 +72,11 @@
 ## 1.4 最终效果图
 
 <p align="center">
-    <img src="./docs/yaf_php_tip.gif" width="400" alt="IDE识别">    
+    <img src="./docs/yaf_php_tip.gif" width="1500" alt="IDE识别">    
 </p>
 
 <p align="center">
-    <img src="./docs/yaf_php_auto.gif" width="400" alt="IDE自动补齐">    
+    <img src="./docs/yaf_php_auto.gif" width="1500" alt="IDE自动补齐">    
 </p>
 
 # 2 相关链接
