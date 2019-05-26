@@ -23,8 +23,8 @@ class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
      * @link http://www.php.net/manual/en/yaf-config-ini.construct.php
      *
      * @param string|array $filename 文件名称或者参数值
-     * @param string       $section  所要选取的ini部分
-     * @throws \Yaf\Exception\TypeError | \Exception
+     * @param string $section 所要选取的ini部分
+     * @throws \Exception
      */
     public function __construct($filename, $section = null)
     {

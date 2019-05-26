@@ -1,12 +1,8 @@
 <?php
 
-namespace Yaf\Route;
+namespace Yaf;
 
-use Yaf\Application;
 use const YAF\ERR\TYPE_ERROR;
-use Yaf\Request_Abstract;
-use Yaf\Route_Interface;
-use Yaf\Router;
 
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-static.php

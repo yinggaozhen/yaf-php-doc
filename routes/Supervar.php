@@ -11,6 +11,9 @@ use Yaf\Route_Interface;
  */
 class Supervar implements Route_Interface
 {
+    /**
+     * @var null|string
+     */
     protected $_var_name = null;
 
     /**

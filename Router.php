@@ -141,7 +141,7 @@ class Router
 
     /**
      * @param string $uri
-     * @param $params
+     * @param array $params
      */
     public static function _parseParameters($uri, &$params)
     {
@@ -183,7 +183,7 @@ class Router
     }
 
     /**
-     * @param $configs
+     * @param array $configs
      * @return int
      * @throws \Exception
      */
