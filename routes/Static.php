@@ -7,7 +7,7 @@ use const YAF\ERR\TYPE_ERROR;
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-static.php
  */
-class Route_Static implements Route_Interface
+final class Route_Static implements Route_Interface
 {
     /**
      * @link https://www.php.net/manual/en/yaf-route-static.match.php

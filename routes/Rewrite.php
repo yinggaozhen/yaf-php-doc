@@ -10,7 +10,7 @@ use Yaf\Router;
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-rewrite.php
  */
-class Rewrite implements Route_Interface
+final class Rewrite implements Route_Interface
 {
     /**
      * @var string

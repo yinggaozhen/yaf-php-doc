@@ -9,7 +9,7 @@ use Yaf\Route_Interface;
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-map.php
  */
-class Map implements Route_Interface
+final class Map implements Route_Interface
 {
     /**
      * @var bool

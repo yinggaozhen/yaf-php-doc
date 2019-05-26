@@ -10,7 +10,7 @@ use Yaf\Route_Interface;
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-simple.php
  */
-class Simple implements Route_Interface
+final class Simple implements Route_Interface
 {
     protected $controller;
 

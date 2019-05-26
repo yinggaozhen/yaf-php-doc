@@ -9,7 +9,7 @@ use Yaf\Route_Interface;
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-supervar.php
  */
-class Supervar implements Route_Interface
+final class Supervar implements Route_Interface
 {
     /**
      * @var null|string

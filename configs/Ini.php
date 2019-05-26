@@ -15,7 +15,7 @@ use const YAF\ERR\TYPE_ERROR;
  *
  * @link http://www.php.net/manual/en/class.yaf-config-ini.php
  */
-class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
+final class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
     /**
      * Ini constructor.

@@ -8,7 +8,7 @@ use const YAF\ERR\TYPE_ERROR;
 /**
  * @link http://www.php.net/manual/en/class.yaf-config-simple.php
  */
-class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
+final class Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
     /**
      * @var bool

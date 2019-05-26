@@ -9,7 +9,7 @@ use Yaf\Route_Interface;
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-regex.php
  */
-class Regex implements Route_Interface
+final class Regex implements Route_Interface
 {
     protected $_route = null;
     protected $_default = null;

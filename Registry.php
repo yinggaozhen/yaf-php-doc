@@ -5,7 +5,7 @@ namespace Yaf;
 /**
  * @link https://www.php.net/manual/en/class.yaf-registry.php
  */
-class Registry
+final class Registry
 {
     /**
      * @var array
