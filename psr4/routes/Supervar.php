@@ -81,19 +81,19 @@ final class Supervar implements Route_Interface
             $uri .= $pname;
             $uri .= '=';
 
-            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT];
+            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT] ?? null;
             if (!is_null($zv)) {
                 $uri .= '/' . $zv;
             }
 
-            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT];
+            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT] ?? null;
             if (is_null($zv)) {
                 yaf_trigger_error(TYPE_ERROR, "You need to specify the controller by ':c'");
                 break;
             }
             $uri .= '/' . $zv;
 
-            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT];
+            $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT] ?? null;
             if (is_null($zv)) {
                 yaf_trigger_error(TYPE_ERROR, "You need to specify the action by ':a'");
                 break;
@@ -101,7 +101,7 @@ final class Supervar implements Route_Interface
             $uri .= '/' . $zv;
 
             if ($query && is_array($query)) {
-                $uri .= http_build_query($query);
+                $uri .= '&' . http_build_query($query);
             }
 
             return $uri;

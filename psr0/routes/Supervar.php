@@ -100,7 +100,7 @@ final class Yaf_Route_Supervar implements Route_Interface
             $uri .= '/' . $zv;
 
             if ($query && is_array($query)) {
-                $uri .= http_build_query($query);
+                $uri .= '&' . http_build_query($query);
             }
 
             return $uri;
