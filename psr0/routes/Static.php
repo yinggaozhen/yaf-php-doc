@@ -81,8 +81,13 @@ final class Yaf_Route_Static implements Route_Interface
 
             $str .= '/' . $zv;
 
+            foreach ($query as $key => $value) {
+                if (!is_string($key)) {
+                    unset($query[$key]);
+                }
+            }
             if ($query && is_array($query)) {
-                $str .= http_build_query($query);
+                $str .= '?' . http_build_query($query);
             }
 
             return $str;

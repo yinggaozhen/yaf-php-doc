@@ -24,7 +24,7 @@ final class Yaf_Route_Map implements Route_Interface
      * @param bool $controller_prefer
      * @param string $delimer
      */
-    public function __construct($controller_prefer = false, $delimer = '#!')
+    public function __construct($controller_prefer = false, $delimer = null)
     {
         $this->_ctl_router = $controller_prefer;
 
@@ -112,7 +112,7 @@ final class Yaf_Route_Map implements Route_Interface
 
         do {
             if ($ctl_prefer === true) {
-                $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT];
+                $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT] ?? null;
 
                 if (!is_null($zv) && is_string($zv)) {
                     $pname = $zv;
@@ -122,7 +122,7 @@ final class Yaf_Route_Map implements Route_Interface
                 }
 
             } else {
-                $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT];
+                $zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT] ?? null;
                 if (!is_null($zv) && is_string($zv)) {
                     $pname = $zv;
                 } else {
@@ -132,7 +132,7 @@ final class Yaf_Route_Map implements Route_Interface
             }
 
             foreach (explode('_', $pname) as $seg) {
-                $seg .= empty($seg) ? '' : '/' . $seg;
+                $uri .= empty($seg) ? '' : '/' . $seg;
             }
 
             if ($query && is_array($query)) {
