@@ -155,7 +155,7 @@ class Yaf_Request_Http extends Request_Abstract
 
     public function getRaw()
     {
-        // TODO 这里看不太懂
+        return file_get_contents('php://input', 'r');
     }
 
     /**

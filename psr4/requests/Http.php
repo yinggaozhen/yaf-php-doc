@@ -155,9 +155,14 @@ class Http extends Request_Abstract
         return isset($_FILES[$name]) ? $_FILES[$name] : $default;
     }
 
+    /**
+     * @link https://www.php.net/manual/en/yaf-request-http.getraw.php
+     *
+     * @return string
+     */
     public function getRaw()
     {
-        // TODO 这里看不太懂
+        return file_get_contents('php://input', 'r');
     }
 
     /**
