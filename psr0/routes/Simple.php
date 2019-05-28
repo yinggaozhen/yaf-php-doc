@@ -99,7 +99,7 @@ final class Yaf_Route_Simple implements Route_Interface
             $uri .= $naction . '=' . $zv;
 
             if (!empty($query) && is_array($query)) {
-                $uri .= http_build_query($query);
+                $uri .= '&' . http_build_query($query);
             }
 
             return $uri;
