@@ -177,18 +177,15 @@ final class Yaf_Route_Regex implements Route_Interface
         $uri = $reverse;
 
         if (($zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT]) != null) {
-            $inter = str_replace($uri, Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT, (string)$zv);
-            $uri = $inter;
+            $uri = str_replace(Route_Interface::YAF_ROUTE_ASSEMBLE_MOUDLE_FORMAT, (string)$zv, $uri);
         }
 
         if (($zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT]) != null) {
-            $inter = str_replace($uri, Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT, (string)$zv);
-            $uri = $inter;
+            $uri = str_replace(Route_Interface::YAF_ROUTE_ASSEMBLE_CONTROLLER_FORMAT, (string)$zv, $uri);
         }
 
         if (($zv = $info[Route_Interface::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT]) != null) {
-            $inter = str_replace($uri, Route_Interface::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT, (string)$zv);
-            $uri = $inter;
+            $uri = str_replace(Route_Interface::YAF_ROUTE_ASSEMBLE_ACTION_FORMAT, (string)$zv, $uri);
         }
 
         if ($query && is_array($query)) {
