@@ -3,7 +3,15 @@
 namespace Yaf;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-plugin-abstract.php
+ * Yaf_Plugin_Abstract是Yaf的插件基类, 所有应用在Yaf的插件都需要继承实现这个类, 这个类定义了7个方法, 依次在7个时机的时候被调用.
+ *
+ *  插件有两种部署方式
+ *  1.  一种是部署在plugins目录下
+ *      通过名称中的后缀(可通过ap.name_suffix和ap.name_separator来改变具体命名形式),来使得自动加载器可以正确加载.
+ *  2.
+ *      放置在类库, 由普通加载规则加载, 但无论哪种方式, 用户定义的插件都需要继承自Yaf_Plugin_Abstract.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.plugin.html
  */
 abstract class Plugin_Abstract
 {

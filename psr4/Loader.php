@@ -3,21 +3,30 @@
 namespace Yaf;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-loader.php
+ * Yaf_Loader类为Yaf提供了自动加载功能, 它根据类名中包含的路径信息实现类的定位和自动加载.
+ * Yaf_Loader也提供了对传统的require_once的替代方案, 相比传统的require_once, 因为舍弃对require的支持, 所以性能能有一丁点小优势.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.loader.html
  */
 class Loader
 {
     /**
+     * 本地(自身)类加载路径, 一般的, 属性的值来自配置文件中的ap.library
+     *
      * @var string
      */
     protected $_library;
 
     /**
+     * 全局类加载路径, 一般的, 属性的值来自php.ini中的ap.library
+     *
      * @var string
      */
     protected $_global_library;
 
     /**
+     * Yaf_Loader实现了单利模式, 一般的它由Yaf_Application负责初始化. 此属性保存当前实例
+     *
      * @var \Yaf\Loader
      */
     protected static $_instance;
@@ -32,10 +41,13 @@ class Loader
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.autoload.php
+     * 载入一个类, 这个方法被Yaf用作自动加载类的方法, 当然也可以手动调用.
      *
-     * @param string $class_name
-     * @return bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.autoload.html
+     *
+     * @param string $class_name 要载入的类名, 类名必须包含路径信息, 也就是下划线分隔的路径信息和类名.
+     * @return bool 成功返回TRUE
      * @throws \Exception
      * @throws \ReflectionException
      */
@@ -150,10 +162,13 @@ out:
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.getinstance.php
+     * 获取当前的Yaf_Loader实例
      *
-     * @param string $library
-     * @param string $global_library
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.getInstance.html
+     *
+     * @param string $library 本地(自身)类库目录, 如果留空, 则返回已经实例化过的Yaf_Loader实例
+     * @param string $global_library 全局类库目录, 如果留空则会认为和$local_library_directory相同.
      * @return Loader|false
      * @throws \Exception
      * @throws \ReflectionException
@@ -170,10 +185,13 @@ out:
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.import.php
+     * 导入一个PHP文件, 因为Yaf_Loader::import只是专注于一次包含, 所以要比传统的require_once性能好一些
      *
-     * @param string $file
-     * @return bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.import.html
+     *
+     * @param string $file 要载入的文件路径, 可以为绝对路径和相对路径. 如果为相对路径, 则会以应用的本地类目录(ap.library)为基目录.
+     * @return bool 成功返回TRUE, 失败返回FALSE.
      * @throws \Exception
      * @throws \ReflectionException
      */
@@ -209,9 +227,12 @@ out:
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.registerlocalnamespace.php
+     * 注册本地类前缀, 是的对于以这些前缀开头的本地类, 都从本地类库路径中加载.
      *
-     * @param string|array $namespaces
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.registerLocalNamespace.html
+     *
+     * @param string|array $namespaces 字符串或者是数组格式的类名前缀, 不包含前缀后面的下划线.
      * @return $this|bool
      * @throws \Exception
      */
@@ -233,7 +254,10 @@ out:
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.getlocalnamespace.php
+     * 获取当前已经注册的本地类前缀
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.getLocalNamespace.html
      *
      * @return null|string
      */
@@ -243,9 +267,12 @@ out:
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.clearlocalnamespace.php
+     * 清除已注册的本地类前缀
      *
-     * @return bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.clearLocalNamespace.html
+     *
+     * @return bool 成功返回TRUE, 失败返回FALSE
      */
     public function clearLocalNamespace()
     {
@@ -256,9 +283,14 @@ out:
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-loader.islocalname.php
+     * 判断一个类, 是否是本地类.
      *
-     * @param null|string $class_name
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.loader.isLocalName.html
+     *
+     * @param null|string $class_name <p>
+     * 字符串的类名, 本方法会根据下划线分隔截取出类名的第一部分, 然后在Yaf_Loader的_local_ns中判断是否存在, 从而确定结果.
+     * </p>
      * @return bool|int
      */
     public function isLocalName($class_name)

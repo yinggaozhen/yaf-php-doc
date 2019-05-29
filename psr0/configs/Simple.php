@@ -5,7 +5,9 @@ use Yaf\Config_Abstract;
 use const YAF\ERR\TYPE_ERROR;
 
 /**
- * @link http://www.php.net/manual/en/class.yaf-config-simple.php
+ * Yaf_Config_Simple为存储在数组中的配置数据提供了适配器。
+ *
+ * @link http://www.laruence.com/manual/yaf.class.config.html#yaf.class.config.simple
  */
 final class Yaf_Config_Simple extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {

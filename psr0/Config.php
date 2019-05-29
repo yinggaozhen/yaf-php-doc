@@ -5,17 +5,30 @@ use Yaf\Config\Simple;
 use const YAF\ERR\TYPE_ERROR;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-config-abstract.php
+ * Yaf_Config_Abstract被设计在应用程序中简化访问和使用配置数据。
+ * 它为在应用程序代码中访问这样的配置数据提供了一个基于用户接口的嵌入式对象属性。
+ * 配置数据可能来自于各种支持等级结构数据存储的媒体。
+ * Yaf_Config_Abstract实现了Countable, ArrayAccess 和 Iterator 接口。
+ * 这样，可以基于Yaf_Config_Abstract对象使用count()函数和PHP语句如foreach, 也可以通过数组方式访问Yaf_Config_Abstract的元素.
+ *
+ * - Yaf_Config_INI : 存储在Ini文件的配置数据提供了适配器。
+ * - Yaf_Config_Simple : 存储在PHP的数组中的配置数据提供了适配器。
+ *
+ * @link http://www.laruence.com/manual/yaf.class.config.html
  */
 abstract class Yaf_Config_Abstract
 {
     /**
+     * 配置实际的保存容器
+     *
      * @access protected
      * @array
      */
     public $_config;
 
     /**
+     * 表示配置是否容许修改, 对于Yaf_Config_Ini来说, 永远都是TRUE
+     *
      * @access protected
      * @var bool
      */

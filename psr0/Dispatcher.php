@@ -24,61 +24,88 @@ use function YP\internalCall;
 use function Yaf\Exception\Internal\yaf_buildin_exceptions;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-dispatcher.php
+ * Yaf_Dispatcher实现了MVC中的C分发, 它由Yaf_Application负责初始化, 然后由Yaf_Application::run启动
+ * 它协调路由来的请求, 并分发和执行发现的动作, 并收集动作产生的响应, 输出响应给请求者, 并在整个过程完成以后返回响应.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.dispatcher.html
  */
 class Yaf_Dispatcher
 {
     /**
+     * Yaf_Dispatcher实现了单利模式, 此属性保存当前实例
+     *
      * @var Dispatcher
      */
     protected static $_instance = null;
 
     /**
+     * 路由器, 在Yaf0.1之前, 路由器是可更改的, 但是Yaf0.2以后, 随着路由器和路由协议的分离, 各种路由都可以通过配置路由协议来实现, 也就取消了自定义路由器的功能
+     *
      * @var Router
      */
     protected $_router;
 
     /**
+     * 当前的视图引擎, 可以通过Yaf_Dispatcher::setView来替换视图引擎为自定义视图引擎(比如Smary/Firekylin等常见引擎)
+     *
      * @var View_Interface
      */
     protected $_view;
 
     /**
+     * 当前的请求
+     *
      * @var Request_Abstract
      */
     protected $_request;
 
     /**
+     * 已经注册的插件, 插件一经注册, 就不能更改和删除
+     *
      * @var array
      */
     protected $_plugins;
 
     /**
+     * 标示着,是否在动作执行完成后, 调用视图引擎的render方法, 产生响应.
+     * 可以通过Yaf_Dispatcher::disableView和Yaf_Dispatcher::enableView来切换开关状态
+     *
      * @var bool
      */
     protected $_auto_render = true;
 
     /**
+     * 标示着,是否在产生响应以后, 不自动输出给客户端, 而是返回给调用者. 可以通过Yaf_Dispatcher::returnResponse来切换开关状态
+     *
      * @var bool
      */
     protected $_return_response = false;
 
     /**
+     * 标示着, 是否在有输出的时候, 直接响应给客户端, 不写入Yaf_Response_Abstract对象.
+     *
+     * @tip 如果此属性为TRUE, 那么将忽略Yaf_Dispatcher::$_return_response
      * @var bool
      */
     protected $_instantly_flush = false;
 
     /**
+     * 默认的模块名, 在路由的时候, 如果没有指明模块, 则会使用这个值, 也可以通过配置文件中的ap.dispatcher.defaultModule来指定
+     *
      * @var string
      */
     protected $_default_module;
 
     /**
+     * 默认的控制器名, 在路由的时候, 如果没有指明控制器, 则会使用这个值, 也可以通过配置文件中的ap.dispatcher.defaultController来指定
+     *
      * @var string
      */
     protected $_default_controller;
 
     /**
+     * 默认的动作名, 在路由的时候, 如果没有指明动作, 则会使用这个值, 也可以通过配置文件中的ap.dispatcher.defaultAction来指定
+     *
      * @var string
      */
     protected $_default_action;
@@ -102,9 +129,12 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.getinstance.php
+     * 获取当前的Yaf_Dispatcher实例
      *
-     * @return Yaf_Dispatcher
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.getInstance.html
+     *
+     * @return Dispatcher
      * @throws \Exception
      */
     public static function getInstance()
@@ -121,7 +151,10 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.dispatch.php
+     * 开始处理流程, 一般的不需要用户调用此方法, Yaf_Application::run 会自动调用此方法.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.dispatch.html
      *
      * @param Request_Abstract $request
      * @return Response_Abstract|bool
@@ -141,9 +174,12 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.enableview.php
+     * 开启自动Render. 默认是开启的, 在动作执行完成以后, Yaf会自动render以动作名命名的视图模板文件.
      *
-     * @return Yaf_Dispatcher
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.enableView.html
+     *
+     * @return $this 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function enableView()
     {
@@ -153,9 +189,12 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.disableview.php
+     * 关闭自动Render. 默认是开启的, 在动作执行完成以后, Yaf会自动render以动作名命名的视图模板文件.
      *
-     * @return Yaf_Dispatcher
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.disableView.html
+     *
+     * @return Yaf_Dispatcher 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function disableView()
     {
@@ -165,9 +204,12 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.initview.php
+     * 初始化视图引擎, 因为Yaf采用延迟实例化视图引擎的策略, 所以只有在使用前调用此方法, 视图引擎才会被实例化
      *
-     * @param string $templates_dir
+     * @since 1.0.0.9
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.initView.html
+     *
+     * @param string $templates_dir 视图的模板目录的绝对路径
      * @param array|null $options
      * @return null|Simple|View_Interface
      * @throws \Exception
@@ -180,10 +222,13 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.setview.php
+     * 设置视图引擎
      *
-     * @param View_Interface $view
-     * @return $this|bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setView.html
+     *
+     * @param View_Interface $view 一个实现了Yaf_View_Interface的视图引擎实例
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function setView(View_Interface $view)
     {
@@ -197,10 +242,11 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.setrequest.php
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setRequest.html
      *
-     * @param Request_Abstract $request
-     * @return $this|bool
+     * @param Request_Abstract $request 一个Yaf_Request_Abstract实例
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      * @throws \Exception
      */
     public function setRequest(Request_Abstract $request)
@@ -215,15 +261,23 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.getapplication.php
+     * 获取当前的Yaf_Application实例
+     *
+     * @since 1.0.0.8
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.getApplication.html
+     *
+     * @return Application
      */
     public function getApplication()
     {
-        // TODO PHP_MN(yaf_application_app)(INTERNAL_FUNCTION_PARAM_PASSTHRU);什么意思
+        return Application::app();
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.getrouter.php
+     * 获取路由器
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.getRouter.html
      *
      * @return Router
      */
@@ -233,7 +287,10 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.getrequest.php
+     * 获取当前的请求实例
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.getRequest.html
      *
      * @return Request_Abstract
      */
@@ -243,10 +300,12 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.setdefaultmodule.php
+     * 设置路由的默认模块, 如果在路由结果中不包含模块信息, 则会使用此默认模块作为路由模块结果
      *
-     * @param string $module
-     * @return $this|bool
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setDefaultModule.html
+     *
+     * @param string $module 默认模块名, 请注意需要首字母大写
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function setDefaultModule($module)
     {
@@ -260,10 +319,13 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.setdefaultcontroller.php
+     * 设置路由的默认控制器, 如果在路由结果中不包含控制器信息, 则会使用此默认控制器作为路由控制器结果
      *
-     * @param string $controller
-     * @return $this|bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setDefaultController.html
+     *
+     * @param string $controller 默认控制器名, 请注意需要首字母大写
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function setDefaultController($controller)
     {
@@ -277,10 +339,13 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.setdefaultaction.php
+     * 设置路由的默认动作, 如果在路由结果中不包含动作信息, 则会使用此默认动作作为路由动作结果
      *
-     * @param string $action
-     * @return $this|bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setDefaultAction.html
+     *
+     * @param string $action 默认动作名, 请注意需要全部小写
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function setDefaultAction($action)
     {
@@ -294,10 +359,13 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.returnresponse.php
+     * 是否返回Response对象, 如果启用, 则Response对象在分发完成以后不会自动输出给请求端, 而是交给程序员自己控制输出.
      *
-     * @param bool $auto_response
-     * @return $this|int
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.returnResponse.html
+     *
+     * @param bool $auto_response 开启状态
+     * @return $this|int 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function returnResponse($auto_response = true)
     {
@@ -312,10 +380,14 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.flushinstantly.php
+     * 切换自动响应.
+     * 在Yaf_Dispatcher::enableView()的情况下, 会使得Yaf_Dispatcher调用Yaf_Controller_Abstract::display方法, 直接输出响应给请求端
      *
-     * @param bool $flag
-     * @return $this|int
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.flushInstantly.html
+     *
+     * @param bool $flag 开启状态
+     * @return $this|int 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function flushInstantly($flag = false)
     {
@@ -330,11 +402,17 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.seterrorhandler.php
+     * 设置错误处理函数, 一般在appcation.throwException关闭的情况下, Yaf会在出错的时候触发错误
+     * 这个时候, 如果设置了错误处理函数, 则会把控制交给错误处理函数处理.
      *
-     * @param callable $callback
-     * @param int $error_type
-     * @return Yaf_Dispatcher | boolean
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setErrorHandler.html
+     *
+     * @param callable $callback <p>
+     * 错误处理函数, 这个函数需要最少接受俩个参数: 错误代码($error_code)和错误信息($error_message)
+     * 可选的还可以接受三个参数: 错误文件($err_file), 错误行($err_line)和错误上下文($errcontext)
+     * <p>
+     * @param int $error_type 要捕获的错误类型
+     * @return Dispatcher | boolean 成功返回Yaf_Dispatcher, 失败返回FALSE
      * @throws \Exception
      */
     public function setErrorHandler($callback, $error_type = E_ALL)
@@ -350,10 +428,13 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.autorender.php
+     * 开启/关闭自动渲染功能. 在开启的情况下(Yaf默认开启), Action执行完成以后, Yaf会自动调用View引擎去渲染该Action对应的视图模板.
      *
-     * @param bool $flag
-     * @return $this|int
+     * @since 1.0.0.11
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.autoRender.html
+     *
+     * @param bool $flag 开启状态
+     * @return $this|int 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function autoRender($flag = false)
     {
@@ -368,10 +449,16 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.throwexception.php
+     * 切换在Yaf出错的时候抛出异常, 还是触发错误.
+     * 当然,也可以在配置文件中使用ap.dispatcher.thorwException=$switch达到同样的效果, 默认的是开启状态.
      *
-     * @param bool $flag
-     * @return $this|bool
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.throwException.html
+     *
+     * @param bool $flag <p>
+     * 如果为TRUE,则Yaf在出错的时候采用抛出异常的方式. 如果为FALSE, 则Yaf在出错的时候采用触发错误的方式.
+     * </p>
+     *
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function throwException($flag = false)
     {
@@ -386,10 +473,14 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.catchexception.php
+     * 在ap.dispatcher.throwException开启的状态下, 是否启用默认捕获异常机制
+     * 当然,也可以在配置文件中使用ap.dispatcher.catchException=$switch达到同样的效果, 默认的是开启状态.
      *
-     * @param bool $flag
-     * @return $this|bool
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.catchException.html
+     *
+     * @param bool $flag 如果为TRUE, 则在有未捕获异常的时候, Yaf会交给Error Controller的Error Action处理.
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      */
     public function catchException($flag = false)
     {
@@ -404,10 +495,13 @@ class Yaf_Dispatcher
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-dispatcher.registerplugin.php
+     * 一个Yaf_Plugin_Abstract派生类的实例.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.registerPlugin.html
      *
      * @param Plugin_Abstract $plugin
-     * @return $this|bool
+     * @return $this|bool 成功返回Yaf_Dispatcher, 失败返回FALSE
      * @throws \Exception
      */
     public function registerPlugin(Plugin_Abstract $plugin)

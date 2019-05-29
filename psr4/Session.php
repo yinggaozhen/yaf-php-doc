@@ -7,7 +7,9 @@ use Countable;
 use Iterator;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-session.php
+ * Yaf_Session是Yaf对Session的包装, 实现了Iterator, ArrayAccess, Countable接口, 方便使用.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.session.html
  */
 final class Session implements Iterator, ArrayAccess, Countable
 {

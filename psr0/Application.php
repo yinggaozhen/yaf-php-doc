@@ -13,36 +13,51 @@ use Yaf\Bootstrap_Abstract;
 use Yaf\Dispatcher;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-application.php
+ * Yaf_Application代表一个产品/项目, 是Yaf运行的主导者, 真正执行的主题. 它负责接收请求, 协调路由, 分发, 执行, 输出.
+ *
+ * @since 1.0.0.0
+ * @link http://www.laruence.com/manual/yaf.classes.html#yaf.class.application
  */
 class Yaf_Application
 {
     /**
+     * Yaf_Application通过特殊的方式实现了单利模式, 此属性保存当前实例
+     *
      * @var \Yaf\Application
      */
     protected static $_app = null;
 
     /**
+     * 全局配置实例
+     *
      * @var \Yaf\Config_Abstract
      */
     protected $config = null;
 
     /**
+     * Yaf_Dispatcher实例
+     *
      * @var \Yaf\Dispatcher
      */
     protected $dispatcher = null;
 
     /**
+     * 存在的模块名, 从配置文件中ap.modules读取
+     *
      * @var array
      */
     protected $_modules = null;
 
     /**
+     * 布尔值, 指明当前的Yaf_Application是否已经运行
+     *
      * @var bool
      */
     protected $_running = false;
 
     /**
+     * 当前的环境名, 也就是Yaf_Application在读取配置的时候, 获取的配置节名字
+     *
      * @var string
      */
     protected $_environ;
@@ -58,11 +73,12 @@ class Yaf_Application
     protected $_err_msg = '';
 
     /**
-     * Application constructor.
+     * 初始化一个Yaf_Application, 如果$config是一个INI文件, 那么$section指明要读取的配置节.
      *
-     * @link https://www.php.net/manual/en/yaf-application.construct.php
+     * @link http://www.laruence.com/manual/yaf.class.application.construct.html
      *
-     * @param mixed $config
+     * @since 1.0.0.0
+     * @param mixed $config 关联数组的配置, 或者一个指向ini格式的配置文件的路径的字符串, 或者是一个Yaf_Config_Abstract实例
      * @param string|null $section
      * @throws \Exception | \ReflectionException | \TypeError
      */
@@ -135,7 +151,10 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.app.php
+     * 获取当前的Yaf_Application实例
+     *
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.application.app.html
      *
      * @return Application
      */
@@ -145,7 +164,10 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.run.php
+     * 运行一个Yaf_Application, 开始接受并处理请求. 这个方法只能调用一次, 多次调用并不会有特殊效果.
+     *
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.application.run.html
      *
      * @throws \Exception
      */
@@ -168,11 +190,14 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.execute.php
+     * 在Yaf_Application的环境下, 运行一个用户自定义函数过程. 主要用在使用Yaf做简单的命令行脚本的时候, 应用Yaf的外围环境, 比如:自动加载, 配置, 视图引擎等.
      *
-     * @param callable $func
-     * @param array $args
-     * @return bool|mixed
+     * @since 1.0.0.17
+     * @link http://www.laruence.com/manual/yaf.class.application.execute.html
+     *
+     * @param callable $func 要运行的函数或者方法, 方法可以通过array($obj, "method_name")来定义.
+     * @param array $args 零个或者多个要传递给函数的参数.
+     * @return bool|mixed 被调用函数或者方法的返回值
      */
     public function execute($func, ...$args)
     {
@@ -185,9 +210,12 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.environ.php
+     * 获取当前Yaf_Application的环境名
      *
-     * @return string
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.application.environ.html
+     *
+     * @return string 当前的环境名, 也就是ini_get("yaf.environ")
      */
     public function environ()
     {
@@ -199,7 +227,12 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.bootstrap.php
+     * 指示Yaf_Application去寻找Bootstrap(默认在ap.directory/Bootstrap.php), 并执行所有在Bootstrap类中定义的, 以_init开头的方法.
+     * 一般用作在处理请求之前, 做一些个性化定制.
+     * Bootstrap并不会调用run, 所以还需要在bootstrap以后调用Application::run来运行Yaf_Application实例
+     *
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.application.bootstrap.html
      *
      * @throws \Exception | \ReflectionException
      * @return $this|bool
@@ -253,7 +286,10 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.getconfig.php
+     *获取Yaf_Application读取的配置项.
+     *
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.application.getConfig.html
      *
      * @return Config_Abstract
      */
@@ -266,9 +302,12 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.getdispatcher.php
+     * 获取当前的分发器
      *
-     * @return Dispatcher
+     * @since 1.0.0.6
+     * @link http://www.laruence.com/manual/yaf.class.application.getDispatcher.html
+     *
+     * @return Dispatcher Yaf_Dispatcher实例
      */
     public function getDispatcher()
     {
@@ -276,7 +315,10 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.getmodules.php
+     * 获取在配置文件中申明的模块.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.application.getModules.html
      *
      * @return array
      */
@@ -286,9 +328,12 @@ class Yaf_Application
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-application.setappdirectory.php
+     * 改变APPLICATION_PATH, 在这之后, 将从新的APPLICATION_PATH下加载控制器/视图, 但注意, 不会改变自动加载的路径.
      *
-     * @param string $directory
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.dispatcher.setAppDirectory.html
+     *
+     * @param string $directory 绝度路径的APPLICATION_PATH
      * @return $this|bool
      */
     public function setAppDirectory($directory)

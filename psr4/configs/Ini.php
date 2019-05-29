@@ -13,7 +13,7 @@ use const YAF\ERR\TYPE_ERROR;
  * - 其中字符（“.”）作为分隔键，支持配置数据层次结构。
  * - 而字符（“：”）作为继承/扩展符号，方法是 <子节点名>:<父节点名>
  *
- * @link http://www.php.net/manual/en/class.yaf-config-ini.php
+ * @link http://www.laruence.com/manual/yaf.class.config.html#yaf.class.config.ini
  */
 final class Ini extends Config_Abstract implements \Countable, \Iterator, \ArrayAccess
 {
