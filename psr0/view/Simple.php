@@ -5,16 +5,23 @@ use const YAF\ERR\TYPE_ERROR;
 use Yaf\View_Interface;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-view-simple.php
+ * af_View_Simple是Yaf自带的视图引擎, 它追求性能, 所以并没有提供类似Smarty那样的多样功能, 和复杂的语法.
+ * 对于Yaf_View_Simple的视图模板, 就是普通的PHP脚本, 对于通过Yaf_View_Interface::assgin的模板变量, 可在视图模板中直接通过变量名使用.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.view.html#yaf.class.view.simple
  */
 class Yaf_View_Simple implements View_Interface
 {
     /**
+     * 所有通过Yaf_View_Simple::assign分配的变量, 都保存在此属性中
+     *
      * @var array
      */
     protected $_tpl_vars;
 
     /**
+     * 当前视图引擎的模板文件基目录
+     *
      * @var string
      */
     protected $_tpl_dir;
@@ -51,10 +58,16 @@ class Yaf_View_Simple implements View_Interface
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-view-simple.assign.php
+     * 为视图引擎分配一个模板变量, 在视图模板中可以直接通过${$name}获取模板变量值
      *
-     * @param string $name
-     * @param mixed $value
+     * @link http://www.laruence.com/manual/yaf.class.view.simple.assign.html
+     *
+     * @param string $name <p>
+     * 字符串或者关联数组, 如果为字符串, 则$value不能为空, 此字符串代表要分配的变量名.
+     * 如果为数组, 则$value须为空, 此参数为变量名和值的关联数组.
+     * </p>
+     *
+     * @param mixed $value 分配的模板变量值
      * @return $this|bool
      */
     function assign($name, $value = null)
@@ -77,10 +90,13 @@ class Yaf_View_Simple implements View_Interface
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-view-simple.display.php
+     * 渲染一个视图模板, 并直接输出给请求端
      *
-     * @param string $tpl
-     * @param array $tpl_vars
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.view.simple.display.html
+     *
+     * @param string $tpl 视图模板的文件, 绝对路径, 一般这个路径由Yaf_Controller_Abstract提供
+     * @param array $tpl_vars 关联数组, 模板变量
      * @throws \Exception
      */
     function display($tpl, $tpl_vars = null)
@@ -90,10 +106,13 @@ class Yaf_View_Simple implements View_Interface
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-view-simple.render.php
+     * 渲染一个视图模板, 得到结果
      *
-     * @param string $tpl
-     * @param array $tpl_vars
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.view.simple.render.html
+     *
+     * @param string $tpl 视图模板的文件, 绝对路径, 一般这个路径由Yaf_Controller_Abstract提供
+     * @param array $tpl_vars 关联数组, 模板变量
      * @return string $return_value
      * @throws \Exception
      */
@@ -106,9 +125,12 @@ class Yaf_View_Simple implements View_Interface
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-view-simple.setscriptpath.php
+     * 设置模板的基目录, 默认的Yaf_Dispatcher会设置此目录为APPLICATION_PATH . "/views".
      *
-     * @param string $template_dir
+     * @since 1.0.0.13
+     * @link http://www.laruence.com/manual/yaf.class.view.simple.setScriptPath.html
+     *
+     * @param string $template_dir 视图模板的基目录, 绝对地址
      * @return $this|bool
      */
     function setScriptPath($template_dir)
@@ -123,7 +145,10 @@ class Yaf_View_Simple implements View_Interface
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-view-simple.getscriptpath.php
+     * 获取当前的模板目录
+     *
+     * @since 1.0.0.13
+     * @link http://www.laruence.com/manual/yaf.class.view.simple.getScriptPath.html
      *
      * @return string
      */
@@ -139,9 +164,12 @@ class Yaf_View_Simple implements View_Interface
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-view-simple.get.php
+     * 获取视图引擎的一个模板变量值
      *
-     * @param string|null $name
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.view.simple.get.html
+     *
+     * @param string|null $name 模板变量名
      * @return array|mixed|null
      */
     public function get($name = null)
@@ -204,6 +232,21 @@ class Yaf_View_Simple implements View_Interface
         } else {
             unset($this->_tpl_vars[$name]);
         }
+    }
+
+    public function __isset($name)
+    {
+        return array_key_exists($name, $this->_tpl_vars);
+    }
+
+    public function __get($name)
+    {
+        return $this->get($name);
+    }
+
+    public function __set($name, $value)
+    {
+        return $this->assign($name, $value);
     }
 
     // ================================================== 内部方法 ==================================================
@@ -425,20 +468,5 @@ class Yaf_View_Simple implements View_Interface
         }
 
 	    return 1;
-    }
-
-    public function __isset($name)
-    {
-        return array_key_exists($name, $this->_tpl_vars);
-    }
-
-    public function __get($name)
-    {
-        return $this->get($name);
-    }
-
-    public function __set($name, $value)
-    {
-        return $this->assign($name, $value);
     }
 }

@@ -1,7 +1,9 @@
 <?php
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-view-interface.php
+ * Yaf_View_Interface是为了提供可扩展的, 可自定的视图引擎而设立的视图引擎接口, 它定义了用在Yaf上的视图引擎需要实现的方法和功能.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.view.html
  */
 interface Yaf_View_Interface
 {
