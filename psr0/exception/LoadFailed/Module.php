@@ -3,7 +3,9 @@
 use Yaf\Exception\LoadFailed;
 
 /**
- * @link http://www.php.net/manual/en/class.yaf-exception-loadfaild-module.php
+ * 在找不到路由指定的模块时抛出
+ *
+ * @link http://www.laruence.com/manual/yaf.class.exception.html#yaf.class.exception.loadfailed.module
  */
 class Yaf_Exception_LoadFailed_Module extends LoadFailed
 {

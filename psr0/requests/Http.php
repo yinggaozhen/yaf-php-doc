@@ -3,7 +3,10 @@
 use Yaf\Request_Abstract;
 
 /**
- * @link http://www.php.net/manual/en/class.yaf-request-http.php
+ * 代表了一个实际的Http请求, 一般的不用自己实例化它
+ * Yaf_Application在run以后会自动根据当前请求实例它
+ *
+ * @link http://www.laruence.com/manual/yaf.class.request.html#yaf.class.request.http
  */
 class Yaf_Request_Http extends Request_Abstract
 {

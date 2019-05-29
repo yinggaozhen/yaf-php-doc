@@ -5,7 +5,9 @@ namespace Yaf\Exception;
 use Yaf\Exception;
 
 /**
- * @link http://www.php.net/manual/en/class.yaf-exception-routefaild.php
+ * 在路由失败的时候抛出.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.exception.html#yaf.class.exception.routerfailed
  */
 class RouterFailed extends Exception
 {

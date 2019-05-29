@@ -4,6 +4,11 @@ namespace Yaf\Response;
 
 use Yaf\Response_Abstract;
 
+/**
+ * 响应对象和请求对象相对应, 是发送给请求端的响应的载体
+ *
+ * @link http://www.laruence.com/manual/yaf.class.response.html#yaf.class.response.http
+ */
 class Http extends Response_Abstract
 {
     /**
@@ -11,6 +16,11 @@ class Http extends Response_Abstract
      */
     protected $_sendheader = true;
 
+    /**
+     * 响应给请求端的HTTP状态码
+     *
+     * @var int
+     */
     protected $_response_code = 0;
 
     /**
@@ -78,9 +88,12 @@ class Http extends Response_Abstract
     }
 
     /**
-     * @link http://www.php.net/manual/en/yaf-response-abstract.setredirect.php
+     * 设置重定向URL
      *
-     * @param string $url
+     * @since 1.0.0.0
+     * @link http://www.laruence.com/manual/yaf.class.response.setRedirect.html
+     *
+     * @param string $url 要重定向到的URL
      * @return bool
      */
     public function setRedirect($url)

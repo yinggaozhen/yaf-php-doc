@@ -3,16 +3,22 @@
 namespace Yaf;
 
 /**
- * @link https://www.php.net/manual/en/class.yaf-router.php
+ * Yaf的路由器, 负责分析请求中的request uri, 得出目标模板, 控制器, 动作.
+ *
+ * @link http://www.laruence.com/manual/yaf.class.router.html
  */
 class Router
 {
     /**
+     * 路由器已有的路由协议栈, 默认的栈底总是名为"default"的Yaf_Route_Static路由协议的实例.
+     *
      * @var Route_Interface[]
      */
     protected $_routes;
 
     /**
+     * 在路由成功后, 路由生效的路由协议名
+     *
      * @var string
      */
     protected $_current;
@@ -30,10 +36,13 @@ class Router
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-router.addroute.php
+     * 给路由器增加一个名为$name的路由协议
      *
-     * @param string $name
-     * @param Route_Interface $route
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.router.addRoute.html
+     *
+     * @param string $name 要增加的路由协议的名字
+     * @param Route_Interface $route 要增加的路由协议, Yaf_Route_Interface的一个实例
      * @return $this|bool
      */
     public function addRoute($name, $route)
@@ -53,7 +62,10 @@ class Router
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-router.addconfig.php
+     * 给路由器通过配置增加一簇路由协议
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.router.addConfig.html
      *
      * @param array|Config_Abstract $config
      * @return $this|bool
@@ -78,7 +90,10 @@ class Router
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-router.route.php
+     * 路由一个请求, 本方法不需要主动调用, Yaf_Dispatcher::dispatch会自动调用本方法
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.router.route.html
      *
      * @param Request_Abstract $request
      * @return bool
@@ -101,9 +116,12 @@ class Router
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-router.getroute.php
+     * 获取当前路由器的路由协议栈中名为$name的协议
      *
-     * @param string $name
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.router.getRoute.html
+     *
+     * @param string $name 要获取的协议名
      * @return bool|null|Route_Interface
      */
     public function getRoute($name)
@@ -116,7 +134,10 @@ class Router
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-router.getroutes.php
+     * 获取当前路由器中的所有路由协议
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.router.getRoutes.html
      *
      * @return array
      */
@@ -126,7 +147,10 @@ class Router
     }
 
     /**
-     * @link https://www.php.net/manual/en/yaf-router.getcurrentroute.php
+     * 在路由结束以后, 获取路由匹配成功, 路由生效的路由协议名
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.router.getCurrentRoute.html
      *
      * @return string
      */

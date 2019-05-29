@@ -3,6 +3,10 @@
 namespace Yaf;
 
 /**
+ * 代表了一个实际请求, 一般的不用自己实例化它, Yaf_Application在run以后会自动根据当前请求实例它
+ *
+ * @link http://www.laruence.com/manual/yaf.class.request.html#yaf.class.request.http
+ *
  * @method bool isGet()
  * @method bool isPost()
  * @method bool isPut()
@@ -14,20 +18,44 @@ namespace Yaf;
  */
 abstract class Request_Abstract
 {
+    /**
+     * 在路由完成后, 请求被分配到的模块名
+     *
+     * @var string
+     */
     public $module;
 
+    /**
+     * 在路由完成后, 请求被分配到的控制器名
+     *
+     * @var string
+     */
     public $controller;
 
+    /**
+     * 在路由完成后, 请求被分配到的动作名
+     *
+     * @var string
+     */
     public $action;
 
+    /**
+     * 当前请求的Method, 对于命令行来说, Method为"CLI"
+     *
+     * @var string
+     */
     public $method;
 
     /**
+     * 当前请求的附加参数
+     *
      * @var array
      */
     protected $_params;
 
     /**
+     * 当前请求的希望接受的语言, 对于Http请求来说, 这个值来自分析请求头Accept-Language. 对于不能鉴别的情况, 这个值为NULL.
+     *
      * @var string
      */
     protected $_language;
@@ -38,21 +66,29 @@ abstract class Request_Abstract
     protected $_exception;
 
     /**
+     * 当前请求Request URI要忽略的前缀, 一般不需要手工设置, Yaf会自己分析
+     *
      * @var string
      */
     protected $_base_uri;
 
     /**
+     * 当前请求的Request URI
+     *
      * @var string
      */
     protected $_uri = '';
 
     /**
+     * 表示当前请求是否已经完成分发
+     *
      * @var int
      */
     protected $_dispatched = 0;
 
     /**
+     * 表示当前请求是否已经完成路由
+     *
      * @var int
      */
     protected $_routed = 0;
@@ -109,6 +145,11 @@ abstract class Request_Abstract
     }
 
     /**
+     * 为当前的请求,设置路由参数.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.setParam.html
+     *
      * @param array ...$params
      * @return null
      */
@@ -141,7 +182,15 @@ abstract class Request_Abstract
     }
 
     /**
-     * @return array|null
+     * 获取当前请求中的所有路由参数, 路由参数不是指$_GET或者$_POST, 而是在路由过程中, 路由协议根据Request Uri分析出的请求参数.
+     * 比如, 对于默认的路由协议Yaf_Route_Static
+     *  - 路由如下请求URL: http://www.domain.com/module/controller/action/name1/value1/name2/value2/
+     * 路由结束后将会得到俩个路由参数, name1和name2, 值分别是value1, value2.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.getParams.html
+     *
+     * @return array|null 当前所有的路由参数
      */
     public function getParams()
     {
@@ -149,15 +198,31 @@ abstract class Request_Abstract
     }
 
     /**
-     * @param string     $name
-     * @param null|mixed $default
-     * @return mixed
+     * 获取当前请求中的路由参数, 路由参数不是指$_GET或者$_POST, 而是在路由过程中, 路由协议根据Request Uri分析出的请求参数.
+     * 比如, 对于默认的路由协议Yaf_Route_Static
+     *  - 路由如下请求URL: http://www.domain.com/module/controller/action/name1/value1/name2/value2/
+     * 路由结束后将会得到俩个路由参数, name1和name2, 值分别是value1, value2.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.getParam.html
+     *
+     * @param string     $name 要获取的路由参数名
+     * @param null|mixed $default 如果设定此参数, 如果没有找到$name路由参数, 则返回此参数值.
+     * @return mixed 找到返回对应的路由参数值, 如果没有找到, 而又设置了$default_value, 则返回default_value, 否则返回NULL.
      */
     public function getParam($name, $default = null)
     {
         return isset($this->_params[$name]) ? $this->_params[$name] : $default;
     }
 
+    /**
+     * 本方法主要用于在异常捕获模式下, 在异常发生的情况时流程进入Error控制器的error动作时, 获取当前发生的异常对象
+     *
+     * @since 1.0.0.12
+     * @link http://www.laruence.com/manual/yaf.class.request.getException.html
+     *
+     * @return \Exception|null
+     */
     public function getException()
     {
         $exception = $this->_exception;
@@ -170,6 +235,11 @@ abstract class Request_Abstract
     }
 
     /**
+     * 获取当前请求被路由到的模块名.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.getModuleName.html
+     *
      * @return mixed
      */
     public function getModuleName()
@@ -178,6 +248,11 @@ abstract class Request_Abstract
     }
 
     /**
+     * 获取当前请求被路由到的控制器名.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.getControllerName.html
+     *
      * @return mixed
      */
     public function getControllerName()
@@ -186,6 +261,11 @@ abstract class Request_Abstract
     }
 
     /**
+     * 获取当前请求被路由到的动作(Action)名.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.getActionName.html
+     *
      * @return mixed
      */
     public function getActionName()
@@ -281,6 +361,11 @@ abstract class Request_Abstract
     }
 
     /**
+     * 获取当前请求的类型, 可能的返回值为GET,POST,HEAD,PUT,CLI等.
+     *
+     * @since 1.0.0.5
+     * @link http://www.laruence.com/manual/yaf.class.request.getMethod.html
+     *
      * @return mixed
      */
     public function getMethod()

@@ -7,6 +7,11 @@ use Yaf\Route\Rewrite;
 use Yaf\Route\Simple;
 use Yaf\Route\Supervar;
 
+/**
+ * Yaf_Route_Interface是Yaf路由协议的标准接口, 它的存在使得用户可以自定义路由协议
+ *
+ * @link http://www.laruence.com/manual/yaf.class.route.html
+ */
 interface Yaf_Route_Interface
 {
     public function route(Request_Abstract $request);

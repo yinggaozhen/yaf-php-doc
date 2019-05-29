@@ -3,7 +3,9 @@
 use Yaf\Exception;
 
 /**
- * @link http://www.php.net/manual/en/class.yaf-exception-typeerror.php
+ * 在关键逻辑参数出错的时候抛出
+ *
+ * @link http://www.laruence.com/manual/yaf.class.exception.html#yaf.class.exception.typeerror
  */
 class Yaf_Exception_TypeError extends Exception
 {
