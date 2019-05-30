@@ -72,7 +72,7 @@ class Http extends Response_Abstract
             return $this->_header;
         }
 
-        return $this->_header[$name];
+        return $this->_header[$name] ?? null;
     }
 
     /**
@@ -142,6 +142,7 @@ class Http extends Response_Abstract
             return 1;
         }
 
+        $value = (string) $value;
         if (!isset($this->_header, $name)) {
             $this->_header[$name] = $value;
             return 1;
@@ -150,7 +151,11 @@ class Http extends Response_Abstract
         if ($replace) {
             $this->_header[$name] = $value;
         } else {
-            $this->_header[$name] .= $value;
+            if (isset($this->_header[$name])) {
+                $this->_header[$name] .= ', ' . $value;
+            } else {
+                $this->_header[$name] = $value;
+            }
         }
 
         return 1;
