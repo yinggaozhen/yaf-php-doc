@@ -92,44 +92,36 @@ final class Rewrite implements Route_Interface
      * @param array|null $query
      * @return null|string
      */
-    private function _assemble(array $info, ?array $query)
+    private function _assemble($info, $query)
     {
         $query_str = $wildcard = '';
-
         $uri = $match = $this->_route;
-        $pidents = $info;
 
-        $seg = strtok($match, Route_Interface::YAF_ROUTER_URL_DELIMIETER);
-        while ($seg) {
-            if (!empty($seg)) {
-                if ($seg == '*') {
-                    foreach ($pidents as $key => $zv) {
-                        if ($key) {
-                            if (is_string($zv)) {
-                                $wildcard .= $key . Route_Interface::YAF_ROUTER_URL_DELIMIETER;
-                                $wildcard .= Route_Interface::YAF_ROUTER_URL_DELIMIETER;
-                                $wildcard .= $zv;
-                                $wildcard .= Route_Interface::YAF_ROUTER_URL_DELIMIETER;
-                            }
-                        }
-                    }
-
-                    $uri = $uri . '*' . $wildcard;
-                }
-
-                if ($seg == ':') {
-                    $zv = $info[$seg] ?? null;
-
-                    if (!is_null($zv)) {
-                        $val = $zv;
-                        $uri = $uri . $seg . $val;
-
-                        unset($pidents[$seg]);
-                    }
-                }
+        foreach (explode(Route_Interface::YAF_ROUTER_URL_DELIMIETER, $match) as $seg) {
+            if (empty($seg)) {
+                continue;
             }
 
-            $seg = strtok(Route_Interface::YAF_ROUTER_URL_DELIMIETER);
+            if ($seg[0] == '*') {
+                foreach ($info as $key => $zv) {
+                    if (!$key) {
+                        continue;
+                    }
+
+                    if (is_string($zv)) {
+                        $wildcard .= substr($key, 1) . Route_Interface::YAF_ROUTER_URL_DELIMIETER;
+                        $wildcard .= $zv;
+                        $wildcard .= Route_Interface::YAF_ROUTER_URL_DELIMIETER;
+                    }
+                }
+
+                $uri = str_replace('*', $wildcard, $uri);
+            }
+
+            if ($seg[0] == ':' && isset($info[$seg])) {
+                $uri = str_replace($seg, $info[$seg], $uri);
+                unset($info[$seg]);
+            }
         }
 
         if ($query && is_array($query)) {
