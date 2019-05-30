@@ -13,9 +13,6 @@
     <a href="https://img.shields.io/static/v1.svg?label=version&message=1.0.0&color=blue">
         <img src="https://img.shields.io/static/v1.svg?label=version&message=1.0.0&color=blue" alt="version">
     </a>
-    <a href="https://img.shields.io/static/v1.svg?label=> 7.0&message=PHP&color=blue">
-            <img src="https://img.shields.io/static/v1.svg?label=> 7.0&message=PHP&color=blue" alt="LICENSE">
-        </a>
     <a href="https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green">
         <img src="https://img.shields.io/static/v1.svg?label=LICENSE&message=MIT&color=green" alt="LICENSE">
     </a>
