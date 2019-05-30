@@ -953,7 +953,8 @@ class Yaf_Dispatcher
                             }
 
                             if (is_string($result) && !empty($result)) {
-                                $response->setBody((string) $result, 'YAF_RESPONSE_APPEND');
+                                /** @see \Yaf\Response_Abstract::alterBody */
+                                internalCall($response, 'alterBody', null, (string) $result, 'YAF_RESPONSE_APPEND');
                             }
                         } else {
                             $result = internalCall($executor, 'display', $action);
