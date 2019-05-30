@@ -3,6 +3,7 @@
 use const YAF\ERR\TYPE_ERROR;
 use Yaf\Request_Abstract;
 use Yaf\Route_Interface;
+use Yaf\Router;
 
 /**
  * @link https://www.php.net/manual/en/class.yaf-route-map.php
@@ -78,18 +79,35 @@ final class Yaf_Route_Map implements Route_Interface
         $delimer = $this->_delimiter;
 
         if ($base_uri && is_string($base_uri) && !strncasecmp($uri, $base_uri, strlen($base_uri))) {
-            $req_uri = $uri . $base_uri;
+            $req_uri = substr($uri, strlen($base_uri));
         } else {
             $req_uri = $uri;
         }
 
+        $query_str = null;
         if (is_string($delimer) && !empty($delimer)) {
-            $query_str = strstr($req_uri, $delimer);
+            $query_str = explode($delimer, $req_uri)[1];
 
-            if ($query_str[strlen($query_str) - 1] == '/') {
-                // TODO 这里后面补上
+            if ($query_str[0] == '/') {
+                $query_str = substr($query_str, 1);
             }
         }
+
+        $route_result = implode('_', array_filter(explode(Route_Interface::YAF_ROUTER_URL_DELIMIETER, $req_uri)));
+        if ($route_result) {
+            if ($ctl_prefer === true) {
+                $request->setControllerName($route_result);
+            } else {
+                $request->setActionName($route_result);
+            }
+        }
+
+        if ($query_str) {
+            Router::_parseParameters($query_str, $param);
+            Request_Abstract::_setParamsMulti($request, $param);
+        }
+
+        return 1;
     }
 
     /**

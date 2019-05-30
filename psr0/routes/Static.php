@@ -102,7 +102,7 @@ final class Yaf_Route_Static implements Route_Interface
         $baseUri = $request->getBaseUri();
 
         $req_uri = $zuri;
-        if ($baseUri && is_string($baseUri) && !strcasecmp($zuri, $baseUri)) {
+        if ($baseUri && is_string($baseUri) && !strncasecmp($zuri, $baseUri, strlen($baseUri))) {
             $req_uri = substr($zuri, strlen($baseUri));
         }
 

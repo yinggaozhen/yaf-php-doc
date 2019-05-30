@@ -849,7 +849,6 @@ class Dispatcher
             if (empty($ce)) {
                 return 0;
             } else {
-                // TODO controller 入参问题
                 $iController = new $ce($request, $response, $view);
 
                 if (!$request->isDispatched()) {
