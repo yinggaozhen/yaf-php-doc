@@ -479,8 +479,7 @@ out:
         $autoload = [$loader, $method];
 
         try {
-            // TODO
-            // spl_autoload_register($autoload);
+            spl_autoload_register($autoload);
         } catch (\Exception $e) {
             yaf_trigger_error(E_WARNING, 'Unable to register autoload function autoload');
             return 0;
