@@ -29,10 +29,9 @@ final class Yaf_Config_Ini extends Config_Abstract implements \Countable, \Itera
     {
         if (is_null($filename)) {
             $this->_config = [];
-            return;
+        } else {
+            $this->iniInstance($filename, $section);
         }
-
-        return $this->iniInstance($filename, $section);
     }
 
     /**
@@ -125,19 +124,6 @@ final class Yaf_Config_Ini extends Config_Abstract implements \Countable, \Itera
     public function current()
     {
         return current($this->_config);
-        $prop = $this->_config;
-
-        $pzval = null;
-        if (is_null($pzval = current($prop))) {
-            return false;
-        }
-
-        if (is_array($pzval)) {
-            $ret = $this->format($pzval);
-            return $ret ?? null;
-        } else {
-            return $pzval;
-    }
     }
 
     public function next()
@@ -242,13 +228,13 @@ final class Yaf_Config_Ini extends Config_Abstract implements \Countable, \Itera
      * @param null|string|array $filename
      * @param null|string $section_name
      * @param bool $create
-     * @return null|Ini
+     * @return null|Yaf_Config_Ini
      * @throws \Exception
      */
     private function iniInstance($filename, $section_name, $create = false)
     {
         if ($create) {
-            return new Ini($filename, $section_name);
+            return new Yaf_Config_Ini($filename, $section_name);
         } else if (is_array($filename)) {
             $this->_config = $filename;
             return $this;
@@ -293,7 +279,7 @@ final class Yaf_Config_Ini extends Config_Abstract implements \Countable, \Itera
 
     /**
      * @param $pzval
-     * @return null|Ini
+     * @return null|Yaf_Config_Ini
      * @throws \Exception
      */
     private function format($pzval)

@@ -64,8 +64,6 @@ final class Yaf_Config_Simple extends Config_Abstract implements \Countable, \It
                 return $pzval;
             }
         }
-
-        return false;
     }
 
     /**

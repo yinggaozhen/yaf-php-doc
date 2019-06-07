@@ -65,8 +65,6 @@ final class Simple extends Config_Abstract implements \Countable, \Iterator, \Ar
                 return $pzval;
             }
         }
-
-        return false;
     }
 
     /**

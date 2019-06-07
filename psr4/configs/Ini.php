@@ -30,10 +30,9 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
     {
         if (is_null($filename)) {
             $this->_config = [];
-            return;
+        } else {
+            $this->iniInstance($filename, $section);
         }
-
-        return $this->iniInstance($filename, $section);
     }
 
     /**
@@ -126,19 +125,6 @@ final class Ini extends Config_Abstract implements \Countable, \Iterator, \Array
     public function current()
     {
         return current($this->_config);
-        $prop = $this->_config;
-
-        $pzval = null;
-        if (is_null($pzval = current($prop))) {
-            return false;
-        }
-
-        if (is_array($pzval)) {
-            $ret = $this->format($pzval);
-            return $ret ?? null;
-        } else {
-            return $pzval;
-    }
     }
 
     public function next()
