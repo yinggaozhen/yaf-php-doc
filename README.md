@@ -66,7 +66,7 @@
 ~~~
 
 ~~~
-菜单 `File` -> `Setting` -> `PHP` -> 添加`Yaf-PHP`文件路径 -> `apply`
+菜单 `File` -> `Languages & Frameworks` -> `Setting` -> `PHP` -> 添加`Yaf-PHP`文件路径 -> `apply`
 ~~~
 
 ### 1.4.2 在NetBeans引入
