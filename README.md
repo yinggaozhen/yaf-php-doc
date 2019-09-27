@@ -40,8 +40,6 @@
 
 由于采用了原生PHP重写，可达到抹平阅读能力，降低阅读成本的目的．在平常开发时，也可以作为IDE Helper进行引入，加快开发效率.
 
-:heart::heart::heart:另外，欢迎各位同学的star和fork~~:heart::heart::heart:
-
 ## 1.2 依赖
 
 | 依赖项 | 版本 | 说明 |
